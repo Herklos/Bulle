@@ -16,3 +16,5 @@ export { SectionHeader } from './SectionHeader.js';
 export type { SectionHeaderProps } from './SectionHeader.js';
 export { Row } from './Row.js';
 export type { RowProps } from './Row.js';
+export { FeatureWelcome } from './FeatureWelcome.js';
+export type { FeatureWelcomeProps, FeatureWelcomeBullet } from './FeatureWelcome.js';

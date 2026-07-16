@@ -18,6 +18,7 @@ import { Chemin, type CheminWeek } from '@bulle/ui/primitives';
 import { Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useNow } from '@/lib/use-now';
 
@@ -26,6 +27,7 @@ const MILESTONE_WEEKS = new Set([12, 16, 22, 28, 32]);
 
 export default function JourneyScreen() {
   const { t } = useTranslation();
+  const welcome = useFeatureWelcome('journey');
   const { space } = useBulleTheme();
   const now = useNow();
   const bulle = useBulleStore((s) => s.bulle);
@@ -47,6 +49,7 @@ export default function JourneyScreen() {
 
   return (
     <Screen>
+      <FeatureWelcomeFor area='journey' visible={welcome.visible} onDismiss={welcome.dismiss} />
       <Text variant="display">{t('journey.title')}</Text>
 
       <View style={{ flexDirection: 'row', gap: space[4] }}>

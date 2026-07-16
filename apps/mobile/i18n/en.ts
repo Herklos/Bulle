@@ -191,6 +191,50 @@ export const en = {
     offline: 'Offline. Your changes are kept here.',
   },
 
+  welcome: {
+    start: 'Start',
+    today: {
+      eyebrow: 'Today',
+      title: 'One thing at a time',
+      tagline: 'Bulle shows you the next action, not how far behind you are.',
+      bullets: {
+        oneThing: 'One task at a time, chosen for this week',
+        noShame: 'No counters, no red, no guilt-trip reminders',
+        together: 'What your co-parent does shows up here too',
+      },
+    },
+    journey: {
+      eyebrow: 'Journey',
+      title: 'Week after week',
+      tagline: 'One thread, from the first scan to the day itself.',
+      bullets: {
+        week: 'Where you are, without having to count',
+        milestones: 'The scans and appointments that matter',
+        pause: 'You can pause all of it, at any time',
+      },
+    },
+    plan: {
+      eyebrow: 'Prepare',
+      title: 'Projects, not a list',
+      tagline: 'Forty loose tasks is a source of dread. Six projects is a shape.',
+      bullets: {
+        projects: 'Each project moves at its own pace',
+        admin: 'Every step arrives when it matters',
+        essentials: 'Only the essentials count. The rest are ideas',
+      },
+    },
+    memories: {
+      eyebrow: 'Memories',
+      title: 'What you will keep',
+      tagline: 'Photos, notes, moments. Nothing leaves your phone.',
+      bullets: {
+        gather: 'Your memories gather as the weeks pass',
+        private: 'Encrypted, shared with your co-parent only',
+        later: 'You will read them back later. That is the point',
+      },
+    },
+  },
+
   paywall: {
     title: 'Bulle Complète',
     orbLabel: 'A full bubble.',

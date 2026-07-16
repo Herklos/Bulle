@@ -195,6 +195,50 @@ export const fr = {
     offline: 'Hors ligne. Vos changements sont gardés ici.',
   },
 
+  welcome: {
+    start: 'Commencer',
+    today: {
+      eyebrow: 'Aujourd’hui',
+      title: 'Une chose à la fois',
+      tagline: 'Bulle vous montre la prochaine action, pas votre retard.',
+      bullets: {
+        oneThing: 'Une seule tâche à la fois, choisie pour cette semaine',
+        noShame: 'Pas de compteur, pas de rouge, pas de rappel culpabilisant',
+        together: 'Ce que fait votre co-parent apparaît ici aussi',
+      },
+    },
+    journey: {
+      eyebrow: 'Chemin',
+      title: 'Semaine après semaine',
+      tagline: 'Un fil, de la première échographie au jour J.',
+      bullets: {
+        week: 'Où vous en êtes, sans avoir à compter',
+        milestones: 'Les échographies et les rendez-vous qui comptent',
+        pause: 'Vous pouvez tout mettre en pause, à tout moment',
+      },
+    },
+    plan: {
+      eyebrow: 'Préparer',
+      title: 'Des projets, pas une liste',
+      tagline: 'Quarante tâches en vrac, c’est une source d’angoisse. Six projets, c’est une forme.',
+      bullets: {
+        projects: 'Chaque projet avance à son rythme',
+        admin: 'Les démarches françaises arrivent au bon moment',
+        essentials: 'Seul l’essentiel compte. Le reste, ce sont des idées',
+      },
+    },
+    memories: {
+      eyebrow: 'Souvenirs',
+      title: 'Ce que vous garderez',
+      tagline: 'Les photos, les mots, les moments. Rien ne sort de votre téléphone.',
+      bullets: {
+        gather: 'Vos souvenirs se rassemblent au fil des semaines',
+        private: 'Chiffrés, partagés avec votre co-parent seulement',
+        later: 'Vous les relirez plus tard. C’est tout l’intérêt',
+      },
+    },
+  },
+
   paywall: {
     title: 'Bulle Complète',
     orbLabel: 'Une bulle complète.',

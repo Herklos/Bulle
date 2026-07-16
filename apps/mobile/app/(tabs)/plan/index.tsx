@@ -26,6 +26,7 @@ import { EmptyState, ProgressRing, Row, SectionHeader, Text } from '@bulle/ui/co
 import { Glyph, type GlyphName } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useNow } from '@/lib/use-now';
@@ -37,6 +38,7 @@ import { useSettingsStore } from '@/store/useSettingsStore';
 
 export default function PlanScreen() {
   const { t, i18n } = useTranslation();
+  const welcome = useFeatureWelcome('plan');
   const router = useRouter();
   const { space } = useBulleTheme();
   const now = useNow();
@@ -108,6 +110,7 @@ export default function PlanScreen() {
 
   return (
     <Screen>
+      <FeatureWelcomeFor area='plan' visible={welcome.visible} onDismiss={welcome.dismiss} />
       <Text variant="display">{t('plan.title')}</Text>
 
       {ordered.length === 0 && suggestions.length === 0 && (

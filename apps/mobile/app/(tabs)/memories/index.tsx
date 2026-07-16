@@ -9,11 +9,14 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { EmptyState, Text } from '@bulle/ui/components';
 import { Screen } from '@/components/Screen';
+import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
 
 export default function MemoriesScreen() {
   const { t } = useTranslation();
+  const welcome = useFeatureWelcome('memories');
   return (
     <Screen>
+      <FeatureWelcomeFor area='memories' visible={welcome.visible} onDismiss={welcome.dismiss} />
       <Text variant="display">{t('memories.title')}</Text>
       <EmptyState glyph="souvenirs" message={t('memories.placeholder')} />
     </Screen>

@@ -22,6 +22,7 @@ import { BulleOrb } from '@bulle/ui/primitives';
 import { Checkbox, EmptyState, FocusCard, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
 import { bulleForWeekSG } from '@/assets/bulles';
 import { useBulleStore } from '@/store/useBulleStore';
 import { usePlanStore } from '@/store/usePlanStore';
@@ -31,6 +32,7 @@ import { useNow } from '@/lib/use-now';
 
 export default function TodayScreen() {
   const { t } = useTranslation();
+  const welcome = useFeatureWelcome('today');
   const { space } = useBulleTheme();
   const now = useNow();
 
@@ -84,6 +86,7 @@ export default function TodayScreen() {
 
   return (
     <Screen>
+      <FeatureWelcomeFor area='today' visible={welcome.visible} onDismiss={welcome.dismiss} />
       {/* Header */}
       <View style={{ alignItems: 'center', gap: space[2] }}>
         <Text variant="caption">{t('today.greeting')}</Text>
