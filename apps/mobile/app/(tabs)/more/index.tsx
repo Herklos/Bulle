@@ -2,47 +2,41 @@
 /**
  * Plus (spec §4.1).
  *
- * Built from @expo/ui's FieldGroup/ListItem/Switch: a REAL SwiftUI `Form` on iOS and a real
- * Material 3 grouped list on Android — not a JS approximation of one. A settings screen is
- * where platform conventions are strongest and where a hand-rolled list is most obviously
- * wrong: people know what their own OS's settings feel like.
+ * Built from Bulle's OWN Row and SectionHeader, not from a native list container, and that
+ * is a reversal worth recording so it is not re-reverted.
  *
- * FieldGroup, not List, and the difference is the whole screen. `List` is one flat run of
- * rows, so invite, language, notifications, premium, Pause and the legal line all sat at the
- * same level with nothing to say they are different KINDS of thing — a wall of rows the eye
- * has to read linearly because nothing groups it. A settings screen is a form, and `Form` is
- * the control the platforms ship for exactly this. Sections give it the grouping for free,
- * in each platform's own idiom (inset groups on iOS, the M3 connected list on Android),
- * which is precisely the thing a hand-rolled version gets subtly wrong.
+ * It was @expo/ui `List` first: one flat run of rows where invite, language, notifications,
+ * premium, Pause and the legal line all sat at the same level with nothing saying they are
+ * different KINDS of thing. That diagnosis was right and the screen did need grouping.
  *
- * The sections are ordered by how often they are wanted, not by importance: the pregnancy
- * itself, then the people in it, then the app, then the account, then the quiet exits.
+ * The fix was then `FieldGroup`, reasoning that a settings screen is a form and both
+ * platforms ship `Form` for exactly this. On Android that renders the Material 3 "connected
+ * list": a filled rounded container per section, with another rounded card per row INSIDE
+ * it. Boxes inside boxes — precisely what §15.6 bans (card borders, alternating section
+ * backgrounds) and the opposite of §15.4's "hierarchy comes from space and type, not boxes".
+ * It was more native and less Bulle, on the exact axis the spec says never to trade.
  *
- * LAYOUT CONSTRAINT, learned the hard way and unchanged by the swap: this is a Compose lazy
- * container on Android. It must own its scrolling and be measured with a BOUNDED height, so:
- *   - the screen does NOT scroll (`Screen scroll={false}`) — a lazy list inside a ScrollView
- *     hands it infinite height,
- *   - and the Host must NOT use `matchContents`, which does the same.
- * Get either wrong and it is not a layout glitch, it is a hard native crash:
- * "Vertically scrollable component was measured with an infinity maximum height constraints".
+ * So: sections from SectionHeader, rows from Row, separated by the 1px `line` and by space.
+ * Same grouping, no boxes, and identical to Préparer and the Chemin — which is the point. A
+ * settings screen that is the only screen built out of different parts is not a settings
+ * screen, it is a foreign screen.
  *
- * Every row must be a native @expo/ui child. On Android the container builds each row with
- * `getChildAt(index) as? ExpoComposeView ?: continue`, so a plain RN <View> is not merely
- * unstyled — it is SKIPPED, and the row vanishes on Android while looking fine on iOS.
- *
- * Everything sits inside ONE Host. That is the point of the host bridge: without it each
- * control opens its own native bridge and the screen costs a dozen of them.
+ * The one native island left is the notifications Switch, wrapped in its own small Host.
+ * A toggle is a control people expect to feel like their OS's toggle, and it is a leaf: it
+ * imposes nothing on its neighbours, which is the whole reason the container was the problem
+ * and this is not.
  *
  * Family MANAGEMENT lives here rather than in its own tab (a tab must earn daily taps, and
  * "manage members" does not). Pause is reachable in ≤2 taps from here (§3.1) and is
  * deliberately not buried under a "danger zone".
  */
 import React from 'react';
-import { Alert } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { FieldGroup, Host, ListItem, Switch } from '@expo/ui';
-import { Text } from '@bulle/ui/components';
+import { Host, Switch } from '@expo/ui';
+import { Row, SectionHeader, Text } from '@bulle/ui/components';
+import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { usePermissions } from '@/lib/permissions/usePermissions';
@@ -74,143 +68,152 @@ export default function MoreScreen() {
   };
 
   return (
-    <Screen scroll={false}>
+    // Scrolls again. The lazy native container needed a bounded height and therefore
+    // scroll={false}; Bulle's own rows are ordinary views, so the Screen just scrolls and
+    // the whole infinity-height constraint goes away with the container that caused it.
+    <Screen>
       <Text variant="display">{t('settings.title')}</Text>
 
-      {/*
-        One Host wrapping every native control. `seedColor` is sage so the Switch and the
-        list's selection tint pick up the palette rather than the platform's default blue.
-
-        `flex: 1` and NO `matchContents` — see the layout constraint in the header.
-      */}
-      <Host style={{ flex: 1 }} seedColor={colors.sage}>
-        <FieldGroup>
-          {/* The pregnancy itself. First because it is the only group whose rows change what
-              every other screen SAYS — the DPA re-aims every task window, the birth date
-              starts every post-birth deadline. */}
-          {!bulle?.birthDate && (
-            <FieldGroup.Section title={t('settings.sections.pregnancy')}>
-              {/* Owner-only: correcting the DPA re-aims every task window for everyone in
-                  the bulle, which is not a guest's call. Announcing the birth below is NOT
-                  owner-only and must stay that way — the co-parent is often the one with a
-                  free hand, and gating it would be a regression. */}
-              {isOwner && (
-                <ListItem
-                  onPress={() => router.push('/due-date/edit')}
-                  supportingText={t('dueDate.editBody')}
-                >
-                  {t('dueDate.edit')}
-                </ListItem>
-              )}
-
-              {/* Recording the birth is what starts every post-birth deadline (see
-                  domain/postnatal.ts). The whole section disappears with it: a bulle has one
-                  birth, and leaving the control there invites re-announcing it. */}
-              <ListItem
-                onPress={() => router.push('/birth/new')}
-                supportingText={t('birth.announceBody')}
-              >
-                {t('birth.announce')}
-              </ListItem>
-            </FieldGroup.Section>
-          )}
-
-          {/* The people in it. Couple sync is free (§10), so this is never a gated group. */}
+      {/* The pregnancy. First because it is the only group whose rows change what every
+          other screen SAYS: the DPA re-aims every task window, the birth date starts every
+          post-birth deadline. */}
+      {!bulle?.birthDate && (
+        <View>
+          <SectionHeader title={t('settings.sections.pregnancy')} />
+          {/* Owner-only: correcting the DPA re-aims every window for everyone in the bulle.
+              Announcing the birth below is NOT owner-only and must stay that way — the
+              co-parent is often the one with a free hand. */}
           {isOwner && (
-            <FieldGroup.Section title={t('settings.sections.family')}>
-              <ListItem
-                onPress={() => router.push('/more/invite')}
-                supportingText={t('settings.inviteBody')}
-              >
-                {t('settings.invite')}
-              </ListItem>
-            </FieldGroup.Section>
+            <Row
+              title={t('dueDate.edit')}
+              subtitle={t('dueDate.editBody')}
+              onPress={() => router.push('/due-date/edit')}
+              chevron
+            />
           )}
+          <Row
+            title={t('birth.announce')}
+            subtitle={t('birth.announceBody')}
+            onPress={() => router.push('/birth/new')}
+            chevron
+            divider={false}
+          />
+        </View>
+      )}
 
-          <FieldGroup.Section title={t('settings.sections.app')}>
-            {SUPPORTED_LANGUAGES.map((lang) => (
-              <ListItem
-                key={lang}
-                // Goes through the store, not i18n directly: the store persists the choice
-                // and _layout applies it on boot. changeLanguage alone forgets by the next
-                // launch.
-                onPress={() => void useSettingsStore.getState().setLanguage(lang)}
-                supportingText={language === lang ? t('settings.languageCurrent') : undefined}
-              >
-                {t(lang === 'fr' ? 'settings.languageFr' : 'settings.languageEn')}
-              </ListItem>
-            ))}
+      {/* Couple sync is free (§10), so this is never a gated group. */}
+      {isOwner && (
+        <View>
+          <SectionHeader title={t('settings.sections.family')} />
+          <Row
+            title={t('settings.invite')}
+            subtitle={t('settings.inviteBody')}
+            onPress={() => router.push('/more/invite')}
+            chevron
+            divider={false}
+          />
+        </View>
+      )}
 
-            <ListItem supportingText={t('settings.notificationsBody')}>
-              {t('settings.notifications')}
-              <ListItem.Trailing>
-                <Switch
-                  value={notifications}
-                  onValueChange={(next) => void useSettingsStore.getState().setNotifications(next)}
-                />
-              </ListItem.Trailing>
-            </ListItem>
-          </FieldGroup.Section>
+      <View>
+        <SectionHeader title={t('settings.sections.app')} />
+        {SUPPORTED_LANGUAGES.map((lang) => (
+          <Row
+            key={lang}
+            title={t(lang === 'fr' ? 'settings.languageFr' : 'settings.languageEn')}
+            subtitle={language === lang ? t('settings.languageCurrent') : undefined}
+            // Through the store, not i18n directly: the store persists the choice and
+            // _layout applies it on boot. changeLanguage alone forgets by the next launch.
+            onPress={() => void useSettingsStore.getState().setLanguage(lang)}
+            // The tick marks the live one. A chevron here would promise a screen that does
+            // not exist — tapping IS the choice.
+            trailing={
+              language === lang ? <Glyph name="check" size={20} color="sage" /> : undefined
+            }
+          />
+        ))}
 
-          {/* Switching bulles had no entry point at all before this: the transition route
-              existed and was unreachable. Only with more than one, so a single-bulle user
-              never sees a section for a concept they do not have. */}
-          {bulles.length > 1 && (
-            <FieldGroup.Section title={t('settings.sections.bulles')}>
-              {bulles.map((entry) => (
-                <ListItem
-                  key={entry.id}
-                  onPress={() => router.push(`/bulle-switch?id=${entry.id}`)}
-                  supportingText={
-                    entry.id === registry?.activeBulleId ? t('settings.bulleActive') : undefined
-                  }
-                >
-                  {entry.label}
-                </ListItem>
-              ))}
-            </FieldGroup.Section>
-          )}
+        <Row
+          title={t('settings.notifications')}
+          subtitle={t('settings.notificationsBody')}
+          // The only native island on the screen. A toggle should feel like the OS's
+          // toggle, and as a leaf it imposes nothing on its neighbours — which is exactly
+          // why a native CONTAINER was the problem here and a native control is not.
+          trailing={
+            // seedColor on the Host, not a color prop on the Switch: Switch has none, and
+            // the tint is the Host's job. Without it the toggle is the platform's default
+            // blue on a screen with no blue in it.
+            <Host matchContents seedColor={colors.sage}>
+              <Switch
+                value={notifications}
+                onValueChange={(next) => void useSettingsStore.getState().setNotifications(next)}
+              />
+            </Host>
+          }
+          divider={false}
+        />
+      </View>
 
-          {/* Premium had NO entry point outside a gate. Restore especially: both stores
-              require it to be reachable, and with no account a reinstall leaves restore as
-              the only way back to a purchase — a paying user should never have to go hunting
-              for a paywall to get their own product back. */}
-          <FieldGroup.Section title={t('settings.sections.account')}>
-            {isPremium ? (
-              <ListItem supportingText={t('settings.premiumActiveBody')}>
-                {t('settings.premiumActive')}
-              </ListItem>
-            ) : (
-              <ListItem
-                onPress={() => router.push('/paywall')}
-                supportingText={t('settings.premiumBody')}
-              >
-                {t('settings.premium')}
-              </ListItem>
-            )}
+      {/* Switching bulles had no entry point at all before this: the transition route
+          existed and was unreachable. Only with more than one, so a single-bulle user never
+          sees a group for a concept they do not have. */}
+      {bulles.length > 1 && (
+        <View>
+          <SectionHeader title={t('settings.sections.bulles')} />
+          {bulles.map((entry, index) => (
+            <Row
+              key={entry.id}
+              title={entry.label}
+              subtitle={
+                entry.id === registry?.activeBulleId ? t('settings.bulleActive') : undefined
+              }
+              onPress={() => router.push(`/bulle-switch?id=${entry.id}`)}
+              chevron
+              divider={index < bulles.length - 1}
+            />
+          ))}
+        </View>
+      )}
 
-            <ListItem onPress={restore} supportingText={t('settings.restoreBody')}>
-              {t('settings.restore')}
-            </ListItem>
-          </FieldGroup.Section>
+      {/* Premium had NO entry point outside a gate. Restore especially: with no account, a
+          reinstall leaves restore as the only way back to a purchase, and a paying user
+          should never have to hunt for a paywall to get their own product back. */}
+      <View>
+        <SectionHeader title={t('settings.sections.account')} />
+        {isPremium ? (
+          <Row title={t('settings.premiumActive')} subtitle={t('settings.premiumActiveBody')} />
+        ) : (
+          <Row
+            title={t('settings.premium')}
+            subtitle={t('settings.premiumBody')}
+            onPress={() => router.push('/paywall')}
+            chevron
+          />
+        )}
+        <Row
+          title={t('settings.restore')}
+          subtitle={t('settings.restoreBody')}
+          onPress={restore}
+          chevron
+          divider={false}
+        />
+      </View>
 
-          {/* Pause is reachable in <=2 taps and is deliberately NOT under a "danger zone"
-              (§3.1). It sits in its own quiet section with the legal line rather than at the
-              bottom of a list of unrelated rows: someone reaching for it should not have to
-              scan past "Restore purchases" to find it.
-
-              The regulatory line (§7.3) is the LAST row rather than a block beneath the
-              container. Anything rendered below a lazy container competes with it for height
-              and clips it — and this line has to be reachable, not cut off. */}
-          <FieldGroup.Section title={t('settings.sections.quiet')}>
-            <ListItem onPress={() => router.push('/more/pause')} supportingText={t('pause.enterBody')}>
-              {t('pause.enter')}
-            </ListItem>
-
-            <ListItem supportingText={t('settings.aboutBody')}>{t('settings.about')}</ListItem>
-          </FieldGroup.Section>
-        </FieldGroup>
-      </Host>
+      {/* Pause is reachable in <=2 taps and deliberately NOT under a "danger zone" (§3.1).
+          It sits with the legal line rather than at the bottom of a list of unrelated rows:
+          someone reaching for it should not have to scan past "Restore purchases". */}
+      <View>
+        <SectionHeader title={t('settings.sections.quiet')} />
+        <Row
+          title={t('pause.enter')}
+          subtitle={t('pause.enterBody')}
+          onPress={() => router.push('/more/pause')}
+          chevron
+        />
+        {/* The regulatory line (§7.3). No longer forced to be last to survive a lazy
+            container's height fight — it is last because it belongs last. */}
+        <Row title={t('settings.about')} subtitle={t('settings.aboutBody')} divider={false} />
+      </View>
     </Screen>
   );
 }
