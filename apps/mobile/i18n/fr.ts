@@ -108,7 +108,7 @@ export const fr = {
     lingering: 'Toujours sur votre liste',
     suggestTemplate: 'Bulle propose : {{title}}',
     premiumTemplate: 'Avec Complète',
-    addTemplate: 'Ajouter à Préparer',
+    addTemplate: 'Ajouter',
     tasks: 'Tâches',
     addTask: 'Ajouter une tâche',
     newTaskTitle: 'Une tâche à vous',

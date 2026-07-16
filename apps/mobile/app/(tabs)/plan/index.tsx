@@ -23,7 +23,7 @@ import {
   templateById,
 } from '@bulle/sdk';
 import { EmptyState, ProgressRing, Row, SectionHeader, Text } from '@bulle/ui/components';
-import { Glyph, type GlyphName } from '@bulle/ui/primitives';
+import { Glyph, withAlpha, type GlyphName } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
@@ -40,7 +40,7 @@ export default function PlanScreen() {
   const { t, i18n } = useTranslation();
   const welcome = useFeatureWelcome('plan');
   const router = useRouter();
-  const { space } = useBulleTheme();
+  const { colors, space, radius } = useBulleTheme();
   const now = useNow();
 
   const bulle = useBulleStore((s) => s.bulle);
@@ -140,6 +140,49 @@ export default function PlanScreen() {
     addProjectWithTasks(project, newTasks);
   };
 
+  /**
+   * The trailing affordance on a template row.
+   *
+   * A pill, not a sentence. "Ajouter à Préparer" spent three words and a wrapped line to say
+   * what a button says by being one, and it read as a label rather than an action — so the
+   * row looked inert. "à Préparer" was redundant besides: these sit under Modèles, inside
+   * the Préparer tab. The Chanel rule takes the other two words.
+   *
+   * `pointerEvents: none` is deliberate. The Row already owns the press, so a real nested
+   * Pressable would put a button inside a button — two overlapping targets, and VoiceOver
+   * announcing both. This looks like the button and lets the whole row be the target.
+   */
+  const TemplateAction = ({ templateId }: { templateId: string }) => {
+    // Say it is premium BEFORE the tap. A gate that only appears after you reach for
+    // something feels like a trap, even when the price is fair.
+    const locked = !isPremium && isPremiumTemplate(templateId);
+    if (locked) {
+      // Wrapped, because Glyph takes no accessibility props: bare, this would be an
+      // unlabelled image and the row would announce only its title, losing the one fact
+      // the icon exists to carry.
+      return (
+        <View accessible accessibilityLabel={t('plan.premiumTemplate')}>
+          <Glyph name="check" size={20} color="sage" />
+        </View>
+      );
+    }
+    return (
+      <View
+        pointerEvents="none"
+        style={{
+          paddingHorizontal: space[3],
+          paddingVertical: space[2],
+          borderRadius: radius.s,
+          backgroundColor: withAlpha(colors.sage, 0.12),
+        }}
+      >
+        <Text variant="caption" color="sage">
+          {t('plan.addTemplate')}
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <Screen>
       <FeatureWelcomeFor area='plan' visible={welcome.visible} onDismiss={welcome.dismiss} />
@@ -194,16 +237,7 @@ export default function PlanScreen() {
                 title={t(template.titleKey)}
                 subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
                 leading={<Glyph name={template.glyph as GlyphName} size={22} color="sage" />}
-                trailing={
-                  <Text variant="caption" color="sage">
-                    {/* Say it is premium BEFORE the tap. A gate that only appears after
-                        you reach for something feels like a trap, even when the price is
-                        fair. */}
-                    {!isPremium && isPremiumTemplate(suggestion.templateId)
-                      ? t('plan.premiumTemplate')
-                      : t('plan.addTemplate')}
-                  </Text>
-                }
+                trailing={<TemplateAction templateId={suggestion.templateId} />}
                 onPress={() => addTemplate(suggestion.templateId)}
                 divider={index < suggestions.length - 1}
               />
@@ -225,13 +259,7 @@ export default function PlanScreen() {
               title={t(template.titleKey)}
               subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
               leading={<Glyph name={template.glyph as GlyphName} size={22} color="inkSoft" />}
-              trailing={
-                <Text variant="caption" color="sage">
-                  {!isPremium && isPremiumTemplate(template.id)
-                    ? t('plan.premiumTemplate')
-                    : t('plan.addTemplate')}
-                </Text>
-              }
+              trailing={<TemplateAction templateId={template.id} />}
               onPress={() => addTemplate(template.id)}
               divider={index < later.length - 1}
             />

@@ -17,7 +17,7 @@
  * actually carry information, rather than a decorative marker every N rows.
  */
 import React, { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
@@ -28,7 +28,7 @@ import {
   memoriesForWeek,
   SA_TO_SG_OFFSET,
 } from '@bulle/sdk';
-import { Chemin, Glyph, type CheminWeek } from '@bulle/ui/primitives';
+import { Chemin, Glyph, type CheminWeek, type GlyphName } from '@bulle/ui/primitives';
 import { Row, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
@@ -41,6 +41,52 @@ import { useNow } from '@/lib/use-now';
 
 /** The three French échographies, plus the trimester boundaries. */
 const MILESTONE_WEEKS = new Set([12, 16, 22, 28, 32]);
+
+/**
+ * One step of the week stepper.
+ *
+ * A glyph rather than a word: "Avant"/"Après" cost two words to say what an arrow says
+ * instantly, they sat at inconsistent widths so the row reflowed as the label changed, and
+ * they needed translating to say nothing. The direction IS the meaning.
+ *
+ * The label survives as `accessibilityLabel` — dropping it would trade a visual improvement
+ * for an unlabelled button, which is not a trade (§15.8 item 4).
+ *
+ * 44×44 with the glyph at 22: these were bare `<Text onPress>` before, whose touch target
+ * was the text box itself, around 40×20. Under the 44pt floor in both axes.
+ */
+function IconStep({
+  glyph,
+  label,
+  onPress,
+  disabled,
+}: {
+  glyph: GlyphName;
+  label: string;
+  onPress: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled: !!disabled }}
+      disabled={disabled}
+      onPress={onPress}
+      style={({ pressed }) => ({
+        width: 44,
+        height: 44,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // The end of the fil is a real edge, not an error. Fading is how a stepper says
+        // "nothing further this way" without a disabled-looking box or a message.
+        opacity: disabled ? 0.3 : pressed ? 0.5 : 1,
+      })}
+    >
+      <Glyph name={glyph} size={22} color={disabled ? 'inkSoft' : 'sage'} />
+    </Pressable>
+  );
+}
 
 export default function JourneyScreen() {
   const { t, i18n } = useTranslation();
@@ -136,32 +182,27 @@ export default function JourneyScreen() {
               targets would mean 37 touch areas on a 24px-wide serpentine, nearly all of them
               under 44pt (§15.8 item 5).
             */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: space[4] }}>
-              <Text
-                variant="body"
-                color="sage"
-                accessibilityRole="button"
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: space[2] }}>
+              <IconStep
+                glyph="chevronLeft"
+                label={t('journey.previousWeek')}
                 onPress={() => setSelected(Math.max(5, shown - 1))}
-              >
-                {t('journey.previousWeek')}
-              </Text>
-              <Text
-                variant="body"
-                color="sage"
-                accessibilityRole="button"
+                disabled={shown <= 5}
+              />
+              <IconStep
+                glyph="chevronRight"
+                label={t('journey.nextWeek')}
                 onPress={() => setSelected(Math.min(DPA_WEEKS_SA, shown + 1))}
-              >
-                {t('journey.nextWeek')}
-              </Text>
+                disabled={shown >= DPA_WEEKS_SA}
+              />
+              {/* Only once you have wandered off. Showing a disabled "back to now" while you
+                  ARE at now is a control that spends space to say nothing. */}
               {shown !== weekSA && (
-                <Text
-                  variant="body"
-                  color="sage"
-                  accessibilityRole="button"
+                <IconStep
+                  glyph="today"
+                  label={t('journey.backToNow')}
                   onPress={() => setSelected(null)}
-                >
-                  {t('journey.backToNow')}
-                </Text>
+                />
               )}
             </View>
           </View>

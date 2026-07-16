@@ -106,7 +106,7 @@ export const en = {
     lingering: 'Still on your list',
     suggestTemplate: 'Bulle suggests: {{title}}',
     premiumTemplate: 'With Complète',
-    addTemplate: 'Add to Prepare',
+    addTemplate: 'Add',
     tasks: 'Tasks',
     addTask: 'Add a task',
     newTaskTitle: 'A task of your own',

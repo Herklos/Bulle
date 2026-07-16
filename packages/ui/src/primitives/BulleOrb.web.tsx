@@ -159,14 +159,24 @@ export function BulleOrb({
             />
           )}
 
-          {/* Liquid: the conic gradient, revealed only through the meniscus path. */}
+          {/* Liquid: the conic gradient, revealed only through the meniscus path.
+
+              `from 90deg` is NOT a nudge. Skia's SweepGradient starts at 3 o'clock (the
+              positive x-axis, start={0} in BulleOrb.tsx); CSS conic-gradient starts at 12
+              o'clock. Identical stops therefore land a quarter turn apart, putting the warm
+              trimester accent at 6 o'clock on web and 9 o'clock on native — the same orb,
+              lit differently, on the one screen where both are seen. Rotating the web start
+              to 3 o'clock is what makes the two renderers agree.
+
+              There is no seam to hide: orbGradientStops returns [sage, accent, sage], so the
+              wrap point is sage meeting sage at whatever angle it lands on. */}
           <div
             style={{
               position: 'absolute',
               width: size,
               height: size,
               borderRadius: '50%',
-              background: `conic-gradient(${stops.join(', ')})`,
+              background: `conic-gradient(from 90deg, ${stops.join(', ')})`,
               WebkitMaskImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(
                 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}"><path d="${liquidPathString(size, fill)}" fill="white"/></svg>`,
               )}")`,
