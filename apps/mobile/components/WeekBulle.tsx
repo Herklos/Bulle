@@ -17,7 +17,6 @@
 import React from 'react';
 import { Image, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useBulleTheme } from '@bulle/ui/theme';
 import { bulleForWeekSG } from '@/assets/bulles';
 
 export interface WeekBulleProps {
@@ -28,20 +27,16 @@ export interface WeekBulleProps {
 
 export function WeekBulle({ weekSG, size = 72 }: WeekBulleProps) {
   const { t } = useTranslation();
-  const { colors } = useBulleTheme();
 
   return (
     <View
       accessible
       accessibilityRole="image"
       accessibilityLabel={t('today.weekBulleLabel', { week: weekSG })}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        overflow: 'hidden',
-        backgroundColor: colors.surface,
-      }}
+      // No background: the extracted art is transparent (see scripts/extract-bulles.py), so
+      // it floats on the page like the orb rather than sitting in a disc that would need a
+      // different colour per theme.
+      style={{ width: size, height: size }}
     >
       <Image
         source={bulleForWeekSG(weekSG)}

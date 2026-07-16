@@ -41,6 +41,32 @@ def nearest_labelled(week: int) -> int:
     return min(LABELLED_WEEKS, key=lambda w: (abs(w - week), w))
 
 
+def whiten_to_alpha(img):
+    """
+    Turn the sheet's white background into transparency.
+
+    Not cosmetic. The sheet is white-on-white, so a straight crop bakes an opaque white disc
+    into every file — which looks fine on the ivory background and then punches a glaring
+    hole through the middle of the app in dark mode ("mode nuit", the one that matters at
+    4am). Alpha is derived from luminance so the illustration's own soft edges stay soft
+    instead of being keyed out with a hard threshold.
+    """
+    img = img.convert("RGBA")
+    px = img.load()
+    w, h = img.size
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            # Near-white → transparent; ramp over the last few levels so antialiased edges
+            # fade rather than clip.
+            lum = (r + g + b) / 3
+            if lum >= 252:
+                px[x, y] = (r, g, b, 0)
+            elif lum > 238:
+                px[x, y] = (r, g, b, int(a * (252 - lum) / 14))
+    return img
+
+
 def find_rows(img, threshold=246):
     """Row bands containing ink, found by scanning for rows that are not near-white."""
     gray = img.convert("L")
@@ -115,7 +141,7 @@ def main():
         cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
         half = max(x1 - x0, y1 - y0) // 2 + 8
         square = img.crop((cx - half, cy - half, cx + half, cy + half))
-        crops[week] = square.resize((SIZE, SIZE), Image.LANCZOS)
+        crops[week] = whiten_to_alpha(square.resize((SIZE, SIZE), Image.LANCZOS))
 
     manifest = {}
     for week in range(1, 41):
