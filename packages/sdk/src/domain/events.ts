@@ -31,6 +31,28 @@ export function nextEvents(events: BulleEvent[], now: number, limit = 2): BulleE
   return upcomingEvents(events, now).slice(0, limit);
 }
 
+/**
+ * The gestational week (SA) an event falls in, from the due date.
+ *
+ * The inverse of `weeksSA`: an appointment carries a real datetime, and the Chemin speaks
+ * weeks, so something has to translate. Floor, to match `currentWeekSA` — an event 3 days
+ * into week 12 is in week 12, not "12.4".
+ */
+export function eventWeekSA(event: BulleEvent, dueDate: string, dpaWeeksSA: number): number {
+  const daysUntilDue = (new Date(dueDate).getTime() - new Date(event.at).getTime()) / DAY_MS;
+  return Math.floor(dpaWeeksSA - daysUntilDue / 7);
+}
+
+/** Events falling in a given gestational week, chronological. */
+export function eventsInWeek(
+  events: BulleEvent[],
+  weekSA: number,
+  dueDate: string,
+  dpaWeeksSA: number,
+): BulleEvent[] {
+  return sortEvents(events.filter((e) => eventWeekSA(e, dueDate, dpaWeeksSA) === weekSA));
+}
+
 /** Whole days from `now` until the event. 0 = today, 1 = tomorrow. */
 export function daysUntilEvent(event: BulleEvent, now: number): number {
   const start = new Date(now);

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { daysUntilEvent, isToday, nextEvents, sortEvents, upcomingEvents } from './events.js';
+import {
+  daysUntilEvent,
+  eventsInWeek,
+  eventWeekSA,
+  isToday,
+  nextEvents,
+  sortEvents,
+  upcomingEvents,
+} from './events.js';
 import type { BulleEvent } from './types.js';
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -62,5 +70,34 @@ describe('sortEvents', () => {
     const events = [event('b', '2026-08-01T00:00:00.000Z'), event('a', '2026-07-01T00:00:00.000Z')];
     sortEvents(events);
     expect(events.map((e) => e.id)).toEqual(['b', 'a']);
+  });
+});
+
+describe('eventWeekSA', () => {
+  // DPA 41 SA on 2027-01-01. An event exactly 41 weeks earlier is week 0; each week later
+  // advances one week.
+  const dueDate = '2027-01-01T00:00:00.000Z';
+
+  it('places an event on the DPA at 41 SA', () => {
+    expect(eventWeekSA(event('e', dueDate), dueDate, 41)).toBe(41);
+  });
+
+  it('places an event 29 weeks before the DPA at 12 SA', () => {
+    const at = new Date(Date.parse(dueDate) - 29 * 7 * DAY).toISOString();
+    expect(eventWeekSA(event('e', at), dueDate, 41)).toBe(12);
+  });
+
+  it('floors within the week rather than rounding to the next one', () => {
+    // 3 days into week 12 is still week 12.
+    const at = new Date(Date.parse(dueDate) - (29 * 7 - 3) * DAY).toISOString();
+    expect(eventWeekSA(event('e', at), dueDate, 41)).toBe(12);
+  });
+
+  it('groups by week', () => {
+    const inWeek12 = new Date(Date.parse(dueDate) - 29 * 7 * DAY).toISOString();
+    const inWeek13 = new Date(Date.parse(dueDate) - 28 * 7 * DAY).toISOString();
+    const list = [event('a', inWeek13), event('b', inWeek12)];
+    expect(eventsInWeek(list, 12, dueDate, 41).map((e) => e.id)).toEqual(['b']);
+    expect(eventsInWeek(list, 13, dueDate, 41).map((e) => e.id)).toEqual(['a']);
   });
 });

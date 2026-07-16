@@ -77,7 +77,12 @@ export const en = {
     you: 'You',
     coparent: 'For the co-parent',
     toPrepare: 'To prepare',
-    placeholder: 'Week-by-week content is coming soon.',
+    behindYou: 'Behind you.',
+    ahead: 'Still ahead.',
+    quietWeek: 'Nothing marked this week.',
+    previousWeek: 'Earlier',
+    nextWeek: 'Later',
+    backToNow: 'Back to now',
   },
 
   plan: {

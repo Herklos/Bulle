@@ -78,7 +78,12 @@ export const fr = {
     you: 'Vous',
     coparent: 'Pour le co-parent',
     toPrepare: 'À préparer',
-    placeholder: 'Le contenu semaine par semaine arrive bientôt.',
+    behindYou: 'Derrière toi.',
+    ahead: 'Encore devant.',
+    quietWeek: 'Rien de noté cette semaine.',
+    previousWeek: 'Avant',
+    nextWeek: 'Après',
+    backToNow: 'Revenir à maintenant',
   },
 
   plan: {
