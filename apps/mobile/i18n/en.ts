@@ -64,6 +64,8 @@ export const en = {
     partnerDismissed: 'Your co-parent set aside “{{title}}”',
     thisWeek: 'This week',
     together: 'Together',
+    memoryPrompt: 'Anything worth keeping from this week?',
+    memoryPromptAction: 'Write something',
     calm: 'All is quiet this week.',
     caughtUp: 'Nothing to do right now. That is normal.',
     emptyFocus: 'Nothing essential this week. Enjoy it.',

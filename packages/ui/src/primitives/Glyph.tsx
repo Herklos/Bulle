@@ -36,7 +36,13 @@ export const GLYPHS = {
   chevronLeft: 'M14.5 5.5 8 12l6.5 6.5',
   calendar: 'M5 6h14v14H5zM5 10h14M9 4v4M15 4v4',
   members: 'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3 20c0-3.3 2.7-5 6-5s6 1.7 6 5M17 15c2.2.4 4 1.9 4 5',
-  settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4',
+  // A GEAR, not a sun. The old path was a circle plus eight detached radiating rays,
+  // which is exactly how you draw a sun — the teeth have to be part of the OUTLINE or
+  // the eye reads light, not machinery. One closed 8-tooth outline (tips at r10.2,
+  // valleys at r7.4, slanted flanks) plus a hub. Drawn on the 24 grid rather than
+  // lifted from an icon pack (§8.1).
+  settings:
+    'M10.23 1.95 L13.77 1.95 L14.16 4.92 L15.47 5.47 L17.85 3.64 L20.36 6.15 L18.53 8.53 L19.08 9.84 L22.05 10.23 L22.05 13.77 L19.08 14.16 L18.53 15.47 L20.36 17.85 L17.85 20.36 L15.47 18.53 L14.16 19.08 L13.77 22.05 L10.23 22.05 L9.84 19.08 L8.53 18.53 L6.15 20.36 L3.64 17.85 L5.47 15.47 L4.92 14.16 L1.95 13.77 L1.95 10.23 L4.92 9.84 L5.47 8.53 L3.64 6.15 L6.15 3.64 L8.53 5.47 L9.84 4.92ZM12 15.1a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2Z',
   pause: 'M10 6v12M14 6v12',
   link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 1 0-5.7-5.7L11.5 6.5M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 1 0 5.7 5.7l1.5-1.5',
   leaf: 'M5 19c0-8 5-13 14-14 1 9-4 15-11 15a6 6 0 0 1-3-1ZM5 19c2-4 5-6 9-8',

@@ -22,6 +22,8 @@ import {
   suggestFocus,
   weekDisplay,
   weekEssentials,
+  currentWeekSG,
+  memoriesForWeek,
   type BulleEvent,
   type Task,
 } from '@bulle/sdk';
@@ -34,6 +36,7 @@ import { bulleForWeekSG } from '@/assets/bulles';
 import { useBulleStore } from '@/store/useBulleStore';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useEventsStore } from '@/store/useEventsStore';
+import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
 import { useReadiness } from '@/lib/use-readiness';
 import { useNow } from '@/lib/use-now';
@@ -120,6 +123,14 @@ export default function TodayScreen() {
 
   // Ensemble (§5.1). Solo bulles have no partner, so the module does not exist for them —
   // a "Ton co-parent…" ghost on a solo screen is exactly the failure §3 exists to prevent.
+  // Souvenirs written for THIS week. Select the raw array and derive with useMemo: a
+  // selector that filters returns a new array every call and re-renders forever.
+  const allMemories = useMemoriesStore((s) => s.memories);
+  const weekMemories = useMemo(
+    () => (bulle ? memoriesForWeek(allMemories, currentWeekSG(bulle.profile.dueDate, now)) : []),
+    [allMemories, bulle, now],
+  );
+
   const solo = bulle?.profile.companionship === 'solo';
   const myUserId = getSession()?.userId;
   const partner = useMemo(
@@ -196,11 +207,20 @@ export default function TodayScreen() {
           opacity: pressed ? 0.5 : 1,
         })}
       >
-        {/* `more`, not `settings`: the destination is called Plus and carried this exact
-            glyph as a tab. Changing the icon while moving the button would make it a new
-            thing rather than the same thing in a better place — and the settings glyph reads
-            as brightness at 22px anyway. */}
-        <Glyph name="more" size={22} color="inkSoft" />
+{/* The gear, not the `more` dots it carried as a tab.
+            Consistency with the old tab icon was my argument and it was the wrong one: the
+            `more` glyph is `M6 12h0M12 12h0M18 12h0`, three zero-length caps, and three
+            1.75px dots alone in a corner are nearly invisible. A tab bar gave them a label
+            and four neighbours to be read against; a bare corner gives them nothing. The
+            gear survives being alone, which is the job here.
+
+            `inkSoft`, matching the "Bonjour" caption it sits level with. I reached for `ink`
+            on the grounds that this is the only control up here so nothing is louder than it
+            — which had the argument backwards. The orb is what should be loudest on this
+            screen, and a full-strength gear in the corner competes with it. Quiet is the
+            point: the gear is now legible enough to find (it is a gear, not three 1.75px
+            dots) and does not ask to be looked at. */}
+        <Glyph name="settings" size={22} color="inkSoft" />
       </Pressable>
 
       {/* Header */}
@@ -383,6 +403,42 @@ export default function TodayScreen() {
             />
           ))}
         </View>
+      )}
+
+      {/*
+        A souvenir is the one thing here nobody will ever remind you about, because it has no
+        deadline: a task shouts by having a window, and a moment just quietly does not happen.
+        Preparing is the app's job and remembering is its point (§1.2), so the invitation has
+        to exist somewhere.
+
+        Only when the week is genuinely empty of them. Someone who already wrote something is
+        being asked "did nothing happen?" about a week they just recorded, which is worse than
+        silence.
+
+        A question, not a nudge. No count, no streak, no "you haven't written in 3 weeks" —
+        §5.1 bans exactly that, and this is the surface where it would be easiest to slip in.
+        It disappears the moment it is answered and never mentions having been ignored.
+      */}
+      {!born && weekMemories.length === 0 && (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('today.memoryPrompt')}
+          onPress={() => router.push('/memory/new')}
+          style={({ pressed }) => ({
+            alignItems: 'center',
+            gap: space[2],
+            paddingVertical: space[3],
+            opacity: pressed ? 0.5 : 1,
+          })}
+        >
+          <Glyph name="souvenirs" size={20} color="sage" />
+          <Text variant="body" color="inkSoft" style={{ textAlign: 'center' }}>
+            {t('today.memoryPrompt')}
+          </Text>
+          <Text variant="caption" color="sage">
+            {t('today.memoryPromptAction')}
+          </Text>
+        </Pressable>
       )}
 
       {/* One quiet, honest line. Never "You're doing great!!" */}

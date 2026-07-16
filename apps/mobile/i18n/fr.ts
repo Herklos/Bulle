@@ -65,6 +65,8 @@ export const fr = {
     thisWeek: 'Cette semaine',
     together: 'Ensemble',
     // Rotating footer lines. Honest, never filler.
+    memoryPrompt: 'Quelque chose à garder de cette semaine ?',
+    memoryPromptAction: 'Écrire un mot',
     calm: 'Tout est calme pour cette semaine.',
     caughtUp: 'Rien à faire pour l’instant. C’est normal.',
     emptyFocus: 'Rien d’essentiel cette semaine. Profitez-en.',

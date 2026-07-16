@@ -12,6 +12,7 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { Glyph } from '../primitives/Glyph.js';
 import { useBulleTheme } from '../theme/context.js';
 import { Button } from './Button.js';
 import { Text } from './Text.js';
@@ -29,6 +30,9 @@ export interface FocusCardProps {
   /**
    * Opens the task's details. Only the TEXT is pressable, never the whole card: the card
    * carries its own actions, and a card-wide target would swallow taps meant for them.
+   *
+   * When set, the card shows a chevron. Without it the card was pressable and SILENT about
+   * it — the affordance existed and nobody could know, which is the same as not having it.
    */
   onOpen?: () => void;
 }
@@ -55,10 +59,37 @@ export function FocusCard({
         gap: space[2],
       }}
     >
-      <Pressable onPress={onOpen} disabled={!onOpen} accessibilityRole={onOpen ? 'button' : undefined}>
-        <Text variant="overline">{projectTitle}</Text>
-        <Text variant="title">{taskTitle}</Text>
-        <Text variant="caption">{effortLabel}</Text>
+      <Pressable
+        onPress={onOpen}
+        disabled={!onOpen}
+        accessibilityRole={onOpen ? 'button' : undefined}
+        // The chevron rides the text block, so the row IS the target it advertises. Putting
+        // it in the card's own corner would have it point at a card that does not respond.
+        style={({ pressed }) => ({
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          gap: space[3],
+          opacity: pressed ? 0.6 : 1,
+        })}
+      >
+        <View style={{ flex: 1, gap: space[1] }}>
+          <Text variant="overline">{projectTitle}</Text>
+          <Text variant="title">{taskTitle}</Text>
+          <Text variant="caption">{effortLabel}</Text>
+        </View>
+
+        {/* The card was already openable and said nothing about it. A chevron is the app's
+            existing word for "there is more behind this" (every Row uses it), so this costs
+            no new vocabulary.
+
+            Quiet on purpose: inkSoft at 18, aligned to the overline rather than centred, so
+            it reads as a hint and not a second action. The boldness on this card is spent on
+            the terracotta CTA, and §15.6 allows exactly one. */}
+        {onOpen && (
+          <View style={{ paddingTop: space[1] }}>
+            <Glyph name="chevronRight" size={18} color="inkSoft" />
+          </View>
+        )}
       </Pressable>
 
       <View style={{ flexDirection: 'row', gap: space[3], marginTop: space[3] }}>
