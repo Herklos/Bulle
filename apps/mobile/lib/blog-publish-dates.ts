@@ -1,13 +1,20 @@
 /**
- * The content calendar. One article per day, in SEO-priority order.
+ * The content calendar. Two articles a week, in SEO-priority order.
  *
- * THIS ARRAY IS THE ENTIRE SCHEDULE. Index === day offset from
- * `BLOG_FIRST_PUBLISH_DATE`. There is no cron, no CMS, no database, and nothing is hidden
+ * THIS ARRAY IS THE ENTIRE SCHEDULE. Index === position in the queue; the cadence below
+ * turns that into a date. There is no cron, no CMS, no database, and nothing is hidden
  * client-side: an unpublished article simply has no HTML file in `dist/`.
+ *
+ * WHY NOT ONE A DAY. Daily to the end of the year is 165 articles. Each of these is a
+ * researched, bilingual piece citing official sources; 165 of them would be filler, and
+ * filler is not neutral — Google's helpful-content system demotes sites for mass-produced
+ * low-value pages, so a daily wall of thin posts would rank WORSE than a smaller corpus of
+ * pieces that answer the question. Two a week is the rate at which this corpus can be
+ * genuinely researched, and it carries the calendar to the end of December.
  *
  * Reordering the array reschedules everything after the moved slug.
  *
- * ⚠️ A build must run for an article to appear. Without a DAILY SCHEDULED BUILD (cron or a
+ * ⚠️ A build must run for an article to appear. Without a SCHEDULED BUILD (cron or a
  * GitHub Action), nothing ever releases. See scripts/generate-sitemap.mjs.
  */
 
@@ -49,12 +56,68 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'preparer-a-deux-repartir-charge',
   // ── Tier 5 — vie privée ──
   'applications-grossesse-donnees',
+
+  // ── Tier 1 continued — the administrative long tail ──
+  // Highest intent, so they sit as early as the calendar allows: these are what someone
+  // types at 11pm, and they are the queries the FR market serves worst.
+  'declarer-naissance-mairie-5-jours',
+  'conge-paternite-comment-le-poser',
+  'reconnaissance-anticipee-couple-non-marie',
+  'prime-naissance-paje-conditions',
+  'rattacher-bebe-carte-vitale-mutuelle',
+  'choisir-prenom-etat-civil',
+
+  // ── Tier 2 — the logistics people search once it gets real ──
+  'inscription-maternite-comment-choisir',
+  'siege-auto-installer-avant-le-jour-j',
+  'le-jour-j-qui-fait-quoi',
+  'derniere-ligne-droite-les-deux-dernieres-semaines',
+  'jumeaux-ce-qui-change-vraiment',
+  'travaux-demenagement-pendant-grossesse',
+
+  // ── Tier 4 — the couple angle, which nobody else covers ──
+  'charge-mentale-grossesse-repartir',
+  'co-parent-quoi-faire-concretement',
+  'decider-a-deux-avant-que-ca-decide-pour-vous',
+  'annoncer-la-grossesse-a-qui-quand',
+  'preparer-laine-a-larrivee',
+  'parent-solo-organiser-larrivee',
+
+  // ── Tier 3 — achats, on the anti-overbuying angle ──
+  'liste-naissance-la-faire-sans-culpabiliser',
+  'poussette-choisir-sans-se-tromper',
+  'lit-bebe-cododo-ce-qui-change',
+  'chambre-bebe-preparer-sans-surinvestir',
+  'seconde-main-bebe-ce-qui-se-reprend',
+  'allaitement-ou-biberon-le-materiel',
+
+  // ── Le retour à la maison — searched later in the pregnancy, so scheduled later ──
+  'consultation-postnatale-et-entretien-precoce',
+  'prado-retour-maison-sage-femme',
+  'baby-blues-qui-appeler',
+  'organiser-les-premieres-semaines',
+  'reeducation-perineale-ce-quil-faut-savoir',
+  'cadrer-les-visites-apres-naissance',
 ];
+
+/**
+ * Day offsets within a week. `BLOG_FIRST_PUBLISH_DATE` is a Monday, so this is Monday and
+ * Wednesday: two a week, spaced, and never on a weekend where nobody is reading.
+ */
+const PUBLISH_OFFSETS = [0, 2] as const;
+const DAYS_PER_WEEK = 7;
+
+/** Queue position → day offset from day 0. */
+export function publishOffsetForIndex(index: number): number {
+  const week = Math.floor(index / PUBLISH_OFFSETS.length);
+  const slot = index % PUBLISH_OFFSETS.length;
+  return week * DAYS_PER_WEEK + PUBLISH_OFFSETS[slot]!;
+}
 
 function buildPublishDates(): Record<string, string> {
   const dates: Record<string, string> = {};
   BLOG_PUBLISH_PRIORITY.forEach((slug, index) => {
-    dates[slug] = addDays(BLOG_FIRST_PUBLISH_DATE, index);
+    dates[slug] = addDays(BLOG_FIRST_PUBLISH_DATE, publishOffsetForIndex(index));
   });
   return dates;
 }
@@ -67,7 +130,10 @@ export const BLOG_PUBLISH_DATES: Record<string, string> = buildPublishDates();
  * immediately, which is the failure you actually want.
  */
 export function getBlogPublishDate(slug: string): string {
-  return BLOG_PUBLISH_DATES[slug] ?? addDays(BLOG_FIRST_PUBLISH_DATE, BLOG_PUBLISH_PRIORITY.length);
+  return (
+    BLOG_PUBLISH_DATES[slug] ??
+    addDays(BLOG_FIRST_PUBLISH_DATE, publishOffsetForIndex(BLOG_PUBLISH_PRIORITY.length))
+  );
 }
 
 /** Last substantive content edit per slug → JSON-LD `dateModified` and sitemap `lastmod`. */

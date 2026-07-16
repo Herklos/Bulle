@@ -10,7 +10,11 @@ import { describe, expect, it } from 'vitest';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { buildSitemapXml } from '@/lib/sitemap';
-import { BLOG_FIRST_PUBLISH_DATE, BLOG_PUBLISH_PRIORITY } from '@/lib/blog-publish-dates';
+import {
+  BLOG_FIRST_PUBLISH_DATE,
+  BLOG_PUBLISH_PRIORITY,
+  getBlogPublishDate,
+} from '@/lib/blog-publish-dates';
 import { BASE_URL } from '@/lib/seo-urls';
 
 const DIST = path.resolve(__dirname, '..', 'dist');
@@ -57,16 +61,25 @@ describe('sitemap', () => {
     expect(before).toContain(`<loc>${BASE_URL}/fr</loc>`);
   });
 
-  it('releases exactly one more article per day', () => {
+  it('releases on the publish days only', () => {
     // Count <loc> entries only. A bare /fr/blog/ match would also hit the three hreflang
     // links inside every url block and count each article five times over.
     const countArticles = (asOf: string) =>
       (buildSitemapXml(asOf).match(/<loc>[^<]*\/fr\/blog\/[^<]+<\/loc>/g) ?? []).length;
 
-    const day0 = countArticles('2026-07-20');
-    expect(day0).toBe(1); // day zero publishes exactly the first slug
-    expect(countArticles('2026-07-21')).toBe(2);
-    expect(countArticles('2026-07-22')).toBe(3);
+    // Two a week, Monday and Wednesday (see blog-publish-dates.ts).
+    expect(countArticles('2026-07-20')).toBe(1); // Monday, article 1
+    expect(countArticles('2026-07-21')).toBe(1); // Tuesday, nothing new
+    expect(countArticles('2026-07-22')).toBe(2); // Wednesday, article 2
+    expect(countArticles('2026-07-27')).toBe(3); // the next Monday
+  });
+
+  it('carries the calendar to the end of December', () => {
+    // The user-facing promise is that the blog keeps releasing until 31 December. At two a
+    // week that needs ~47 articles; this fails the moment the corpus shrinks below the
+    // schedule, which is the only way that promise breaks silently.
+    const last = BLOG_PUBLISH_PRIORITY[BLOG_PUBLISH_PRIORITY.length - 1]!;
+    expect(getBlogPublishDate(last) >= '2026-12-01').toBe(true);
   });
 
   it('eventually lists the whole corpus', () => {

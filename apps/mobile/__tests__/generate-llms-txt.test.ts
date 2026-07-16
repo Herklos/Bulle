@@ -27,11 +27,15 @@ describe('llms.txt', () => {
     expect(buildBlogSection('2026-07-19')).toContain('20 juillet 2026');
   });
 
-  it('grows by one article a day', () => {
+  it('grows on the publish days and stands still in between', () => {
+    // Two a week, Monday and Wednesday (see blog-publish-dates.ts). Tuesday adds nothing,
+    // which is the point: the count must follow the cadence, not the calendar.
     const count = (asOf: string) =>
       (buildBlogSection(asOf).match(/^- \[/gm) ?? []).length;
-    expect(count('2026-07-20')).toBe(1);
-    expect(count('2026-07-21')).toBe(2);
+    expect(count('2026-07-20')).toBe(1); // Monday, article 1
+    expect(count('2026-07-21')).toBe(1); // Tuesday, nothing new
+    expect(count('2026-07-22')).toBe(2); // Wednesday, article 2
+    expect(count('2026-07-27')).toBe(3); // the next Monday
   });
 
   it('injects between the markers and leaves the rest of the file intact', () => {

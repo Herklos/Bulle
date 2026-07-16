@@ -10,12 +10,37 @@ import { getBlogPublishDate, isBlogPostPublished } from './blog-publish-dates';
 import { BASE_URL, localizedUrl, type MarketingLang } from './seo-urls';
 import { getPostAuthorSlug, authorPersonId, BLOG_AUTHORS } from './blog-authors';
 import { POSTS_ADMIN_EN, POSTS_ADMIN_FR } from './blog-posts-admin';
+import { POSTS_ADMIN2_EN, POSTS_ADMIN2_FR } from './blog-posts-admin2';
 import { POSTS_PREP_EN, POSTS_PREP_FR } from './blog-posts-prep';
+import { POSTS_COUPLE_EN, POSTS_COUPLE_FR } from './blog-posts-couple';
+import { POSTS_RETOUR_EN, POSTS_RETOUR_FR } from './blog-posts-retour';
+import { POSTS_LOGISTIQUE_EN, POSTS_LOGISTIQUE_FR } from './blog-posts-logistique';
+import { POSTS_ACHATS_EN, POSTS_ACHATS_FR } from './blog-posts-achats';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
+/**
+ * Every article, in both languages. Order here is irrelevant: the publish date decides what
+ * exists (blog-publish-dates.ts) and each query sorts for itself.
+ */
 const POSTS: Record<MarketingLang, BlogPost[]> = {
-  fr: [...POSTS_ADMIN_FR, ...POSTS_PREP_FR],
-  en: [...POSTS_ADMIN_EN, ...POSTS_PREP_EN],
+  fr: [
+    ...POSTS_ADMIN_FR,
+    ...POSTS_ADMIN2_FR,
+    ...POSTS_PREP_FR,
+    ...POSTS_COUPLE_FR,
+    ...POSTS_RETOUR_FR,
+    ...POSTS_LOGISTIQUE_FR,
+    ...POSTS_ACHATS_FR,
+  ],
+  en: [
+    ...POSTS_ADMIN_EN,
+    ...POSTS_ADMIN2_EN,
+    ...POSTS_PREP_EN,
+    ...POSTS_COUPLE_EN,
+    ...POSTS_RETOUR_EN,
+    ...POSTS_LOGISTIQUE_EN,
+    ...POSTS_ACHATS_EN,
+  ],
 };
 
 /** Publisher node, referenced by @id from every page graph rather than repeated. */
