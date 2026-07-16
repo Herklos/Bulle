@@ -119,7 +119,24 @@ export const en = {
 
   memories: {
     title: 'Memories',
-    placeholder: 'Your photos, notes and moments will gather here.',
+    placeholder: 'Nothing here yet. Write something when you feel like it.',
+    add: 'Add',
+    newTitle: 'Something to keep',
+    kindQuestion: 'What is it?',
+    kinds: {
+      note: 'A note',
+      milestone: 'A moment',
+    },
+    kindHints: {
+      note: 'Something you want to say, or remember thinking.',
+      milestone: 'Something that happened. The first kick, the first scan.',
+    },
+    titleLabel: 'Title',
+    titlePlaceholder: 'Optional',
+    bodyLabel: 'What happened?',
+    bodyPlaceholder: 'Write as much or as little as you want.',
+    weekStamp: 'Week {{week}}',
+    delete: 'Delete',
   },
 
   onboarding: {

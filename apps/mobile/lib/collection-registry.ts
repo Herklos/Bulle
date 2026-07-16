@@ -14,6 +14,7 @@ import {
   BULLE_TYPES,
   DEFAULT_PERMISSION_ROLES,
   eventSchema,
+  memorySchema,
   parseCollection,
   projectSchema,
   taskSchema,
@@ -23,6 +24,7 @@ import { z } from 'zod';
 import { usePlanStore, PROJECTS_KEY, TASKS_KEY } from '@/store/usePlanStore';
 import { usePermissionsStore, ASSIGNMENTS_KEY, ROLES_KEY } from '@/store/usePermissionsStore';
 import { useEventsStore, EVENTS_KEY } from '@/store/useEventsStore';
+import { useMemoriesStore, MEMORIES_KEY } from '@/store/useMemoriesStore';
 
 /**
  * `read`/`write` are intentionally separate fields rather than a single store reference:
@@ -86,6 +88,13 @@ export const COLLECTIONS: CollectionDef<CollectionEntity>[] = [
     read: () => useEventsStore.getState().events as unknown as CollectionEntity[],
     write: (items) => useEventsStore.getState().setEvents(items as never),
     parse: (rows) => parseCollection(eventSchema, rows) as never,
+  },
+  {
+    key: MEMORIES_KEY,
+    type: BULLE_TYPES.memory,
+    read: () => useMemoriesStore.getState().memories as unknown as CollectionEntity[],
+    write: (items) => useMemoriesStore.getState().setMemories(items as never),
+    parse: (rows) => parseCollection(memorySchema, rows) as never,
   },
   {
     key: ROLES_KEY,

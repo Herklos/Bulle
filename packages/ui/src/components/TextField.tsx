@@ -17,14 +17,14 @@ import { TextInput, View, type TextInputProps } from 'react-native';
 import { useBulleTheme } from '../theme/context.js';
 import { Text } from './Text.js';
 
-export interface TextFieldProps extends Omit<TextInputProps, 'style' | 'placeholderTextColor'> {
+export interface TextFieldProps extends Omit<TextInputProps, 'placeholderTextColor'> {
   /** Sits above the field, always visible — never a placeholder masquerading as a label. */
   label?: string;
   /** Quiet helper line under the field. */
   hint?: string;
 }
 
-export function TextField({ label, hint, onFocus, onBlur, ...props }: TextFieldProps) {
+export function TextField({ label, hint, onFocus, onBlur, style, ...props }: TextFieldProps) {
   const { colors, space, touch, type } = useBulleTheme();
   const [focused, setFocused] = useState(false);
 
@@ -42,15 +42,19 @@ export function TextField({ label, hint, onFocus, onBlur, ...props }: TextFieldP
           onBlur?.(e);
         }}
         placeholderTextColor={colors.inkSoft}
-        style={{
-          minHeight: touch.min,
-          paddingVertical: space[2],
-          fontFamily: type.body.family,
-          fontSize: type.body.size,
-          color: colors.ink,
-          borderBottomWidth: 1,
-          borderBottomColor: focused ? colors.sage : colors.line,
-        }}
+        // `style` last so a caller can set a multiline height without losing the underline.
+        style={[
+          {
+            minHeight: touch.min,
+            paddingVertical: space[2],
+            fontFamily: type.body.family,
+            fontSize: type.body.size,
+            color: colors.ink,
+            borderBottomWidth: 1,
+            borderBottomColor: focused ? colors.sage : colors.line,
+          },
+          style,
+        ]}
       />
       {hint && <Text variant="caption">{hint}</Text>}
     </View>

@@ -156,7 +156,15 @@ export interface BulleEvent {
 
 // ─── Memories (spec §5 — Souvenirs) ──────────────────────────────────────────
 
-export type MemoryKind = 'photo' | 'note' | 'voice' | 'milestone';
+/**
+ * `photo` and `voice` are deliberately absent for now.
+ *
+ * A note and a moment are pure text: they sync as ordinary encrypted content and cost the
+ * merge model nothing. Media does not — it needs blob storage, a size budget, and its own
+ * sync path, and half-shipping it would mean a memory that exists on one parent's phone and
+ * silently not the other's. Text first, media when it can be done properly.
+ */
+export type MemoryKind = 'note' | 'milestone';
 
 export interface Memory {
   id: string;

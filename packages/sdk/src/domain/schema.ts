@@ -73,6 +73,19 @@ export const taskSchema = z.object({
   updatedAt: iso,
 });
 
+export const memoryKindSchema = z.enum(['note', 'milestone']);
+
+export const memorySchema = z.object({
+  id: z.string(),
+  kind: memoryKindSchema,
+  title: z.string().optional(),
+  body: z.string().optional(),
+  week: z.number().optional(),
+  authorId: z.string().optional(),
+  createdAt: iso,
+  updatedAt: iso,
+});
+
 export const eventKindSchema = z.enum(['echo', 'consultation', 'prepa', 'admin', 'autre']);
 
 export const eventSchema = z.object({

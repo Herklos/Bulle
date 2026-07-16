@@ -121,7 +121,24 @@ export const fr = {
 
   memories: {
     title: 'Souvenirs',
-    placeholder: 'Vos photos, mots et moments se rassembleront ici.',
+    placeholder: 'Rien ici pour l’instant. Écris quelque chose quand tu en as envie.',
+    add: 'Ajouter',
+    newTitle: 'Quelque chose à garder',
+    kindQuestion: 'C’est quoi ?',
+    kinds: {
+      note: 'Un mot',
+      milestone: 'Un moment',
+    },
+    kindHints: {
+      note: 'Quelque chose que tu veux dire, ou dont tu veux te souvenir.',
+      milestone: 'Quelque chose qui est arrivé. Le premier coup de pied, la première écho.',
+    },
+    titleLabel: 'Titre',
+    titlePlaceholder: 'Facultatif',
+    bodyLabel: 'Il s’est passé quoi ?',
+    bodyPlaceholder: 'Écris autant ou aussi peu que tu veux.',
+    weekStamp: 'Semaine {{week}}',
+    delete: 'Supprimer',
   },
 
   onboarding: {
