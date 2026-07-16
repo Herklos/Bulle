@@ -17,6 +17,7 @@ import { breathe } from '../theme/motion.js';
 import {
   HALO_OPACITY,
   HALO_SCALE,
+  LIGHT,
   liquidPathString,
   orbGradientStops,
   withAlpha,
@@ -99,6 +100,19 @@ export function BulleOrb({
             animation: `bulle-breathe ${breathe.duration}ms ease-in-out infinite`,
           }}
         >
+          {/* Contact shadow: sits the orb in space rather than floating it on the page. */}
+          <div
+            style={{
+              position: 'absolute',
+              width: size * 0.7,
+              height: size * 0.7,
+              borderRadius: '50%',
+              background: withAlpha(colors.ink, LIGHT.contactOpacity),
+              filter: `blur(${size * 0.12}px)`,
+              transform: `translateY(${size * 0.45}px)`,
+            }}
+            aria-hidden
+          />
           {/* Halo — the only light-emitting element in the app. */}
           <div
             style={{
@@ -166,9 +180,7 @@ export function BulleOrb({
             aria-hidden
             id={maskId}
           />
-          {/* Sheen: a soft diagonal highlight. The one detail that makes it read as glass
-              rather than a circle — light has to reflect OFF something for it to have a
-              surface. */}
+          {/* Sheen: the broad diagonal wash. */}
           <div
             style={{
               position: 'absolute',
@@ -176,18 +188,47 @@ export function BulleOrb({
               height: size,
               borderRadius: '50%',
               background: `linear-gradient(135deg, ${withAlpha(colors.surface, 0.85)}, ${withAlpha(colors.surface, 0)} 60%)`,
-              opacity: 0.5,
+              opacity: 0.45,
             }}
             aria-hidden
           />
-          {/* Rim, over the liquid, so the liquid reads as inside the vessel. */}
+
+          {/* Rim light: a bright crescent where light wraps the far edge. An inset shadow
+              rather than a border — a border outlines the shape, a crescent lights it. */}
           <div
             style={{
               position: 'absolute',
               width: size,
               height: size,
               borderRadius: '50%',
-              border: `1px solid ${colors.line}`,
+              boxShadow: `inset ${size * 0.03}px ${size * 0.04}px ${size * 0.03}px ${withAlpha(colors.surface, LIGHT.rimOpacity)}`,
+            }}
+            aria-hidden
+          />
+
+          {/* The KEY SPECULAR. Small, tight, up-left. This single element is what the eye
+              reads as "hard transparent surface"; everything else only supports it. */}
+          <div
+            style={{
+              position: 'absolute',
+              width: size * LIGHT.specularRadius * 2,
+              height: size * LIGHT.specularRadius * 2,
+              borderRadius: '50%',
+              background: withAlpha(colors.surface, LIGHT.specularOpacity),
+              filter: `blur(${size * 0.035}px)`,
+              transform: `translate(${size * LIGHT.keyX * 0.5}px, ${size * LIGHT.keyY * 0.5}px)`,
+            }}
+            aria-hidden
+          />
+
+          {/* The physical edge, hairline, over everything. */}
+          <div
+            style={{
+              position: 'absolute',
+              width: size,
+              height: size,
+              borderRadius: '50%',
+              border: `1px solid ${withAlpha(colors.line, 0.9)}`,
               boxSizing: 'border-box',
             }}
             aria-hidden

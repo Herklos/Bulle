@@ -49,7 +49,9 @@ import { breathe, settle } from '../theme/motion.js';
 import {
   HALO_OPACITY,
   HALO_SCALE,
+  LIGHT,
   liquidPathString,
+  meniscusLinePath,
   orbGradientStops,
   withAlpha,
 } from './orb-shared.js';
@@ -128,6 +130,12 @@ export function BulleOrb({
     Skia.Path.MakeFromSVGString(liquidPathString(size, level.value)) ?? Skia.Path.Make(),
   );
 
+  // The bright line riding the liquid surface. Derived alongside the liquid so the two can
+  // never disagree by a frame.
+  const meniscus = useDerivedValue(() =>
+    Skia.Path.MakeFromSVGString(meniscusLinePath(size, level.value)) ?? Skia.Path.Make(),
+  );
+
   const clip = useMemo(() => {
     const p = Skia.Path.Make();
     p.addCircle(cx, cy, r);
@@ -163,6 +171,17 @@ export function BulleOrb({
       <Canvas style={{ width: box, height: box }}>
         <Group transform={transform} origin={{ x: box / 2, y: box / 2 }}>
           <Group transform={[{ translateX: (size * (HALO_SCALE - 1)) / 2 }, { translateY: (size * (HALO_SCALE - 1)) / 2 }]}>
+            {/* Contact shadow. Sits the orb in space instead of floating it on the page —
+                without it the whole thing reads as a sticker, however good the glass is. */}
+            <Circle
+              cx={cx}
+              cy={cy + r * 0.9}
+              r={r * 0.7}
+              color={withAlpha(colors.ink, LIGHT.contactOpacity)}
+            >
+              <BlurMask blur={22} style="normal" />
+            </Circle>
+
             {/* Halo — the only light-emitting element in the app (§15.2). */}
             <Circle cx={cx} cy={cy} r={r} color={withAlpha(halo, HALO_OPACITY)}>
               <BlurMask blur={18} style="normal" />
@@ -172,7 +191,7 @@ export function BulleOrb({
                 a plastic ball, and the offset centre supplies the implied light source. */}
             <Circle cx={cx} cy={cy} r={r}>
               <RadialGradient
-                c={vec(cx - r * 0.35, cy - r * 0.35)}
+                c={vec(cx + r * LIGHT.keyX, cy + r * LIGHT.keyY)}
                 r={r * 1.6}
                 colors={[withAlpha(colors.surface, 0.95), withAlpha(colors.line, 0.55)]}
               />
@@ -199,21 +218,71 @@ export function BulleOrb({
                 <SweepGradient c={vec(cx, cy)} start={0} end={360} colors={stops} />
               </Path>
 
-              {/* Sheen: a soft diagonal highlight across the upper left. This is the one
-                  detail that makes it read as glass rather than as a circle — light has to
-                  reflect OFF something for it to have a surface. */}
-              <Circle cx={cx} cy={cy} r={r} opacity={0.5}>
+              {/* Surface tension: a bright line riding the meniscus. This is what gives the
+                  liquid a TOP, rather than looking like a fill pasted behind the glass. */}
+              <Path
+                path={meniscus}
+                style="stroke"
+                strokeWidth={1.5}
+                color={withAlpha(colors.surface, 0.6)}
+              />
+
+              {/* Bounce light: a dim, wide secondary low-right. Sells roundness without
+                  implying a second lamp in the room. */}
+              <Circle
+                cx={cx + r * LIGHT.bounceX}
+                cy={cy + r * LIGHT.bounceY}
+                r={r * LIGHT.bounceRadius}
+                color={withAlpha(colors.surface, LIGHT.bounceOpacity)}
+              >
+                <BlurMask blur={18} style="normal" />
+              </Circle>
+
+              {/* Sheen: the broad diagonal wash across the upper left. */}
+              <Circle cx={cx} cy={cy} r={r} opacity={0.45}>
                 <LinearGradient
                   start={vec(cx - r, cy - r)}
                   end={vec(cx + r * 0.2, cy + r * 0.3)}
                   colors={[withAlpha(colors.surface, 0.85), withAlpha(colors.surface, 0)]}
                 />
               </Circle>
+
+              {/* Rim light: a bright crescent where light wraps the far edge. Drawn INSIDE
+                  the clip and inset, so it hugs the inner wall rather than outlining the
+                  shape — an outline reads as a border, a crescent reads as a lit edge. */}
+              <Circle
+                cx={cx - r * 0.06}
+                cy={cy - r * 0.08}
+                r={r - LIGHT.rimWidth / 2}
+                style="stroke"
+                strokeWidth={LIGHT.rimWidth}
+                color={withAlpha(colors.surface, LIGHT.rimOpacity)}
+              >
+                <BlurMask blur={3} style="normal" />
+              </Circle>
+
+              {/* The KEY SPECULAR. Small, tight, offset up-left. This single element is what
+                  the eye reads as "hard transparent surface"; everything above only supports
+                  it. A large soft one instead would read as plastic. */}
+              <Circle
+                cx={cx + r * LIGHT.keyX}
+                cy={cy + r * LIGHT.keyY}
+                r={r * LIGHT.specularRadius}
+                color={withAlpha(colors.surface, LIGHT.specularOpacity)}
+              >
+                <BlurMask blur={6} style="normal" />
+              </Circle>
             </Group>
 
-            {/* Rim, over everything: draws the edge of the glass so the contents read as
-                being INSIDE the vessel rather than sitting on top of it. */}
-            <Circle cx={cx} cy={cy} r={r} color={colors.line} style="stroke" strokeWidth={1} />
+            {/* The physical edge, hairline, over everything. */}
+            <Circle
+              cx={cx}
+              cy={cy}
+              r={r}
+              color={withAlpha(colors.line, 0.9)}
+              style="stroke"
+              strokeWidth={1}
+            />
           </Group>
         </Group>
       </Canvas>

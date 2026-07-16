@@ -110,3 +110,50 @@ export function liquidPathString(size: number, fill: number): string {
 export const HALO_OPACITY = 0.25;
 /** Halo radius as a multiple of the orb radius. */
 export const HALO_SCALE = 1.3;
+
+/**
+ * The lighting model, in one place so both renderers agree.
+ *
+ * A sphere reads as GLASS rather than as a filled circle because of four things, and all
+ * four are cheap:
+ *  1. a key light — one small, sharp SPECULAR highlight, offset up-left;
+ *  2. a RIM light on the opposite edge, where light wraps around the far side;
+ *  3. surface TENSION catching light along the meniscus;
+ *  4. a CONTACT shadow, so it sits in space instead of floating on the page.
+ *
+ * The body gradient alone (which is all this had) gives a matte ball. The specular is what
+ * your eye actually reads as "hard, transparent surface".
+ */
+export const LIGHT = {
+  /** Key light direction, as a fraction of the radius from centre. Up and to the left. */
+  keyX: -0.38,
+  keyY: -0.42,
+  /** The specular: small and tight. A big soft one reads as plastic. */
+  specularRadius: 0.17,
+  specularOpacity: 0.9,
+  /** A second, much dimmer bounce, low and right. Sells roundness without a second source. */
+  bounceX: 0.3,
+  bounceY: 0.42,
+  bounceRadius: 0.3,
+  bounceOpacity: 0.16,
+  /** Rim light: a bright crescent on the far edge. */
+  rimWidth: 2.5,
+  rimOpacity: 0.55,
+  /** Contact shadow beneath the orb. */
+  contactOpacity: 0.1,
+} as const;
+
+/**
+ * The meniscus highlight: a thin bright line riding the liquid surface.
+ *
+ * Surface tension catches light, and this is the detail that stops the liquid looking like
+ * a flat fill pasted behind glass — it gives the surface a top.
+ */
+export function meniscusLinePath(size: number, fill: number): string {
+  'worklet';
+  const y = surfaceY(size, fill);
+  return [
+    `M 0 ${y - MENISCUS}`,
+    `C ${size * 0.3} ${y + MENISCUS * 1.4}, ${size * 0.7} ${y + MENISCUS * 1.4}, ${size} ${y - MENISCUS}`,
+  ].join(' ');
+}
