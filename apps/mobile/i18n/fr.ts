@@ -244,6 +244,8 @@ export const fr = {
     languageCurrent: 'Choisie',
     notifications: 'Un point le matin',
     notificationsBody: 'Un seul par jour, jamais plus. Rien le soir.',
+    digestTitle: 'Bulle',
+    digestBody: 'Une chose aujourd’hui, si vous en avez envie.',
     bulleActive: 'Bulle active',
     aboutBody: 'Bulle vous aide à vous organiser, pas à vous soigner.',
     premium: 'Bulle Complète',

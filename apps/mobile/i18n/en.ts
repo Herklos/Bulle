@@ -240,6 +240,8 @@ export const en = {
     languageCurrent: 'Selected',
     notifications: 'A morning check-in',
     notificationsBody: 'One a day, never more. Nothing in the evening.',
+    digestTitle: 'Bulle',
+    digestBody: 'One thing today, if you feel like it.',
     bulleActive: 'Active bubble',
     aboutBody: 'Bulle helps you get organised, not treated.',
     premium: 'Bulle Complète',

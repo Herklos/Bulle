@@ -26,6 +26,10 @@ import {
   scheduleSyncPush,
 } from './space-sync';
 import { useSyncAccessStore } from '@/store/useSyncAccessStore';
+import { useSettingsStore } from '@/store/useSettingsStore';
+import { useBulleStore } from '@/store/useBulleStore';
+import { useTranslation } from 'react-i18next';
+import { syncNotifications } from './notifications';
 
 /** Single-flighted per bulle, so boot and a settings toggle can't both activate at once. */
 const _activating = new Map<string, Promise<void>>();
@@ -150,6 +154,36 @@ export function SyncInitializer({ bulle }: { bulle: BulleRegistryEntry }) {
       unsubNet?.();
     };
   }, [bulle]);
+
+  return null;
+}
+
+
+/**
+ * Keeps the notification schedule matching the settings.
+ *
+ * Runs on mount and on every change to the toggle or to Pause, and it always cancels before
+ * scheduling, so it is idempotent and safe to run on every boot.
+ *
+ * Pause is a dependency deliberately: entering Pause purges the schedule (see
+ * lib/use-pause.ts), and this is what stops it being silently re-armed the next time the
+ * app starts. Purge-then-reschedule would be the worst possible bug in this product.
+ */
+export function NotificationInitializer() {
+  const { t } = useTranslation();
+  const notificationsEnabled = useSettingsStore((s) => s.notifications);
+  const settingsLoaded = useSettingsStore((s) => s.isLoaded);
+  const paused = useBulleStore((s) => s.bulle?.pause.paused ?? false);
+
+  useEffect(() => {
+    // Before the settings load, `notifications` is its `false` default, and acting on that
+    // would cancel a real schedule on every cold start.
+    if (!settingsLoaded) return;
+    void syncNotifications(
+      { notificationsEnabled, paused },
+      { title: t('settings.digestTitle'), body: t('settings.digestBody') },
+    );
+  }, [settingsLoaded, notificationsEnabled, paused, t]);
 
   return null;
 }

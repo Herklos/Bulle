@@ -22,7 +22,7 @@ import { BulleThemeProvider, useBulleTheme } from '@bulle/ui/theme';
 import { configureOnBoot } from '@/lib/config';
 import { i18n, initI18n } from '@/i18n';
 import { DatabaseProvider, useDatabaseSwitching } from '@/db/provider';
-import { SyncInitializer } from '@/lib/providers';
+import { NotificationInitializer, SyncInitializer } from '@/lib/providers';
 import { useBulleRegistryStore } from '@/store/useBulleRegistryStore';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { usePremiumStore } from '@/store/usePremiumStore';
@@ -49,7 +49,14 @@ initI18n();
 function ActiveBulleRuntime({ bulle }: { bulle: BulleRegistryEntry }) {
   const switching = useDatabaseSwitching();
   if (switching) return null;
-  return <SyncInitializer bulle={bulle} />;
+  return (
+    <>
+      <SyncInitializer bulle={bulle} />
+      {/* Unmounted during a switch along with the rest: rescheduling against a half-swapped
+          bulle would arm a notification for a pregnancy that is not the active one. */}
+      <NotificationInitializer />
+    </>
+  );
 }
 
 function Loading() {
