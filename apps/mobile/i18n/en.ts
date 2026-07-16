@@ -122,6 +122,14 @@ export const en = {
     },
   },
 
+  dueDate: {
+    editTitle: 'Correct the date',
+    editLead:
+      'The due date is an estimate, and the dating scan often moves it by a few days. Correct it here: your tasks follow, because they sit on weeks rather than on dates.',
+    editPreview: 'You would move from week {{from}} to week {{to}}.',
+    edit: 'Due date',
+    editBody: 'Correct the due date if it changed.',
+  },
   birth: {
     announce: 'The baby is here',
     announceBody: 'Records the birth date. It is what times the paperwork that follows.',

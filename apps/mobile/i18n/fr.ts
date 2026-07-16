@@ -124,6 +124,14 @@ export const fr = {
     },
   },
 
+  dueDate: {
+    editTitle: 'Corriger la date',
+    editLead:
+      'La DPA est une estimation, et l’échographie de datation la décale souvent de quelques jours. Corrigez-la ici : les tâches suivent, elles sont calées sur des semaines, pas sur des dates.',
+    editPreview: 'Vous passeriez de la semaine {{from}} à la semaine {{to}}.',
+    edit: 'Date prévue',
+    editBody: 'Corrigez la DPA si elle a changé.',
+  },
   birth: {
     announce: 'Le bébé est là',
     announceBody: 'Enregistre la date de naissance. C’est elle qui déclenche les démarches qui suivent.',

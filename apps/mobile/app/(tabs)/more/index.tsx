@@ -117,6 +117,20 @@ export default function MoreScreen() {
               </ListItem>
             ))}
 
+          {/* The DPA is an estimate and the dating scan routinely moves it, so this is a
+              likely edit rather than an exotic one. Owner-only: it re-aims every task window
+              for everyone in the bulle, which is not a guest's call to make. Hidden once the
+              baby is here — at that point the estimate is a matter of record, and the date
+              that drives everything is the real one. */}
+          {isOwner && !bulle?.birthDate && (
+            <ListItem
+              onPress={() => router.push('/due-date/edit')}
+              supportingText={t('dueDate.editBody')}
+            >
+              {t('dueDate.edit')}
+            </ListItem>
+          )}
+
           {/* Recording the birth is what starts every post-birth deadline (see
               domain/postnatal.ts). Hidden once it is recorded — a bulle only has one birth,
               and leaving the control there invites re-announcing it. */}
