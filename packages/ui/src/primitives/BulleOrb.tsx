@@ -177,6 +177,29 @@ export function BulleOrb({
       // The glow is decoration; it must never eat a touch meant for what is underneath it.
       pointerEvents="none"
     >
+      {/*
+        OPEN BUG (Android, seen on emulator-5554): the orb paints inside a visible grey
+        square against the ivory background. Reproduced across reloads and breathing cycles,
+        so it is not a repaint artifact.
+
+        Measured, not guessed: the square is ~1.3x the sphere, which is `layout`
+        (size * HALO_SCALE) — the PARENT View's bounds — and NOT `box` (size * CANVAS_SCALE
+        = 2.4x). Android clips a Skia surface to its parent, so a surface painting its own
+        background would show at exactly the parent's size. That is the leading hypothesis.
+
+        Ruled out with evidence, so nobody buys them twice:
+        - NOT a worklet failure from meniscusFor/liquidPathString. logcat has no Reanimated
+          or JS error, and the sphere itself renders correctly. The only RNSkia line is
+          "updateAndRelease() failed. The exception above can safely be ignored", which is
+          benign and unrelated.
+        - NOT the bulle PNGs lacking transparency. All 40 are colortype 6 (RGB+ALPHA) and
+          their corner pixels are alpha 0.
+        - NOT the canvas bleed itself: the square is 1.3x, and the canvas is 2.4x.
+
+        Next step is `opaque` / surface-backing on <Canvas>, checked ON A DEVICE. Note that
+        if the parent really does clip at 1.3x, then CANVAS_SCALE 2.4 is buying nothing and
+        the halo is being clipped anyway — which would make this two bugs, not one.
+      */}
       <Canvas style={{ width: box, height: box, margin: -bleed }}>
         <Group transform={transform} origin={{ x: box / 2, y: box / 2 }}>
           <Group transform={[{ translateX: (box - size) / 2 }, { translateY: (box - size) / 2 }]}>
