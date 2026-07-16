@@ -25,6 +25,8 @@ import { DatabaseProvider, useDatabaseSwitching } from '@/db/provider';
 import { SyncInitializer } from '@/lib/providers';
 import { useBulleRegistryStore } from '@/store/useBulleRegistryStore';
 import { useSettingsStore } from '@/store/useSettingsStore';
+import { usePremiumStore } from '@/store/usePremiumStore';
+import { configurePurchases } from '@/lib/revenuecat';
 import { activeEntry, type BulleRegistryEntry } from '@/lib/bulle-registry';
 
 /**
@@ -72,6 +74,9 @@ function AppContent() {
   useEffect(() => {
     void useBulleRegistryStore.getState().load();
     void useSettingsStore.getState().load();
+    // Configure purchases then read the entitlement. Both no-op on web and on failure,
+    // leaving the user on the free product rather than crashing the app.
+    void configurePurchases().then(() => usePremiumStore.getState().refresh());
   }, []);
 
   // Apply the stored language once it has loaded. i18n is initialised at module scope from
@@ -111,6 +116,9 @@ function AppContent() {
         <Stack.Screen name="join" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="pause" />
+        {/* A modal: a paywall interrupts a flow and must return you to exactly where you
+            were, whether you buy or not. */}
+        <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
         <Stack.Screen name="bulle-switch" options={{ gestureEnabled: false }} />
       </Stack>
     </DatabaseProvider>

@@ -94,6 +94,7 @@ export const fr = {
     // Never "en retard". A closed window is not a failure (§5.1).
     lingering: 'Toujours sur votre liste',
     suggestTemplate: 'Bulle propose : {{title}}',
+    premiumTemplate: 'Avec Complète',
     addTemplate: 'Ajouter à Préparer',
   },
 
@@ -192,6 +193,27 @@ export const fr = {
   sync: {
     readOnly: 'Vous êtes en lecture seule dans cette bulle.',
     offline: 'Hors ligne. Vos changements sont gardés ici.',
+  },
+
+  paywall: {
+    title: 'Bulle Complète',
+    orbLabel: 'Une bulle complète.',
+    lead: {
+      adminTemplate: 'Les démarches françaises, chacune au moment où elle compte, avec le lien officiel. C’est ce que Bulle fait de mieux.',
+      projectLimit: 'Vous avez rempli vos deux projets. Complète les débloque tous.',
+    },
+    benefits: {
+      adminAll: 'Le modèle Administratif français en entier',
+      adminTiming: 'Chaque démarche à sa semaine, avec sa source officielle',
+      unlimited: 'Autant de projets que vous voulez',
+      allTemplates: 'Tous les modèles, y compris jumeaux et solo',
+    },
+    price: '29,99 € · une fois, pour toute la grossesse',
+    cta: 'Débloquer Bulle Complète',
+    later: 'Plus tard',
+    restore: 'Restaurer un achat',
+    restoreEmpty: 'Aucun achat trouvé sur ce compte.',
+    reassurance: 'Un seul achat, pour vous deux. Pas d’abonnement.',
   },
 
   marketing: {

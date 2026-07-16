@@ -19,7 +19,7 @@ import {
   randomId,
   sortProjects,
   suggestTemplates,
-  templatesForLocale,
+  templatesFor,
   templateById,
 } from '@bulle/sdk';
 import { EmptyState, ProgressRing, Row, SectionHeader, Text } from '@bulle/ui/components';
@@ -31,6 +31,8 @@ import { useBulleStore } from '@/store/useBulleStore';
 import { useNow } from '@/lib/use-now';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
 import { CONCERN_TEMPLATE_ORDER } from '@/lib/concerns';
+import { needsPremiumForProject, needsPremiumForTemplate, isPremiumTemplate } from '@/lib/premium';
+import { usePremiumStore } from '@/store/usePremiumStore';
 import { useSettingsStore } from '@/store/useSettingsStore';
 
 export default function PlanScreen() {
@@ -48,10 +50,13 @@ export default function PlanScreen() {
   const weekSA = bulle ? currentWeekSA(bulle.profile.dueDate, now) : 0;
 
   const concern = useSettingsStore((s) => s.concern);
+  const isPremium = usePremiumStore((s) => s.isPremium);
 
   const suggestions = useMemo(() => {
     if (!bulle) return [];
-    const available = templatesForLocale(i18n.language);
+    // templatesFor, NOT templatesForLocale: the latter ignores appliesTo and leaks the
+    // twins template to a single pregnancy and the solo template to a couple.
+    const available = templatesFor(i18n.language, bulle.profile);
     const instantiated = new Set(
       projects.map((p) => p.templateId).filter((id): id is string => !!id),
     );
@@ -77,6 +82,21 @@ export default function PlanScreen() {
   const addTemplate = (templateId: string) => {
     const template = templateById(templateId);
     if (!template) return;
+
+    /**
+     * The gate sits HERE, at the value moment (§10) — the instant someone reaches for the
+     * Admin FR template or their third project — rather than on a generic upgrade screen.
+     * They already know what they wanted, so the paywall can name it.
+     */
+    if (needsPremiumForTemplate(templateId, isPremium)) {
+      router.push('/paywall?reason=adminTemplate');
+      return;
+    }
+    if (needsPremiumForProject(projects, isPremium)) {
+      router.push('/paywall?reason=projectLimit');
+      return;
+    }
+
     const { project, tasks: newTasks } = instantiateTemplate(template, bulle.profile, {
       now,
       t: (key) => t(key),
@@ -140,7 +160,12 @@ export default function PlanScreen() {
                 leading={<Glyph name={template.glyph as GlyphName} size={22} color="sage" />}
                 trailing={
                   <Text variant="caption" color="sage">
-                    {t('plan.addTemplate')}
+                    {/* Say it is premium BEFORE the tap. A gate that only appears after
+                        you reach for something feels like a trap, even when the price is
+                        fair. */}
+                    {!isPremium && isPremiumTemplate(suggestion.templateId)
+                      ? t('plan.premiumTemplate')
+                      : t('plan.addTemplate')}
                   </Text>
                 }
                 onPress={() => addTemplate(suggestion.templateId)}

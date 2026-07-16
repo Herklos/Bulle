@@ -92,6 +92,7 @@ export const en = {
     dismiss: 'Not for us',
     lingering: 'Still on your list',
     suggestTemplate: 'Bulle suggests: {{title}}',
+    premiumTemplate: 'With Complète',
     addTemplate: 'Add to Prepare',
   },
 
@@ -188,6 +189,27 @@ export const en = {
   sync: {
     readOnly: 'You have read-only access to this bubble.',
     offline: 'Offline. Your changes are kept here.',
+  },
+
+  paywall: {
+    title: 'Bulle Complète',
+    orbLabel: 'A full bubble.',
+    lead: {
+      adminTemplate: 'Every step at the moment it matters, with its official source. It is the thing Bulle does best.',
+      projectLimit: 'You have filled your two projects. Complète unlocks them all.',
+    },
+    benefits: {
+      adminAll: 'The full French paperwork template',
+      adminTiming: 'Every step in its own week, with its official source',
+      unlimited: 'As many projects as you want',
+      allTemplates: 'Every template, including twins and solo',
+    },
+    price: '€29.99 · once, for the whole pregnancy',
+    cta: 'Unlock Bulle Complète',
+    later: 'Later',
+    restore: 'Restore a purchase',
+    restoreEmpty: 'No purchase found on this account.',
+    reassurance: 'One purchase, for both of you. No subscription.',
   },
 
   marketing: {

@@ -13,7 +13,7 @@
  * no diagnosis, no monitoring — that is what keeps Bulle outside EU MDR scope.
  */
 
-import type { ProjectTemplate } from './types.js';
+import type { BulleProfile, ProjectTemplate } from './types.js';
 
 /**
  * The flagship (§5.4). Nearly absent from competitors and, per the spec, the single
@@ -817,8 +817,25 @@ export function templateById(id: string): ProjectTemplate | undefined {
   return PROJECT_TEMPLATES.find((t) => t.id === id);
 }
 
-/** Templates offered for a locale — see `ProjectTemplate.locales` and spec §7.1. */
+/**
+ * Templates offered for a locale — see `ProjectTemplate.locales` and spec §7.1.
+ *
+ * Locale ONLY. Prefer `templatesFor()` in app code: this ignores `appliesTo`, so used on
+ * its own it offers the twins template to someone expecting one baby.
+ */
 export function templatesForLocale(locale: string): ProjectTemplate[] {
   const lang = locale.split('-')[0];
   return PROJECT_TEMPLATES.filter((t) => !t.locales || t.locales.includes(lang));
+}
+
+/**
+ * Templates offered for a locale AND a profile. This is the one app code should call.
+ *
+ * Both filters have to be applied together or the gated templates leak: `appliesTo` is what
+ * keeps Jumeaux away from a single pregnancy and Solo away from a couple. A leak here is
+ * not cosmetic — being offered "ce qui double" when you are expecting one baby is the kind
+ * of thing that makes an app feel like it is not listening.
+ */
+export function templatesFor(locale: string, profile: BulleProfile): ProjectTemplate[] {
+  return templatesForLocale(locale).filter((t) => !t.appliesTo || t.appliesTo(profile));
 }
