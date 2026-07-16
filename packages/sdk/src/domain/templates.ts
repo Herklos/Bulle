@@ -275,6 +275,7 @@ const VALISE: ProjectTemplate = {
   tasks: [
     {
       titleKey: 'templates.valise.tasks.maman',
+      detailsKey: 'templates.valise.tasks.mamanDetails',
       weekStart: 34,
       weekEnd: 37,
       effort: 'M',
@@ -283,6 +284,7 @@ const VALISE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.valise.tasks.bebe',
+      detailsKey: 'templates.valise.tasks.bebeDetails',
       weekStart: 34,
       weekEnd: 37,
       effort: 'M',
@@ -291,6 +293,7 @@ const VALISE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.valise.tasks.coparent',
+      detailsKey: 'templates.valise.tasks.coparentDetails',
       weekStart: 35,
       weekEnd: 38,
       effort: 'S',
@@ -301,6 +304,7 @@ const VALISE: ProjectTemplate = {
     {
       titleKey: 'templates.valise.tasks.documents',
       notesKey: 'templates.valise.tasks.documentsNote',
+      detailsKey: 'templates.valise.tasks.documentsDetails',
       weekStart: 32,
       weekEnd: 36,
       effort: 'S',
@@ -310,6 +314,7 @@ const VALISE: ProjectTemplate = {
     {
       titleKey: 'templates.valise.tasks.siegeAuto',
       notesKey: 'templates.valise.tasks.siegeAutoNote',
+      detailsKey: 'templates.valise.tasks.siegeAutoDetails',
       weekStart: 34,
       weekEnd: 38,
       effort: 'M',
@@ -318,6 +323,7 @@ const VALISE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.valise.tasks.trajet',
+      detailsKey: 'templates.valise.tasks.trajetDetails',
       weekStart: 35,
       weekEnd: 39,
       effort: 'S',
@@ -335,6 +341,7 @@ const NID: ProjectTemplate = {
   tasks: [
     {
       titleKey: 'templates.nid.tasks.emplacement',
+      detailsKey: 'templates.nid.tasks.emplacementDetails',
       weekStart: 20,
       weekEnd: 26,
       effort: 'S',
@@ -344,6 +351,7 @@ const NID: ProjectTemplate = {
     {
       titleKey: 'templates.nid.tasks.lit',
       notesKey: 'templates.nid.tasks.litNote',
+      detailsKey: 'templates.nid.tasks.litDetails',
       weekStart: 24,
       weekEnd: 30,
       effort: 'M',
@@ -352,6 +360,7 @@ const NID: ProjectTemplate = {
     },
     {
       titleKey: 'templates.nid.tasks.installerLit',
+      detailsKey: 'templates.nid.tasks.installerLitDetails',
       weekStart: 30,
       weekEnd: 36,
       effort: 'M',
@@ -361,6 +370,7 @@ const NID: ProjectTemplate = {
     {
       titleKey: 'templates.nid.tasks.laverVetements',
       notesKey: 'templates.nid.tasks.laverVetementsNote',
+      detailsKey: 'templates.nid.tasks.laverVetementsDetails',
       weekStart: 30,
       weekEnd: 36,
       effort: 'M',
@@ -369,6 +379,7 @@ const NID: ProjectTemplate = {
     },
     {
       titleKey: 'templates.nid.tasks.change',
+      detailsKey: 'templates.nid.tasks.changeDetails',
       weekStart: 26,
       weekEnd: 32,
       effort: 'S',
@@ -377,6 +388,7 @@ const NID: ProjectTemplate = {
     },
     {
       titleKey: 'templates.nid.tasks.securite',
+      detailsKey: 'templates.nid.tasks.securiteDetails',
       weekStart: 28,
       weekEnd: 38,
       effort: 'M',
@@ -502,7 +514,7 @@ const DECISIONS: ProjectTemplate = {
   id: 'tpl-decisions',
   titleKey: 'templates.decisions.title',
   descriptionKey: 'templates.decisions.description',
-  glyph: 'chemin',
+  glyph: 'check',
   locales: ['fr'],
   countries: ['FR'],
   tasks: [
@@ -616,6 +628,7 @@ const ACHATS: ProjectTemplate = {
     {
       titleKey: 'templates.achats.tasks.siegeAuto',
       notesKey: 'templates.achats.tasks.siegeAutoNote',
+      detailsKey: 'templates.achats.tasks.siegeAutoDetails',
       weekStart: 28,
       weekEnd: 34,
       effort: 'L',
@@ -625,6 +638,7 @@ const ACHATS: ProjectTemplate = {
     {
       titleKey: 'templates.achats.tasks.installer',
       notesKey: 'templates.achats.tasks.installerNote',
+      detailsKey: 'templates.achats.tasks.installerDetails',
       weekStart: 34,
       weekEnd: 36,
       effort: 'M',
@@ -634,6 +648,7 @@ const ACHATS: ProjectTemplate = {
     {
       titleKey: 'templates.achats.tasks.liste',
       notesKey: 'templates.achats.tasks.listeNote',
+      detailsKey: 'templates.achats.tasks.listeDetails',
       weekStart: 20,
       weekEnd: 26,
       effort: 'M',
@@ -643,6 +658,7 @@ const ACHATS: ProjectTemplate = {
     {
       titleKey: 'templates.achats.tasks.poussette',
       notesKey: 'templates.achats.tasks.poussetteNote',
+      detailsKey: 'templates.achats.tasks.poussetteDetails',
       weekStart: 26,
       weekEnd: 34,
       effort: 'L',
@@ -652,6 +668,7 @@ const ACHATS: ProjectTemplate = {
     {
       titleKey: 'templates.achats.tasks.occasion',
       notesKey: 'templates.achats.tasks.occasionNote',
+      detailsKey: 'templates.achats.tasks.occasionDetails',
       weekStart: 26,
       weekEnd: 36,
       effort: 'M',
@@ -661,6 +678,7 @@ const ACHATS: ProjectTemplate = {
     {
       titleKey: 'templates.achats.tasks.tailleNaissance',
       notesKey: 'templates.achats.tasks.tailleNaissanceNote',
+      detailsKey: 'templates.achats.tasks.tailleNaissanceDetails',
       weekStart: 30,
       weekEnd: 38,
       effort: 'S',
@@ -670,6 +688,7 @@ const ACHATS: ProjectTemplate = {
     {
       titleKey: 'templates.achats.tasks.trousse',
       notesKey: 'templates.achats.tasks.trousseNote',
+      detailsKey: 'templates.achats.tasks.trousseDetails',
       weekStart: 34,
       weekEnd: 39,
       effort: 'M',
@@ -690,13 +709,14 @@ const SECURITE: ProjectTemplate = {
   id: 'tpl-securite',
   titleKey: 'templates.securite.title',
   descriptionKey: 'templates.securite.description',
-  glyph: 'stamp',
+  glyph: 'shield',
   locales: ['fr'],
   countries: ['FR'],
   tasks: [
     {
       titleKey: 'templates.securite.tasks.fumee',
       notesKey: 'templates.securite.tasks.fumeeNote',
+      detailsKey: 'templates.securite.tasks.fumeeDetails',
       weekStart: 30,
       weekEnd: 38,
       effort: 'S',
@@ -707,6 +727,7 @@ const SECURITE: ProjectTemplate = {
     {
       titleKey: 'templates.securite.tasks.chaudiere',
       notesKey: 'templates.securite.tasks.chaudiereNote',
+      detailsKey: 'templates.securite.tasks.chaudiereDetails',
       weekStart: 24,
       weekEnd: 36,
       effort: 'M',
@@ -716,6 +737,7 @@ const SECURITE: ProjectTemplate = {
     {
       titleKey: 'templates.securite.tasks.tabac',
       notesKey: 'templates.securite.tasks.tabacNote',
+      detailsKey: 'templates.securite.tasks.tabacDetails',
       weekStart: 20,
       weekEnd: 41,
       effort: 'S',
@@ -725,6 +747,7 @@ const SECURITE: ProjectTemplate = {
     {
       titleKey: 'templates.securite.tasks.secours',
       notesKey: 'templates.securite.tasks.secoursNote',
+      detailsKey: 'templates.securite.tasks.secoursDetails',
       weekStart: 24,
       weekEnd: 34,
       effort: 'L',
@@ -735,6 +758,7 @@ const SECURITE: ProjectTemplate = {
       // Deliberately says NOT to buy anything yet — the need arrives at 6-9 months.
       titleKey: 'templates.securite.tasks.reperer',
       notesKey: 'templates.securite.tasks.repererNote',
+      detailsKey: 'templates.securite.tasks.repererDetails',
       weekStart: 36,
       weekEnd: 41,
       effort: 'M',
@@ -873,7 +897,7 @@ const BUDGET: ProjectTemplate = {
   id: 'tpl-budget',
   titleKey: 'templates.budget.title',
   descriptionKey: 'templates.budget.description',
-  glyph: 'stamp',
+  glyph: 'purse',
   locales: ['fr'],
   countries: ['FR'],
   tasks: [

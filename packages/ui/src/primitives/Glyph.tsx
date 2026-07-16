@@ -40,6 +40,12 @@ export const GLYPHS = {
   pause: 'M10 6v12M14 6v12',
   link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 1 0-5.7-5.7L11.5 6.5M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 1 0 5.7 5.7l1.5-1.5',
   leaf: 'M5 19c0-8 5-13 14-14 1 9-4 15-11 15a6 6 0 0 1-3-1ZM5 19c2-4 5-6 9-8',
+  /** Budget. A purse, not a coin stack or a currency sign: money here is a household
+      envelope, not a market. */
+  purse: 'M4 9h16v11H4zM4 9c0-2 2-3 4-3h8c2 0 4 1 4 3M9 13h6',
+  /** Sécurité. A shield reads as protection; a warning triangle would read as an alarm,
+      and §15.1 keeps alarm out of this product entirely. */
+  shield: 'M12 3.5 5 6.5v5c0 4.5 3 8 7 9.5 4-1.5 7-5 7-9.5v-5Z',
 } as const;
 
 export type GlyphName = keyof typeof GLYPHS;
