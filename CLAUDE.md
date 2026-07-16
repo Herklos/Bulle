@@ -109,6 +109,15 @@ while the page goes dark, and the mismatch lands in the OS status bar.
 **Skia canvases clip their own shadows/blur.** The orb needs `CANVAS_SCALE` > 1 plus a
 negative margin, or its halo is cut at the bounds.
 
+**`typeof window !== 'undefined'` is not a native/web check.** RN's own
+`setUpGlobals.js` unconditionally does `global.window = global` when `window` is undefined,
+on every platform — so that guard is always true on native too. `lib/identity.ts`'s
+`bootHref` used it to gate `window.location.href`, which crashed cold-start on iOS Release
+with `TypeError: Cannot read property 'href' of undefined` (`window` existed, `window.location`
+didn't). Dev mode masked it because debugger tooling stubs `location`; only a Release build
+ever showed it. Use `Platform.OS === 'web'` instead — that's what `initialInviteUrl()` two
+lines below already did correctly.
+
 ### Debugging RN via CDP
 
 **Forcing `prefers-color-scheme` after load produces a fake bug.** The page repaints its
