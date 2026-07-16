@@ -418,6 +418,7 @@ const GARDE: ProjectTemplate = {
     {
       titleKey: 'templates.garde.tasks.guichet',
       notesKey: 'templates.garde.tasks.guichetNote',
+      detailsKey: 'templates.garde.tasks.guichetDetails',
       weekStart: 12,
       weekEnd: 20,
       effort: 'S',
@@ -427,6 +428,7 @@ const GARDE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.garde.tasks.recenser',
+      detailsKey: 'templates.garde.tasks.recenserDetails',
       weekStart: 12,
       weekEnd: 22,
       effort: 'M',
@@ -437,6 +439,7 @@ const GARDE: ProjectTemplate = {
     {
       titleKey: 'templates.garde.tasks.preinscription',
       notesKey: 'templates.garde.tasks.preinscriptionNote',
+      detailsKey: 'templates.garde.tasks.preinscriptionDetails',
       weekStart: 14,
       weekEnd: 24,
       effort: 'M',
@@ -448,6 +451,7 @@ const GARDE: ProjectTemplate = {
       // Never mentioned spontaneously, and it runs on a calendar of its own.
       titleKey: 'templates.garde.tasks.crecheEntreprise',
       notesKey: 'templates.garde.tasks.crecheEntrepriseNote',
+      detailsKey: 'templates.garde.tasks.crecheEntrepriseDetails',
       weekStart: 20,
       weekEnd: 30,
       effort: 'S',
@@ -457,6 +461,7 @@ const GARDE: ProjectTemplate = {
     {
       titleKey: 'templates.garde.tasks.relais',
       notesKey: 'templates.garde.tasks.relaisNote',
+      detailsKey: 'templates.garde.tasks.relaisDetails',
       weekStart: 16,
       weekEnd: 28,
       effort: 'S',
@@ -467,6 +472,7 @@ const GARDE: ProjectTemplate = {
     {
       titleKey: 'templates.garde.tasks.assistants',
       notesKey: 'templates.garde.tasks.assistantsNote',
+      detailsKey: 'templates.garde.tasks.assistantsDetails',
       weekStart: 20,
       weekEnd: 32,
       effort: 'M',
@@ -477,6 +483,7 @@ const GARDE: ProjectTemplate = {
     {
       titleKey: 'templates.garde.tasks.confirmer',
       notesKey: 'templates.garde.tasks.confirmerNote',
+      detailsKey: 'templates.garde.tasks.confirmerDetails',
       weekStart: 24,
       weekEnd: 34,
       effort: 'S',
@@ -486,6 +493,7 @@ const GARDE: ProjectTemplate = {
     {
       titleKey: 'templates.garde.tasks.cmg',
       notesKey: 'templates.garde.tasks.cmgNote',
+      detailsKey: 'templates.garde.tasks.cmgDetails',
       weekStart: 45,
       weekEnd: 50,
       effort: 'M',
@@ -496,6 +504,7 @@ const GARDE: ProjectTemplate = {
     {
       titleKey: 'templates.garde.tasks.finaliser',
       notesKey: 'templates.garde.tasks.finaliserNote',
+      detailsKey: 'templates.garde.tasks.finaliserDetails',
       weekStart: 48,
       weekEnd: 52,
       effort: 'M',
@@ -521,6 +530,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.suivi',
       notesKey: 'templates.decisions.tasks.suiviNote',
+      detailsKey: 'templates.decisions.tasks.suiviDetails',
       weekStart: 6,
       weekEnd: 12,
       effort: 'S',
@@ -531,6 +541,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.maternite',
       notesKey: 'templates.decisions.tasks.materniteNote',
+      detailsKey: 'templates.decisions.tasks.materniteDetails',
       weekStart: 6,
       weekEnd: 12,
       effort: 'M',
@@ -541,6 +552,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.nom',
       notesKey: 'templates.decisions.tasks.nomNote',
+      detailsKey: 'templates.decisions.tasks.nomDetails',
       weekStart: 20,
       weekEnd: 41,
       effort: 'M',
@@ -551,6 +563,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.prenom',
       notesKey: 'templates.decisions.tasks.prenomNote',
+      detailsKey: 'templates.decisions.tasks.prenomDetails',
       weekStart: 24,
       weekEnd: 41,
       effort: 'M',
@@ -562,6 +575,7 @@ const DECISIONS: ProjectTemplate = {
       // Must be decided BEFORE 32 SA, because one of the two options happens at 32-36.
       titleKey: 'templates.decisions.tasks.vrs',
       notesKey: 'templates.decisions.tasks.vrsNote',
+      detailsKey: 'templates.decisions.tasks.vrsDetails',
       weekStart: 28,
       weekEnd: 34,
       effort: 'M',
@@ -572,6 +586,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.projetNaissance',
       notesKey: 'templates.decisions.tasks.projetNaissanceNote',
+      detailsKey: 'templates.decisions.tasks.projetNaissanceDetails',
       weekStart: 28,
       weekEnd: 36,
       effort: 'L',
@@ -582,6 +597,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.congeQui',
       notesKey: 'templates.decisions.tasks.congeQuiNote',
+      detailsKey: 'templates.decisions.tasks.congeQuiDetails',
       weekStart: 30,
       weekEnd: 40,
       effort: 'M',
@@ -592,6 +608,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.visites',
       notesKey: 'templates.decisions.tasks.visitesNote',
+      detailsKey: 'templates.decisions.tasks.visitesDetails',
       weekStart: 34,
       weekEnd: 40,
       effort: 'S',
@@ -601,6 +618,7 @@ const DECISIONS: ProjectTemplate = {
     {
       titleKey: 'templates.decisions.tasks.photos',
       notesKey: 'templates.decisions.tasks.photosNote',
+      detailsKey: 'templates.decisions.tasks.photosDetails',
       weekStart: 34,
       weekEnd: 45,
       effort: 'S',
@@ -780,6 +798,7 @@ const JUMEAUX: ProjectTemplate = {
     {
       titleKey: 'templates.jumeaux.tasks.signaler',
       notesKey: 'templates.jumeaux.tasks.signalerNote',
+      detailsKey: 'templates.jumeaux.tasks.signalerDetails',
       weekStart: 12,
       weekEnd: 20,
       effort: 'S',
@@ -789,6 +808,7 @@ const JUMEAUX: ProjectTemplate = {
     {
       titleKey: 'templates.jumeaux.tasks.aideDomicile',
       notesKey: 'templates.jumeaux.tasks.aideDomicileNote',
+      detailsKey: 'templates.jumeaux.tasks.aideDomicileDetails',
       weekStart: 28,
       weekEnd: 36,
       effort: 'M',
@@ -798,6 +818,7 @@ const JUMEAUX: ProjectTemplate = {
     {
       titleKey: 'templates.jumeaux.tasks.association',
       notesKey: 'templates.jumeaux.tasks.associationNote',
+      detailsKey: 'templates.jumeaux.tasks.associationDetails',
       weekStart: 28,
       weekEnd: 40,
       effort: 'S',
@@ -807,6 +828,7 @@ const JUMEAUX: ProjectTemplate = {
     {
       titleKey: 'templates.jumeaux.tasks.equipement',
       notesKey: 'templates.jumeaux.tasks.equipementNote',
+      detailsKey: 'templates.jumeaux.tasks.equipementDetails',
       weekStart: 30,
       weekEnd: 38,
       effort: 'L',
@@ -834,6 +856,7 @@ const SOLO: ProjectTemplate = {
     {
       titleKey: 'templates.solo.tasks.priorite',
       notesKey: 'templates.solo.tasks.prioriteNote',
+      detailsKey: 'templates.solo.tasks.prioriteDetails',
       weekStart: 30,
       weekEnd: 46,
       effort: 'M',
@@ -843,6 +866,7 @@ const SOLO: ProjectTemplate = {
     {
       titleKey: 'templates.solo.tasks.aideDomicile',
       notesKey: 'templates.solo.tasks.aideDomicileNote',
+      detailsKey: 'templates.solo.tasks.aideDomicileDetails',
       weekStart: 34,
       weekEnd: 46,
       effort: 'M',
@@ -852,6 +876,7 @@ const SOLO: ProjectTemplate = {
     {
       titleKey: 'templates.solo.tasks.conducteur',
       notesKey: 'templates.solo.tasks.conducteurNote',
+      detailsKey: 'templates.solo.tasks.conducteurDetails',
       weekStart: 34,
       weekEnd: 40,
       effort: 'S',
@@ -861,6 +886,7 @@ const SOLO: ProjectTemplate = {
     {
       titleKey: 'templates.solo.tasks.isole',
       notesKey: 'templates.solo.tasks.isoleNote',
+      detailsKey: 'templates.solo.tasks.isoleDetails',
       weekStart: 41,
       weekEnd: 46,
       effort: 'S',
@@ -870,6 +896,7 @@ const SOLO: ProjectTemplate = {
     {
       titleKey: 'templates.solo.tasks.asf',
       notesKey: 'templates.solo.tasks.asfNote',
+      detailsKey: 'templates.solo.tasks.asfDetails',
       weekStart: 41,
       weekEnd: 46,
       effort: 'M',
@@ -906,6 +933,7 @@ const BUDGET: ProjectTemplate = {
       // salaries and capped at the plafond, so they do not reproduce the usual net.
       titleKey: 'templates.budget.tasks.revenu',
       notesKey: 'templates.budget.tasks.revenuNote',
+      detailsKey: 'templates.budget.tasks.revenuDetails',
       weekStart: 20,
       weekEnd: 30,
       effort: 'M',
@@ -919,6 +947,7 @@ const BUDGET: ProjectTemplate = {
       // assumed.
       titleKey: 'templates.budget.tasks.maintienSalaire',
       notesKey: 'templates.budget.tasks.maintienSalaireNote',
+      detailsKey: 'templates.budget.tasks.maintienSalaireDetails',
       weekStart: 20,
       weekEnd: 30,
       effort: 'S',
@@ -931,6 +960,7 @@ const BUDGET: ProjectTemplate = {
       // BEFORE choosing the maternité, not on the bill.
       titleKey: 'templates.budget.tasks.secteur',
       notesKey: 'templates.budget.tasks.secteurNote',
+      detailsKey: 'templates.budget.tasks.secteurDetails',
       weekStart: 16,
       weekEnd: 28,
       effort: 'M',
@@ -944,6 +974,7 @@ const BUDGET: ProjectTemplate = {
       // looking, so the copy says "tôt" rather than inventing a deadline.
       titleKey: 'templates.budget.tasks.garde',
       notesKey: 'templates.budget.tasks.gardeNote',
+      detailsKey: 'templates.budget.tasks.gardeDetails',
       weekStart: 16,
       weekEnd: 26,
       effort: 'L',
@@ -954,6 +985,7 @@ const BUDGET: ProjectTemplate = {
     {
       titleKey: 'templates.budget.tasks.simulateur',
       notesKey: 'templates.budget.tasks.simulateurNote',
+      detailsKey: 'templates.budget.tasks.simulateurDetails',
       weekStart: 14,
       weekEnd: 30,
       effort: 'S',
@@ -968,6 +1000,7 @@ const BUDGET: ProjectTemplate = {
       // copy does not quote a week.
       titleKey: 'templates.budget.tasks.prime',
       notesKey: 'templates.budget.tasks.primeNote',
+      detailsKey: 'templates.budget.tasks.primeDetails',
       weekStart: 28,
       weekEnd: 34,
       effort: 'S',
@@ -978,6 +1011,7 @@ const BUDGET: ProjectTemplate = {
     {
       titleKey: 'templates.budget.tasks.paje',
       notesKey: 'templates.budget.tasks.pajeNote',
+      detailsKey: 'templates.budget.tasks.pajeDetails',
       weekStart: 28,
       weekEnd: 34,
       effort: 'S',
@@ -988,6 +1022,7 @@ const BUDGET: ProjectTemplate = {
     {
       titleKey: 'templates.budget.tasks.equipement',
       notesKey: 'templates.budget.tasks.equipementNote',
+      detailsKey: 'templates.budget.tasks.equipementDetails',
       weekStart: 25,
       weekEnd: 35,
       effort: 'M',
@@ -997,6 +1032,7 @@ const BUDGET: ProjectTemplate = {
     {
       titleKey: 'templates.budget.tasks.foyer',
       notesKey: 'templates.budget.tasks.foyerNote',
+      detailsKey: 'templates.budget.tasks.foyerDetails',
       weekStart: 32,
       weekEnd: 38,
       effort: 'M',
@@ -1009,6 +1045,7 @@ const BUDGET: ProjectTemplate = {
       // month is simply not reimbursed. 30 days is the prompt for the first one.
       titleKey: 'templates.budget.tasks.cmg',
       notesKey: 'templates.budget.tasks.cmgNote',
+      detailsKey: 'templates.budget.tasks.cmgDetails',
       afterBirthDays: 30,
       weekStart: 41,
       weekEnd: 41,
@@ -1023,6 +1060,7 @@ const BUDGET: ProjectTemplate = {
       // itself — the note carries the real rule because the app cannot know the leave dates.
       titleKey: 'templates.budget.tasks.prepare',
       notesKey: 'templates.budget.tasks.prepareNote',
+      detailsKey: 'templates.budget.tasks.prepareDetails',
       afterBirthDays: 120,
       weekStart: 41,
       weekEnd: 41,
@@ -1061,6 +1099,7 @@ const POSTNATAL: ProjectTemplate = {
       // exists before someone asks you to decide while holding a newborn.
       titleKey: 'templates.postnatal.tasks.prado',
       notesKey: 'templates.postnatal.tasks.pradoNote',
+      detailsKey: 'templates.postnatal.tasks.pradoDetails',
       weekStart: 30,
       weekEnd: 38,
       effort: 'S',
@@ -1071,6 +1110,7 @@ const POSTNATAL: ProjectTemplate = {
     {
       titleKey: 'templates.postnatal.tasks.reeducation',
       notesKey: 'templates.postnatal.tasks.reeducationNote',
+      detailsKey: 'templates.postnatal.tasks.reeducationDetails',
       weekStart: 30,
       weekEnd: 38,
       effort: 'S',
@@ -1081,6 +1121,7 @@ const POSTNATAL: ProjectTemplate = {
     {
       titleKey: 'templates.postnatal.tasks.pediatre',
       notesKey: 'templates.postnatal.tasks.pediatreNote',
+      detailsKey: 'templates.postnatal.tasks.pediatreDetails',
       weekStart: 25,
       weekEnd: 35,
       effort: 'M',
@@ -1091,6 +1132,7 @@ const POSTNATAL: ProjectTemplate = {
     {
       titleKey: 'templates.postnatal.tasks.examens',
       notesKey: 'templates.postnatal.tasks.examensNote',
+      detailsKey: 'templates.postnatal.tasks.examensDetails',
       weekStart: 34,
       weekEnd: 38,
       effort: 'S',
@@ -1101,6 +1143,7 @@ const POSTNATAL: ProjectTemplate = {
     {
       titleKey: 'templates.postnatal.tasks.allaitement',
       notesKey: 'templates.postnatal.tasks.allaitementNote',
+      detailsKey: 'templates.postnatal.tasks.allaitementDetails',
       weekStart: 30,
       weekEnd: 38,
       effort: 'S',
@@ -1110,6 +1153,7 @@ const POSTNATAL: ProjectTemplate = {
     {
       titleKey: 'templates.postnatal.tasks.repas',
       notesKey: 'templates.postnatal.tasks.repasNote',
+      detailsKey: 'templates.postnatal.tasks.repasDetails',
       weekStart: 32,
       weekEnd: 38,
       effort: 'M',
@@ -1119,6 +1163,7 @@ const POSTNATAL: ProjectTemplate = {
     {
       titleKey: 'templates.postnatal.tasks.aide',
       notesKey: 'templates.postnatal.tasks.aideNote',
+      detailsKey: 'templates.postnatal.tasks.aideDetails',
       weekStart: 32,
       weekEnd: 40,
       effort: 'M',
@@ -1128,6 +1173,7 @@ const POSTNATAL: ProjectTemplate = {
     {
       titleKey: 'templates.postnatal.tasks.visites',
       notesKey: 'templates.postnatal.tasks.visitesNote',
+      detailsKey: 'templates.postnatal.tasks.visitesDetails',
       weekStart: 32,
       weekEnd: 40,
       effort: 'S',
@@ -1138,6 +1184,7 @@ const POSTNATAL: ProjectTemplate = {
       // Solo bulles never see this: `.coparent` is the suffix instantiateTemplate filters on.
       titleKey: 'templates.postnatal.tasks.nuits.coparent',
       notesKey: 'templates.postnatal.tasks.nuitsNote',
+      detailsKey: 'templates.postnatal.tasks.nuitsDetails',
       weekStart: 32,
       weekEnd: 40,
       effort: 'S',
@@ -1148,6 +1195,7 @@ const POSTNATAL: ProjectTemplate = {
       // CONTACTS ONLY. No symptom list, no self-assessment — see the header.
       titleKey: 'templates.postnatal.tasks.malEtre',
       notesKey: 'templates.postnatal.tasks.malEtreNote',
+      detailsKey: 'templates.postnatal.tasks.malEtreDetails',
       weekStart: 32,
       weekEnd: 40,
       effort: 'S',
@@ -1160,6 +1208,7 @@ const POSTNATAL: ProjectTemplate = {
       // the parent is under no obligation and faces no penalty. Window: weeks 4 to 8.
       titleKey: 'templates.postnatal.tasks.epp',
       notesKey: 'templates.postnatal.tasks.eppNote',
+      detailsKey: 'templates.postnatal.tasks.eppDetails',
       afterBirthDays: 56,
       weekStart: 41,
       weekEnd: 41,
@@ -1172,6 +1221,7 @@ const POSTNATAL: ProjectTemplate = {
       // 6 to 8 weeks after the birth; 56 days is the far end of that window.
       titleKey: 'templates.postnatal.tasks.consultation',
       notesKey: 'templates.postnatal.tasks.consultationNote',
+      detailsKey: 'templates.postnatal.tasks.consultationDetails',
       afterBirthDays: 56,
       weekStart: 41,
       weekEnd: 41,

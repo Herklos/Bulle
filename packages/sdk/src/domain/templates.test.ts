@@ -296,3 +296,36 @@ describe('links must match the countries the template claims', () => {
     }
   });
 });
+
+describe('details coverage', () => {
+  it('gives every task a detailsKey', () => {
+    // A task without details is a title and nothing else, which is the exact problem the
+    // detail screen exists to solve: "Rassembler les documents pour la maternité" tells you
+    // nothing if you do not already know which documents.
+    const bare = PROJECT_TEMPLATES.flatMap((t) =>
+      t.tasks.filter((task) => !task.detailsKey).map((task) => `${t.id}: ${task.titleKey}`),
+    );
+    expect(bare).toEqual([]);
+  });
+
+  it('points every detailsKey at its own task, not a neighbour\'s', () => {
+    // Copy-paste is the obvious failure here, and it is silent: a wrong detailsKey renders
+    // real, plausible paragraphs about a different task.
+    for (const template of PROJECT_TEMPLATES) {
+      for (const task of template.tasks) {
+        // Normally `templates.x.tasks.foo` -> `templates.x.tasks.fooDetails`.
+        //
+        // `.coparent` is ambiguous and both readings are live: in valise it is the task's
+        // NAME (the co-parent's bag), while in `postnatal.tasks.nuits.coparent` it is the
+        // solo-filter suffix that instantiateTemplate strips. So accept either shape rather
+        // than blindly removing it, which would demand `valise.tasksDetails`.
+        const candidates = [`${task.titleKey}Details`];
+        const withoutSuffix = task.titleKey.replace(/\.coparent$/, '');
+        if (withoutSuffix !== task.titleKey && /\.tasks\..+/.test(withoutSuffix)) {
+          candidates.push(`${withoutSuffix}Details`);
+        }
+        expect(candidates, task.titleKey).toContain(task.detailsKey);
+      }
+    }
+  });
+});
