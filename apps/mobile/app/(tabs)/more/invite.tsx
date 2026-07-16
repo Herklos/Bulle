@@ -19,7 +19,9 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { revokeCollaborator } from '@/lib/permissions/revoke';
 import { mintInvite } from '@/lib/invite-link';
-import { getSession, getSpaceId } from '@/lib/starfish';
+import { getSession, initSync, isSyncActive } from '@/lib/starfish';
+import { deriveSessionFromPhrase } from '@/lib/identity';
+import { ensureSpaceProvisioned } from '@/lib/space-provision';
 import { usePermissionsStore } from '@/store/usePermissionsStore';
 import { useActiveBulle } from '@/store/useBulleRegistryStore';
 import { pushSpaceSnapshot } from '@/lib/space-sync';
@@ -44,12 +46,40 @@ export default function InviteScreen() {
       : DEFAULT_PERMISSION_ROLES.map((r) => ({ ...r, createdAt: null, updatedAt: null }));
 
   const invite = async (role: RoleDefinition) => {
-    const session = getSession();
-    const spaceId = getSpaceId();
-    if (!session || !spaceId || !active) return;
+    if (!active) return;
 
     setBusy(true);
     try {
+      /**
+       * Derive the session HERE rather than reading the sync singleton.
+       *
+       * That singleton is only set by activateSync, which bails unless the entry already has
+       * a spaceId, which only exists once someone has been invited. Reading it here meant
+       * invite() hit `if (!session) return` and silently did nothing, forever: an owner could
+       * never mint their first link, so sync never started, so nobody noticed the sync host
+       * does not even resolve. See docs/SYNC.md.
+       *
+       * A bulle with no seed is local-only by design (§9) and has nothing to share.
+       */
+      if (!active.seedPhrase) return;
+      const session = getSession() ?? (await deriveSessionFromPhrase(active.seedPhrase));
+
+      // Creates the space on first use. Idempotent, and the reason sharing can start at all.
+      // A bulle stays purely local until this runs, which is why it runs here and not at
+      // onboarding.
+      const spaceId = await ensureSpaceProvisioned(session, active);
+
+      /**
+       * Arm the sync singletons now.
+       *
+       * pushSpaceSnapshot() and mintInvite() both read them, and SyncInitializer will not
+       * have run for this bulle: it bailed at boot precisely because there was no spaceId
+       * yet. Without this the space would be provisioned and then pushed to by nobody, and
+       * the invite would still point at an empty bulle. An owner is its own root node,
+       * matching activateSync.
+       */
+      if (!isSyncActive()) initSync({ session, spaceId, rootNodeId: active.rootNodeId ?? active.id });
+
       // Push BEFORE handing out the link, or the invite points at an empty space and the
       // joiner opens a blank bulle.
       await pushSpaceSnapshot();
