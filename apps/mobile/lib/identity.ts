@@ -68,14 +68,18 @@ export async function deriveSessionFromPhrase(
  * secret lives in the URL fragment, and expo-router's `history.replaceState` strips the
  * fragment as soon as it mounts. By the time a component's effect runs, the token is gone.
  *
- * null on native. NOT a `typeof window` check: React Native's setUpGlobals.js aliases
- * `global.window = global` on every platform, so `window` alone is always defined here —
- * `window.location` is what's actually missing on native, and reading `.href` off it threw
+ * null on native. NOT a bare `typeof window` check: React Native's setUpGlobals.js aliases
+ * `global.window = global` on every platform, so `window` alone is always defined on native
+ * too — `window.location` is what's actually missing there, and reading `.href` off it threw
  * in Release (dev debugger tooling happens to stub `location`, which is why this only ever
- * crashed on-device). `Platform.OS` is the real signal — see `initialInviteUrl()`.
+ * crashed on-device).
+ *
+ * NOT a bare `Platform.OS === 'web'` check either: `expo export --platform web`'s static
+ * rendering evaluates this module under Node to prerender pages, where `Platform.OS` is
+ * already `'web'` but `window` genuinely doesn't exist — so both conditions are required.
  */
 export const bootHref: string | null =
-  Platform.OS === 'web' ? window.location.href : null;
+  Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.href : null;
 
 /**
  * Parse an invite URL into its token, or null.

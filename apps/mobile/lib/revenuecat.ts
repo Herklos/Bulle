@@ -12,11 +12,19 @@ import type { CustomerInfo, PurchasesOffering } from 'react-native-purchases';
 import { PREMIUM_ENTITLEMENT, PREMIUM_OFFERING } from './premium';
 
 /**
- * Public SDK key. Currently the RevenueCat **Test Store** key, because Bulle is not yet in
- * App Store Connect or Play Console. Swap for the appl_… / goog_… keys once the store-side
- * apps exist; the entitlement identifier does not change.
+ * Public SDK key, one per store — RevenueCat issues a distinct key per platform app
+ * (`appl_…` / `goog_…` / the Web Billing key), unlike the single Test Store key this
+ * replaced. Falls back to the Test Store key when a platform's env var isn't set (e.g. local
+ * `expo start` without `EXPO_PUBLIC_REVENUECAT_KEY_*` configured).
  */
-const API_KEY = process.env.EXPO_PUBLIC_REVENUECAT_KEY ?? 'test_dUUNyHfuSwVAdxDUZvCjiphyaVb';
+const FALLBACK_API_KEY = 'test_dUUNyHfuSwVAdxDUZvCjiphyaVb';
+
+const API_KEY =
+  Platform.select({
+    ios: process.env.EXPO_PUBLIC_REVENUECAT_KEY_IOS,
+    android: process.env.EXPO_PUBLIC_REVENUECAT_KEY_ANDROID,
+    web: process.env.EXPO_PUBLIC_REVENUECAT_KEY_WEB,
+  }) ?? FALLBACK_API_KEY;
 
 let configured = false;
 
