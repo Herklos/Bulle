@@ -14,26 +14,44 @@ import { secureGet, secureSet } from '@bulle/ui/utils/secure-store';
 import { DEFAULT_LANGUAGE, deviceLanguage, isSupportedLanguage, type Language } from '@/i18n';
 
 const LANGUAGE_KEY = 'bulle_language';
+const CONCERN_KEY = 'bulle_concern';
+
+/** §5.12 q5. Orders which templates Préparer proposes first; gates nothing. */
+export type Concern = 'organisation' | 'shopping' | 'admin' | 'everything';
+
+const CONCERNS: Concern[] = ['organisation', 'shopping', 'admin', 'everything'];
 
 interface SettingsState {
   language: Language;
+  concern: Concern;
   isLoaded: boolean;
   load: () => Promise<void>;
   setLanguage: (language: Language) => Promise<void>;
+  setConcern: (concern: Concern) => Promise<void>;
 }
 
 export const useSettingsStore = create<SettingsState>((set) => ({
   language: DEFAULT_LANGUAGE,
+  concern: 'everything',
   isLoaded: false,
 
   load: async () => {
-    const stored = await secureGet(LANGUAGE_KEY);
-    // No stored choice → follow the device. An explicit choice always wins over it.
-    set({ language: isSupportedLanguage(stored) ? stored : deviceLanguage(), isLoaded: true });
+    const [stored, concern] = await Promise.all([secureGet(LANGUAGE_KEY), secureGet(CONCERN_KEY)]);
+    set({
+      // No stored choice → follow the device. An explicit choice always wins over it.
+      language: isSupportedLanguage(stored) ? stored : deviceLanguage(),
+      concern: CONCERNS.includes(concern as Concern) ? (concern as Concern) : 'everything',
+      isLoaded: true,
+    });
   },
 
   setLanguage: async (language) => {
     set({ language });
     await secureSet(LANGUAGE_KEY, language);
+  },
+
+  setConcern: async (concern) => {
+    set({ concern });
+    await secureSet(CONCERN_KEY, concern);
   },
 }));

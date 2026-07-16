@@ -30,6 +30,8 @@ import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useNow } from '@/lib/use-now';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
+import { CONCERN_TEMPLATE_ORDER } from '@/lib/concerns';
+import { useSettingsStore } from '@/store/useSettingsStore';
 
 export default function PlanScreen() {
   const { t, i18n } = useTranslation();
@@ -45,14 +47,28 @@ export default function PlanScreen() {
 
   const weekSA = bulle ? currentWeekSA(bulle.profile.dueDate, now) : 0;
 
+  const concern = useSettingsStore((s) => s.concern);
+
   const suggestions = useMemo(() => {
     if (!bulle) return [];
     const available = templatesForLocale(i18n.language);
     const instantiated = new Set(
       projects.map((p) => p.templateId).filter((id): id is string => !!id),
     );
-    return suggestTemplates(available, instantiated, weekSA, bulle.profile);
-  }, [bulle, projects, weekSA, i18n.language]);
+    const ranked = suggestTemplates(available, instantiated, weekSA, bulle.profile);
+
+    // Float the templates matching the onboarding concern to the top (§5.12 q5). The engine
+    // already ordered by week, which is the correct default; this only re-ranks WITHIN what
+    // it proposed, so answering "l'administratif" can never surface a template that is not
+    // due yet.
+    const preferred = CONCERN_TEMPLATE_ORDER[concern] ?? [];
+    if (preferred.length === 0) return ranked;
+    return [...ranked].sort((a, b) => {
+      const ai = preferred.indexOf(a.templateId);
+      const bi = preferred.indexOf(b.templateId);
+      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+    });
+  }, [bulle, projects, weekSA, i18n.language, concern]);
 
   const ordered = useMemo(() => sortProjects(projects), [projects]);
 

@@ -47,9 +47,22 @@ function useOrbKeyframes() {
   }, []);
 }
 
-export function BulleOrb({ fill, trimesterProgress, size = 180, label, pulseKey = 0 }: BulleOrbProps) {
-  const { colors } = useBulleTheme();
+export function BulleOrb({
+  fill,
+  trimesterProgress,
+  size = 180,
+  label,
+  pulseKey = 0,
+  innerImage,
+}: BulleOrbProps) {
+  const { colors, scheme } = useBulleTheme();
   useOrbKeyframes();
+
+  // On web a `require`d asset resolves to a URI (or a module object carrying one).
+  const babyUri =
+    typeof innerImage === 'string'
+      ? innerImage
+      : (innerImage as unknown as { uri?: string } | undefined)?.uri;
 
   const box = size * HALO_SCALE;
   const stops = orbGradientStops(colors, trimesterProgress);
@@ -111,6 +124,27 @@ export function BulleOrb({ fill, trimesterProgress, size = 180, label, pulseKey 
               background: `radial-gradient(circle at 32% 32%, ${withAlpha(colors.surface, 0.95)}, ${withAlpha(colors.line, 0.55)})`,
             }}
           />
+          {/* The baby, inside the glass and behind the liquid. Inset and sitting low: a
+              fetus floats in the lower half of the sac, and centring it makes the orb look
+              like a logo rather than a bubble with something in it. */}
+          {babyUri && (
+            <img
+              src={babyUri}
+              alt=""
+              aria-hidden
+              style={{
+                position: 'absolute',
+                width: size * 0.6,
+                height: size * 0.6,
+                objectFit: 'contain',
+                transform: `translateY(${size * 0.05}px)`,
+                opacity: scheme === 'dark' ? 0.75 : 0.9,
+                // Clip to the glass, or it spills past the rim on the diagonal.
+                clipPath: 'circle(50%)',
+              }}
+            />
+          )}
+
           {/* Liquid: the conic gradient, revealed only through the meniscus path. */}
           <div
             style={{
@@ -131,6 +165,20 @@ export function BulleOrb({ fill, trimesterProgress, size = 180, label, pulseKey 
             }}
             aria-hidden
             id={maskId}
+          />
+          {/* Sheen: a soft diagonal highlight. The one detail that makes it read as glass
+              rather than a circle — light has to reflect OFF something for it to have a
+              surface. */}
+          <div
+            style={{
+              position: 'absolute',
+              width: size,
+              height: size,
+              borderRadius: '50%',
+              background: `linear-gradient(135deg, ${withAlpha(colors.surface, 0.85)}, ${withAlpha(colors.surface, 0)} 60%)`,
+              opacity: 0.5,
+            }}
+            aria-hidden
           />
           {/* Rim, over the liquid, so the liquid reads as inside the vessel. */}
           <div

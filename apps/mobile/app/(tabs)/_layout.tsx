@@ -22,7 +22,14 @@ export default function TabLayout() {
   const paused = usePauseState();
 
   return (
-    <NativeTabs tintColor={colors.sage}>
+    // backgroundColor/iconColor are set explicitly: left alone, the bar renders Material's
+    // default surface (a pale lavender on Android), which is the one piece of chrome that
+    // does not belong to the palette and reads as "unfinished RN app" against the ivory.
+    <NativeTabs
+      tintColor={colors.sage}
+      backgroundColor={colors.bg}
+      iconColor={colors.inkSoft}
+    >
       <NativeTabs.Trigger name="today">
         <NativeTabs.Trigger.Icon sf={{ default: 'house', selected: 'house.fill' }} md="home" />
         <NativeTabs.Trigger.Label>{t('tabs.today')}</NativeTabs.Trigger.Label>

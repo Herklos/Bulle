@@ -17,12 +17,12 @@
  *    loss should not have to pick "high-risk" from a dropdown to be treated gently.
  */
 import React, { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { randomId, type BulleProfile, type Companionship } from '@bulle/sdk';
-import { BulleOrb } from '@bulle/ui/primitives';
+import { BulleOrb, Glyph } from '@bulle/ui/primitives';
 import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
@@ -33,11 +33,26 @@ import { BulleInflating } from '@/components/BulleInflating';
 import { generatePassphrase } from '@/lib/identity';
 import { useBulleRegistryStore } from '@/store/useBulleRegistryStore';
 import { useBulleStore } from '@/store/useBulleStore';
+import { useSettingsStore, type Concern } from '@/store/useSettingsStore';
 
-type Step = 'welcome' | 'dueDate' | 'firstBaby' | 'companionship' | 'profile' | 'notifications';
+type Step =
+  | 'welcome'
+  | 'dueDate'
+  | 'firstBaby'
+  | 'companionship'
+  | 'profile'
+  | 'concern'
+  | 'notifications';
 
 /** The questions, in order. `welcome` is not a question, so it carries no progress. */
-const QUESTION_STEPS: Step[] = ['dueDate', 'firstBaby', 'companionship', 'profile', 'notifications'];
+const QUESTION_STEPS: Step[] = [
+  'dueDate',
+  'firstBaby',
+  'companionship',
+  'profile',
+  'concern',
+  'notifications',
+];
 
 /** Long-form date, in the user's language. Shown on the confirm button. */
 function formatDueDate(date: Date, language: string): string {
@@ -51,7 +66,7 @@ function formatDueDate(date: Date, language: string): string {
 export default function OnboardingScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
-  const { space } = useBulleTheme();
+  const { space, touch } = useBulleTheme();
   const reduced = useReducedMotion();
 
   const [step, setStep] = useState<Step>('welcome');
@@ -59,7 +74,14 @@ export default function OnboardingScreen() {
   const [firstBaby, setFirstBaby] = useState(true);
   const [companionship, setCompanionship] = useState<Companionship>('couple');
   const [flags, setFlags] = useState<Partial<BulleProfile>>({});
+  const [concern, setConcern] = useState<Concern>('everything');
   const [creating, setCreating] = useState(false);
+
+  /** One step back. Every answer is already in state, so returning re-shows the choice. */
+  const goBack = () => {
+    const index = QUESTION_STEPS.indexOf(step);
+    setStep(index <= 0 ? 'welcome' : QUESTION_STEPS[index - 1]);
+  };
 
   const profile = useMemo<BulleProfile | null>(
     () =>
@@ -98,6 +120,10 @@ export default function OnboardingScreen() {
       createdAt: nowIso,
       updatedAt: nowIso,
     });
+
+    // The concern orders which templates Préparer proposes first. Device-local: it is a
+    // first-run preference, not something the co-parent should inherit.
+    void useSettingsStore.getState().setConcern(concern);
 
     // Let the orb finish inflating before handing over. The wait is real work (Argon2id),
     // so this is showing what is happening, not padding.
@@ -151,7 +177,22 @@ export default function OnboardingScreen() {
   return (
     <Screen>
       <View style={{ gap: space[6] }}>
-        <StepProgress progress={progress} />
+        {/* Back before progress: a six-question flow with no way back is a trap, and the
+            due-date step in particular is easy to tap past. Every answer lives in state, so
+            returning simply re-shows it. */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space[3] }}>
+          <Pressable
+            onPress={goBack}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.back')}
+            hitSlop={touch.min / 2}
+          >
+            <Glyph name="chevronLeft" size={20} color="inkSoft" />
+          </Pressable>
+          <View style={{ flex: 1 }}>
+            <StepProgress progress={progress} />
+          </View>
+        </View>
 
         {step === 'dueDate' && (
           <View style={{ gap: space[5] }}>
@@ -248,6 +289,33 @@ export default function OnboardingScreen() {
                   label={t(`onboarding.${key}`)}
                   onPress={() => {
                     setFlags(value);
+                    setStep('concern');
+                  }}
+                />
+              ))}
+            </View>
+          </View>
+        )}
+
+        {step === 'concern' && (
+          <View style={{ gap: space[4] }}>
+            <Question text={t('onboarding.concernQuestion')} />
+            <View>
+              {(
+                [
+                  ['concernOrganisation', 'organisation'],
+                  ['concernShopping', 'shopping'],
+                  ['concernAdmin', 'admin'],
+                  ['concernEverything', 'everything'],
+                ] as [string, Concern][]
+              ).map(([key, value], index, all) => (
+                <OnboardingChoice
+                  key={key}
+                  index={index}
+                  last={index === all.length - 1}
+                  label={t(`onboarding.${key}`)}
+                  onPress={() => {
+                    setConcern(value);
                     setStep('notifications');
                   }}
                 />
