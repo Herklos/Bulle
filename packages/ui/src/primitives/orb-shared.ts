@@ -108,8 +108,25 @@ export function liquidPathString(size: number, fill: number): string {
 
 /** Halo opacity (§15.2). The orb is the only element in the app that emits light. */
 export const HALO_OPACITY = 0.25;
-/** Halo radius as a multiple of the orb radius. */
+/**
+ * The LAYOUT footprint, as a multiple of the orb size. This is the space the orb reserves
+ * on the screen — not the size of the surface it draws on (see CANVAS_SCALE).
+ */
 export const HALO_SCALE = 1.3;
+
+/**
+ * The DRAWING surface, as a multiple of the orb size.
+ *
+ * Much larger than the layout footprint, and it has to be: Skia clips at the canvas edge,
+ * and the contact shadow is drawn at `cy + r*0.9` with radius `r*0.7` — reaching a full
+ * orb-diameter below centre before its 22px blur spreads any further. At the old 1.3 the
+ * canvas cut straight through it and left a hard horizontal seam under the orb, which read
+ * as a rectangle of slightly different background rather than as a shadow.
+ *
+ * The surplus is absorbed by negative margins at the call site, so a bigger canvas costs
+ * layout nothing and the composition does not move.
+ */
+export const CANVAS_SCALE = 2.4;
 
 /**
  * The lighting model, in one place so both renderers agree.

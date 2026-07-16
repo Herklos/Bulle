@@ -47,6 +47,7 @@ import {
 import { useBulleTheme } from '../theme/context.js';
 import { breathe, settle } from '../theme/motion.js';
 import {
+  CANVAS_SCALE,
   HALO_OPACITY,
   HALO_SCALE,
   LIGHT,
@@ -87,7 +88,13 @@ export function BulleOrb({
   const { colors, scheme } = useBulleTheme();
   const reduced = useReducedMotion();
 
-  const box = size * HALO_SCALE;
+  // `layout` is what the orb occupies on screen; `box` is what it draws on. The canvas is
+  // deliberately much larger so the halo and contact shadow fade out instead of being cut
+  // off at its edge — the surplus hangs outside via the negative margin below and costs
+  // layout nothing.
+  const layout = size * HALO_SCALE;
+  const box = size * CANVAS_SCALE;
+  const bleed = (box - layout) / 2;
   const r = size / 2;
   const cx = r;
   const cy = r;
@@ -166,11 +173,13 @@ export function BulleOrb({
       accessible
       accessibilityRole="image"
       accessibilityLabel={label}
-      style={{ width: box, height: box, alignItems: 'center', justifyContent: 'center' }}
+      style={{ width: layout, height: layout, alignItems: 'center', justifyContent: 'center' }}
+      // The glow is decoration; it must never eat a touch meant for what is underneath it.
+      pointerEvents="none"
     >
-      <Canvas style={{ width: box, height: box }}>
+      <Canvas style={{ width: box, height: box, margin: -bleed }}>
         <Group transform={transform} origin={{ x: box / 2, y: box / 2 }}>
-          <Group transform={[{ translateX: (size * (HALO_SCALE - 1)) / 2 }, { translateY: (size * (HALO_SCALE - 1)) / 2 }]}>
+          <Group transform={[{ translateX: (box - size) / 2 }, { translateY: (box - size) / 2 }]}>
             {/* Contact shadow. Sits the orb in space instead of floating it on the page —
                 without it the whole thing reads as a sticker, however good the glass is. */}
             <Circle
