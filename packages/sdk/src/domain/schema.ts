@@ -20,6 +20,7 @@ export const memberRoleSchema = z.enum(['co-parent', 'famille', 'doula']);
 
 export const bulleProfileSchema = z.object({
   dueDate: iso,
+  country: z.string().optional(),
   dueDateProvisional: z.boolean().optional(),
   firstBaby: z.boolean(),
   companionship: companionshipSchema,

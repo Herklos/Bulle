@@ -22,6 +22,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { randomId, type BulleProfile, type Companionship } from '@bulle/sdk';
+import { deviceCountry } from '@/i18n';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
 import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
@@ -114,6 +115,9 @@ export default function OnboardingScreen() {
         dueDate: finalDue.toISOString(),
         firstBaby,
         companionship,
+        // Stamped once, from the device region. Country decides WHICH institutions apply
+        // (see templatesFor); the language only decides which words describe them.
+        country: deviceCountry(),
         ...resolvedFlags,
       },
       pause: { paused: false },

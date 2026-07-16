@@ -22,6 +22,17 @@ export type Companionship = 'couple' | 'solo';
 export interface BulleProfile {
   /** Estimated due date. The only required onboarding answer. */
   dueDate: Iso;
+  /**
+   * ISO 3166-1 alpha-2 country whose system this bulle lives under ('FR', 'BE', ...).
+   *
+   * NOT the language. The two get conflated constantly and it is wrong in both directions:
+   * a French speaker in Belgium or Québec must never be handed the CAF, and an
+   * English-speaking parent living in Paris very much needs it. Country decides WHICH
+   * institutions apply; locale decides which words they are described in.
+   *
+   * Absent means France, which is the launch market — see `templateAppliesInCountry`.
+   */
+  country?: string;
   /** True when the due date is a DDR-based estimate rather than a scan-confirmed date. */
   dueDateProvisional?: boolean;
   firstBaby: boolean;
@@ -227,11 +238,24 @@ export interface ProjectTemplate {
   glyph: string;
   tasks: TaskTemplate[];
   /**
-   * Locales this template is offered in. The FR administrative template has no meaningful
-   * equivalent elsewhere, and spec §7.1 is explicit that EN ships WITHOUT it rather than
-   * with a bad one. Omit for templates that apply everywhere.
+   * Locales this template has COPY for. Omit when it is offered in every language.
+   *
+   * This is a translation fact, not a legal one: §7.1 says EN ships without a template
+   * rather than with a bad one, and that is all this expresses. Do not use it to mean "this
+   * is French" — that is `countries`.
    */
   locales?: string[];
+  /**
+   * ISO 3166-1 alpha-2 countries whose system this template describes. Omit when it applies
+   * anywhere (a hospital bag is a hospital bag).
+   *
+   * Separate from `locales` because language and country are different questions, and
+   * collapsing them is a real bug rather than a tidiness point: matching on language alone
+   * hands the CAF, the PAJE and the 5-day mairie deadline to a French speaker in Brussels,
+   * Geneva or Montréal, where none of it is true. Adding a country is now: write the copy,
+   * tag the template, and nothing else changes.
+   */
+  countries?: string[];
   /** Omit for templates that apply to every profile. */
   appliesTo?: (profile: BulleProfile) => boolean;
 }

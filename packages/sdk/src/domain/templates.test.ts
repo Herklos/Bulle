@@ -8,6 +8,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   PROJECT_TEMPLATES,
+  templateAppliesInCountry,
   templateById,
   templatesFor,
   templatesForLocale,
@@ -167,5 +168,64 @@ describe('content rules the corpus must not break', () => {
     const budget = templateById('tpl-budget')!;
     const linked = budget.tasks.filter((t) => t.essential && t.href);
     expect(linked.length).toBeGreaterThanOrEqual(4);
+  });
+});
+
+describe('country vs language (multi-country readiness)', () => {
+  it('does NOT hand the French system to a French speaker outside France', () => {
+    // The bug this separation exists to kill. templatesForLocale does
+    // `locale.split('-')[0]`, so fr-BE / fr-CH / fr-CA all read as "fr". Filtering on
+    // language alone tells a parent in Brussels to declare their pregnancy to the CAF,
+    // which is not a bad translation, it is false information about their rights.
+    const belgium = templatesFor('fr-BE', { ...couple, country: 'BE' });
+    const ids = belgium.map((t) => t.id);
+    expect(ids).not.toContain('tpl-admin-fr');
+    expect(ids).not.toContain('tpl-budget');
+    expect(ids).not.toContain('tpl-postnatal');
+    expect(ids).not.toContain('tpl-garde');
+  });
+
+  it('still offers the universal templates outside France', () => {
+    // A hospital bag is a hospital bag. Gating everything by country would leave a new
+    // market with an empty app, which is the opposite failure.
+    const ids = templatesFor('fr-BE', { ...couple, country: 'BE' }).map((t) => t.id);
+    expect(ids).toContain('tpl-valise');
+    expect(ids).toContain('tpl-nid');
+  });
+
+  it('defaults a country-less profile to France, the launch market', () => {
+    const ids = templatesFor('fr', couple).map((t) => t.id);
+    expect(ids).toContain('tpl-admin-fr');
+  });
+
+  it('gives an English speaker IN France the French system when the copy exists', () => {
+    // The mirror of the first test. Country decides WHICH institutions apply; locale only
+    // decides which words they are described in. tpl-admin-fr has no EN copy (§7.1), so it
+    // is correctly absent here — but that must be a LOCALE decision, not a country one.
+    const enInFrance = templatesFor('en', { ...couple, country: 'FR' });
+    expect(templateAppliesInCountry(templateById('tpl-admin-fr')!, 'FR')).toBe(true);
+    expect(enInFrance.map((t) => t.id)).not.toContain('tpl-admin-fr');
+  });
+
+  it('is case-insensitive about the country code', () => {
+    const ids = templatesFor('fr', { ...couple, country: 'fr' }).map((t) => t.id);
+    expect(ids).toContain('tpl-admin-fr');
+  });
+
+  it('tags every template that names French institutions', () => {
+    // The corpus rule: if it talks about the CAF, the CPAM or the mairie, it must say so in
+    // `countries`. Missing the tag is how the Brussels bug comes back.
+    for (const id of ['tpl-admin-fr', 'tpl-budget', 'tpl-postnatal', 'tpl-garde']) {
+      expect(templateById(id)?.countries).toEqual(['FR']);
+    }
+  });
+
+  it('does not claim a country for templates that are merely untranslated', () => {
+    // Twins and solo parenting are not French. They are FR-only because that is the copy
+    // we have, and `locales` is the honest way to say that.
+    for (const id of ['tpl-jumeaux', 'tpl-solo', 'tpl-decisions', 'tpl-securite']) {
+      expect(templateById(id)?.countries).toBeUndefined();
+      expect(templateById(id)?.locales).toEqual(['fr']);
+    }
   });
 });

@@ -10,6 +10,7 @@ import { initReactI18next } from 'react-i18next';
 import { getLocales } from 'expo-localization';
 // No `.js` suffix here: the app uses bundler resolution, unlike packages/* which are
 // NodeNext and need the extension (metro strips it for them — see metro.config.js).
+import { DEFAULT_COUNTRY } from '@bulle/sdk';
 import { fr } from './fr';
 import { en } from './en';
 
@@ -26,6 +27,23 @@ export function isSupportedLanguage(value: string | undefined | null): value is 
 export function deviceLanguage(): Language {
   const tag = getLocales()[0]?.languageCode ?? undefined;
   return isSupportedLanguage(tag) ? tag : DEFAULT_LANGUAGE;
+}
+
+/**
+ * The device's COUNTRY (ISO 3166-1 alpha-2), which is a different question from its
+ * language and must not be derived from it.
+ *
+ * This is what decides whether the French administrative module applies. Reading it off the
+ * language would hand the CAF and the 5-day mairie deadline to a French speaker in
+ * Brussels, Geneva or Montréal, where none of it is true. `regionCode` is the device's
+ * actual region, so fr-BE resolves to BE and en-FR resolves to FR, which are both the right
+ * answers.
+ *
+ * Falls back to the launch market. A wrong guess is recoverable (the profile is editable);
+ * having no country at all is not, because every template filter would then open.
+ */
+export function deviceCountry(): string {
+  return getLocales()[0]?.regionCode?.toUpperCase() || DEFAULT_COUNTRY;
 }
 
 let initialised = false;

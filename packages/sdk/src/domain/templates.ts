@@ -29,6 +29,7 @@ const ADMIN_FR: ProjectTemplate = {
   descriptionKey: 'templates.adminFr.description',
   glyph: 'stamp',
   locales: ['fr'],
+  countries: ['FR'],
   tasks: [
     {
       titleKey: 'templates.adminFr.tasks.declaration',
@@ -381,6 +382,7 @@ const GARDE: ProjectTemplate = {
   descriptionKey: 'templates.garde.description',
   glyph: 'members',
   locales: ['fr'],
+  countries: ['FR'],
   tasks: [
     {
       titleKey: 'templates.garde.tasks.guichet',
@@ -852,6 +854,7 @@ const BUDGET: ProjectTemplate = {
   descriptionKey: 'templates.budget.description',
   glyph: 'stamp',
   locales: ['fr'],
+  countries: ['FR'],
   tasks: [
     {
       // The single biggest financial surprise: IJ are computed from the last 3 gross
@@ -1006,6 +1009,7 @@ const POSTNATAL: ProjectTemplate = {
   descriptionKey: 'templates.postnatal.description',
   glyph: 'nest',
   locales: ['fr'],
+  countries: ['FR'],
   tasks: [
     {
       // Offered AT the maternité, not requested in advance — so the task is to know it
@@ -1152,11 +1156,26 @@ export function templateById(id: string): ProjectTemplate | undefined {
   return PROJECT_TEMPLATES.find((t) => t.id === id);
 }
 
+/** The launch market. A bulle with no country stated lives under the French system. */
+export const DEFAULT_COUNTRY = 'FR';
+
+/**
+ * Does this template's system apply in `country`?
+ *
+ * A template with no `countries` applies anywhere: a hospital bag is a hospital bag. One
+ * that names its countries is describing institutions, and outside them it is not merely
+ * untranslated, it is FALSE.
+ */
+export function templateAppliesInCountry(template: ProjectTemplate, country: string): boolean {
+  return !template.countries || template.countries.includes(country.toUpperCase());
+}
+
 /**
  * Templates offered for a locale — see `ProjectTemplate.locales` and spec §7.1.
  *
- * Locale ONLY. Prefer `templatesFor()` in app code: this ignores `appliesTo`, so used on
- * its own it offers the twins template to someone expecting one baby.
+ * Locale ONLY, and locale is a LANGUAGE question. Prefer `templatesFor()` in app code: this
+ * ignores both `appliesTo` and the country, so on its own it hands the CAF to a French
+ * speaker in Montréal.
  */
 export function templatesForLocale(locale: string): ProjectTemplate[] {
   const lang = locale.split('-')[0];
@@ -1164,13 +1183,21 @@ export function templatesForLocale(locale: string): ProjectTemplate[] {
 }
 
 /**
- * Templates offered for a locale AND a profile. This is the one app code should call.
+ * Templates offered for a locale AND a country AND a profile. The one app code should call.
  *
- * Both filters have to be applied together or the gated templates leak: `appliesTo` is what
- * keeps Jumeaux away from a single pregnancy and Solo away from a couple. A leak here is
- * not cosmetic — being offered "ce qui double" when you are expecting one baby is the kind
- * of thing that makes an app feel like it is not listening.
+ * All three filters have to be applied together or the gated templates leak:
+ *
+ *  - `appliesTo` keeps Jumeaux away from a single pregnancy and Solo away from a couple.
+ *    Being offered "ce qui double" when you are expecting one baby is the kind of thing
+ *    that makes an app feel like it is not listening.
+ *  - `countries` keeps the French system inside France. Language cannot do this job:
+ *    `locale.split('-')[0]` reads fr-BE, fr-CH and fr-CA as "fr", so filtering on language
+ *    alone tells a parent in Brussels to declare their pregnancy to the CAF within three
+ *    months. That is not a bad translation, it is false information about their rights.
  */
 export function templatesFor(locale: string, profile: BulleProfile): ProjectTemplate[] {
-  return templatesForLocale(locale).filter((t) => !t.appliesTo || t.appliesTo(profile));
+  const country = profile.country ?? DEFAULT_COUNTRY;
+  return templatesForLocale(locale)
+    .filter((t) => templateAppliesInCountry(t, country))
+    .filter((t) => !t.appliesTo || t.appliesTo(profile));
 }
