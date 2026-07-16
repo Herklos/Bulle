@@ -98,7 +98,16 @@ export function surfaceY(size: number, fill: number): number {
   'worklet';
   // The floor lives HERE, not in the callers: both orbs and every future one route their
   // geometry through this, so an empty glass cannot come back via a screen that forgot.
-  const f = Math.max(MIN_VISIBLE_FILL, Math.min(1, fill));
+  //
+  // The isFinite guard is not theatre: Math.min/max PROPAGATE NaN rather than clamping it,
+  // so a NaN fill would sail through the clamp and out into the path as "M 0 NaN C 60 NaN"
+  // — an orb that silently draws nothing at all. readiness.ts does guard its own division
+  // (`total === 0 ? 0 : resolved / total`), so this is not reachable from it today; the
+  // guard is here because this is a shared primitive taking a plain number from any caller,
+  // and the failure it prevents is invisible rather than loud.
+  const f = Number.isFinite(fill)
+    ? Math.max(MIN_VISIBLE_FILL, Math.min(1, fill))
+    : MIN_VISIBLE_FILL;
   return size - f * size;
 }
 
