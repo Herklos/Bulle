@@ -24,6 +24,7 @@ import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { usePremiumStore } from '@/store/usePremiumStore';
+import { getOffering } from '@/lib/revenuecat';
 import type { GateReason } from '@/lib/premium';
 
 /** Which three benefits to show. Contextual to the gate the user actually hit (§10). */
@@ -38,6 +39,31 @@ export default function PaywallScreen() {
   const router = useRouter();
   const { colors, space, touch } = useBulleTheme();
   const reduced = useReducedMotion();
+
+  /**
+   * The price the STORE will actually charge, localised by it.
+   *
+   * This used to be a hardcoded i18n string ("29,99 € · une fois..."), which is a promise
+   * the app cannot keep: change the price in the RevenueCat dashboard and the screen lies,
+   * and any non-euro storefront was quoted euros it would never be billed in. `priceString`
+   * comes from the store itself, already formatted for the user's region.
+   *
+   * Falls back to the written line when there is no offering (web, offline, a failed
+   * configure). Showing an approximate price beats showing none, as long as the real one
+   * wins whenever it is known.
+   */
+  const [priceString, setPriceString] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void getOffering().then((offering) => {
+      const pkg = offering?.lifetime ?? offering?.availablePackages[0];
+      if (!cancelled && pkg) setPriceString(pkg.product.priceString);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const purchasing = usePremiumStore((s) => s.purchasing);
   const isPremium = usePremiumStore((s) => s.isPremium);
@@ -113,7 +139,7 @@ export default function PaywallScreen() {
           style={{ gap: space[4] }}
         >
           <Text variant="caption" style={{ textAlign: 'center' }}>
-            {t('paywall.price')}
+            {priceString ? t('paywall.priceOnce', { price: priceString }) : t('paywall.price')}
           </Text>
 
           {/* Sage. Never terracotta. */}

@@ -338,6 +338,7 @@ export const en = {
       allTemplates: 'Every template, including twins and solo',
     },
     price: '€29.99 · once, for the whole pregnancy',
+    priceOnce: '{{price}} · once, for the whole pregnancy',
     cta: 'Unlock Bulle Complète',
     later: 'Later',
     restore: 'Restore a purchase',
