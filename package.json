@@ -9,7 +9,7 @@
     "lint": "pnpm -r lint",
     "//build:web": "Cloudflare Pages runs its build command from the REPO ROOT, so it needs this passthrough — `pnpm -r build:web` fails with 'Command build:web not found' because only apps/mobile defines it.",
     "build:web": "pnpm --filter bulle build:web",
-    "deploy": "pnpm build:web && wrangler pages deploy apps/mobile/dist --project-name bulle"
+    "deploy": "pnpm build:web && wrangler deploy"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

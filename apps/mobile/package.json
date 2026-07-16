@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
     "check": "expo install --check",
-    "build:web": "expo export --platform web && node scripts/generate-sitemap.mjs"
+    "build:web": "expo export --platform web && node scripts/generate-sitemap.mjs && node scripts/generate-404.mjs"
   },
   "dependencies": {
     "@babel/runtime": "^7.29.2",

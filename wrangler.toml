@@ -1,0 +1,28 @@
+# Cloudflare Workers (static assets).
+#
+# THIS FILE IS AT THE REPO ROOT ON PURPOSE, and it is the same reason `build:web` is
+# duplicated in the root package.json: Cloudflare runs both the build and the deploy from
+# the repo root, not from apps/mobile. Without a config here, `npx wrangler deploy` finds a
+# pnpm workspace instead of an application and refuses:
+#
+#   ✘ [ERROR] The Cloudflare application detection logic has been run in the root of a
+#     workspace instead of targeting a specific project.
+#
+# (Fiancé keeps its wrangler.toml in apps/mobile because its Cloudflare project points at
+# that subdirectory. Bulle's points at the root, so the config lives where wrangler looks.)
+
+name = "bulle"
+compatibility_date = "2026-05-22"
+
+[assets]
+# Relative to this file, i.e. the repo root.
+directory = "apps/mobile/dist"
+
+# NOT "single-page-application". Bulle is a STATIC export: every route is a real prerendered
+# .html file (74 of them), which is the whole point of the SEO setup. SPA handling would
+# serve index.html with a 200 for any unmatched URL, turning every typo and every dead
+# backlink into a soft 404 that Google indexes as a duplicate of the home page.
+#
+# "404-page" serves dist/404.html with a real 404 status. Expo names its not-found route
+# `+not-found.html`, so the build copies it to `404.html` — see scripts/generate-404.mjs.
+not_found_handling = "404-page"
