@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Bulle",
+    "slug": "bulle",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "bulle",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "software.drakkar.bulle.app",
+      "associatedDomains": ["applinks:bulle.drakkar.software"]
+    },
+    "android": {
+      "package": "software.drakkar.bulle.app",
+      "edgeToEdgeEnabled": true,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "bulle.drakkar.software",
+              "path": "/join"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "react-native-edge-to-edge",
+      "expo-secure-store",
+      "expo-sqlite",
+      "expo-localization",
+      "expo-font",
+      "expo-splash-screen",
+      "expo-notifications",
+      [
+        "expo-build-properties",
+        {
+          "android": { "kotlinVersion": "2.1.20" },
+          "ios": { "deploymentTarget": "16.4" }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

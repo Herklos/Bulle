@@ -1,0 +1,62 @@
+'use client';
+/**
+ * Native tabs (iOS/Android). The web build resolves `_layout.web.tsx` instead.
+ *
+ * `NativeTabs` renders a REAL platform tab bar: a UITabBar on iOS with SF Symbols, Material
+ * on Android. That is the whole point of the platform split — a JS tab bar on native looks
+ * approximately right and feels wrong.
+ *
+ * No badges. Spec §15.6 bans them outright ("Badges : n'existent pas. Aucun point rouge
+ * nulle part"), which is a deliberate divergence from wedding-os' overdue badge. A red dot
+ * on a pregnancy-preparation app is exactly the anxiety this product exists to remove.
+ */
+import React from 'react';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { useTranslation } from 'react-i18next';
+import { useBulleTheme } from '@bulle/ui/theme';
+import { usePauseState } from '@/lib/use-pause';
+
+export default function TabLayout() {
+  const { t } = useTranslation();
+  const { colors } = useBulleTheme();
+  const paused = usePauseState();
+
+  return (
+    <NativeTabs tintColor={colors.sage}>
+      <NativeTabs.Trigger name="today">
+        <NativeTabs.Trigger.Icon sf={{ default: 'house', selected: 'house.fill' }} md="home" />
+        <NativeTabs.Trigger.Label>{t('tabs.today')}</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+
+      {/* Hidden in Pause mode: the Journey is the one surface that must never appear
+          after a loss (§3.1). */}
+      {!paused && (
+        <NativeTabs.Trigger name="journey">
+          <NativeTabs.Trigger.Icon sf={{ default: 'map', selected: 'map.fill' }} md="route" />
+          <NativeTabs.Trigger.Label>{t('tabs.journey')}</NativeTabs.Trigger.Label>
+        </NativeTabs.Trigger>
+      )}
+
+      <NativeTabs.Trigger name="plan">
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'checklist', selected: 'checklist' }}
+          md="checklist"
+        />
+        <NativeTabs.Trigger.Label>{t('tabs.plan')}</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="memories">
+        <NativeTabs.Trigger.Icon sf={{ default: 'sparkles', selected: 'sparkles' }} md="auto_awesome" />
+        <NativeTabs.Trigger.Label>{t('tabs.memories')}</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+
+      {/* "Plus" (§4.1). Family management, language, and Pause live here rather than in
+          their own tab: a tab must earn daily taps, and "manage members" does not. Without
+          it, none of those screens is reachable on native at all. */}
+      <NativeTabs.Trigger name="more">
+        <NativeTabs.Trigger.Icon sf={{ default: 'ellipsis', selected: 'ellipsis' }} md="more_horiz" />
+        <NativeTabs.Trigger.Label>{t('tabs.more')}</NativeTabs.Trigger.Label>
+      </NativeTabs.Trigger>
+    </NativeTabs>
+  );
+}

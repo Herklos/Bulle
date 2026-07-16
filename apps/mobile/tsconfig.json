@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Extension-less on purpose. Expo enables `tsconfigPaths`, so Metro resolves these too —
+    // and a path ending in `.ts` pins the exact file, defeating platform resolution
+    // (`kv-storage.web.ts` would never be picked on web). Without the extension, TypeScript
+    // and Metro each apply their own resolution and both land correctly.
+    "paths": {
+      // Seo has no base file, only .web.tsx / .native.tsx. Metro picks by platform;
+      // TypeScript cannot, so point it at the web variant (the one with the real types).
+      "@/components/Seo": ["./components/Seo.web.tsx"],
+      "@/*": ["./*"],
+      "@bulle/sdk": ["../../packages/sdk/src/index"],
+      "@bulle/ui": ["../../packages/ui/src/index"],
+      "@bulle/ui/theme": ["../../packages/ui/src/theme/index"],
+      "@bulle/ui/primitives": ["../../packages/ui/src/primitives/index"],
+      "@bulle/ui/components": ["../../packages/ui/src/components/index"],
+      "@bulle/ui/utils/kv-storage": ["../../packages/ui/src/utils/kv-storage"],
+      "@bulle/ui/utils/secure-store": ["../../packages/ui/src/utils/secure-store"]
+    },
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM"],
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": ["node_modules"]
+}
