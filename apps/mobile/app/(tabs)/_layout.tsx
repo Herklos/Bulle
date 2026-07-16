@@ -13,6 +13,7 @@
 import React from 'react';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useTranslation } from 'react-i18next';
+import { withAlpha } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { usePauseState } from '@/lib/use-pause';
 
@@ -29,6 +30,17 @@ export default function TabLayout() {
       tintColor={colors.sage}
       backgroundColor={colors.bg}
       iconColor={colors.inkSoft}
+      // The pill behind the selected icon is a SEPARATE property from tintColor, and it
+      // falls back to Material You's secondaryContainer — a pale lavender, on a palette with
+      // no blue or purple anywhere in it. tintColor was already set and does work (the label
+      // reads sage), which is exactly why this survived: the tab looked half-right, so the
+      // half that was wrong read as intentional.
+      //
+      // Sage at 0.18 rather than solid: the pill sits UNDER the icon, and a solid sage one
+      // would fight the icon it is meant to be indicating.
+      indicatorColor={withAlpha(colors.sage, 0.18)}
+      // Same leak, same default, one interaction later — the touch ripple.
+      rippleColor={withAlpha(colors.sage, 0.12)}
     >
       <NativeTabs.Trigger name="today">
         <NativeTabs.Trigger.Icon sf={{ default: 'house', selected: 'house.fill' }} md="home" />
