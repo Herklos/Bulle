@@ -1,156 +1,95 @@
 #!/usr/bin/env python3
 """
-Generates every icon variant from ONE definition of the orb.
+Generates every icon variant from the master logo at the repo root.
 
-The logo is the orb. Not a picture of the orb — the same geometry the app renders at
-runtime (packages/ui/src/primitives/orb-shared.ts), drawn here with the same tokens. That
-is why this is a script and not a .png someone exported from Figma once: when the palette
-moves, the icons move with it.
+The master (`logo.png`, RGBA with transparency) is a designed asset: a sleeping baby inside
+a translucent bubble. This script does NOT redraw it — it composites it onto the ivory
+background at the right sizes and margins per target, so there is exactly one place the
+brand mark is authored and one place the sizes are decided.
 
-Rendered at 4x and downsampled (LANCZOS) because there is no anti-aliasing in PIL's
-ellipse; supersampling is the cheapest way to get a clean edge at 48px, which is the size
-that actually matters for a favicon.
+An earlier version drew the orb procedurally from tokens.ts. That was defensible while the
+mark did not exist; now that it does, redrawing it would be a second, worse source of truth.
 
 Run:  python3 scripts/generate-logo.py
 """
 
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image
 
-# ─── Tokens. Mirror packages/ui/src/theme/tokens.ts ──────────────────────────
-BG = (250, 247, 242)        # ivory  #FAF7F2
-SURFACE = (255, 255, 255)
-LINE = (233, 226, 216)      # #E9E2D8
-SAGE = (124, 143, 114)      # #7C8F72 — the primary
-DUSTY_BLUE = (143, 166, 191)  # #8FA6BF
-INK = (46, 42, 38)          # #2E2A26
+# Mirrors packages/ui/src/theme/tokens.ts — icons must sit on the same ivory as the app.
+BG = (250, 247, 242)  # #FAF7F2
 
-SS = 4  # supersample factor
-
+ROOT = Path(__file__).resolve().parents[3]
+MASTER = ROOT / "logo.png"
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
 PUBLIC = Path(__file__).resolve().parent.parent / "public" / "assets"
 
 
-def lerp(a, b, t):
-    return tuple(round(x + (y - x) * t) for x, y in zip(a, b))
-
-
-def draw_orb(size, fill=0.62, margin_ratio=0.14, background=BG):
+def compose(size: int, margin_ratio: float, background=BG, transparent=False) -> Image.Image:
     """
-    The orb, at `size` px. `fill` is the liquid level, matching the app's readiness.
+    The master, centred on a square canvas with `margin_ratio` breathing room.
 
-    0.62 by default: an orb that is meaningfully full reads as a bubble, while an empty one
-    reads as a grey circle. The icon has one job at 48px — be recognisably a filling bubble.
+    The margin is the whole point of this function: iOS masks to a rounded rect, Android
+    crops to a circle/squircle with its own safe zone, and a favicon has none of that. One
+    exported PNG cannot satisfy all three, which is why each target below passes its own.
     """
-    S = size * SS
-    img = Image.new("RGB", (S, S), background)
-    d = ImageDraw.Draw(img)
+    master = Image.open(MASTER).convert("RGBA")
 
-    margin = int(S * margin_ratio)
-    box = [margin, margin, S - margin, S - margin]
-    cx = cy = S // 2
-    r = (S - 2 * margin) // 2
+    canvas = Image.new("RGBA", (size, size), (*background, 0 if transparent else 255))
+    inner = int(size * (1 - margin_ratio * 2))
 
-    # ── Halo: the only light-emitting element. Drawn on its own layer and blurred, then
-    #    composited, so it glows outward rather than banding.
-    halo = Image.new("RGB", (S, S), background)
-    hd = ImageDraw.Draw(halo)
-    accent = lerp(DUSTY_BLUE, SAGE, 0.5)
-    hd.ellipse(box, fill=lerp(background, accent, 0.35))
-    halo = halo.filter(ImageFilter.GaussianBlur(radius=S * 0.045))
-    img.paste(halo, (0, 0))
+    # Fit the master inside `inner` without distorting it — the bubble is very slightly
+    # taller than wide, and stretching it to square is instantly visible.
+    ratio = min(inner / master.width, inner / master.height)
+    w, h = int(master.width * ratio), int(master.height * ratio)
+    resized = master.resize((w, h), Image.LANCZOS)
 
-    # ── Glass body: a radial gradient offset to the upper left supplies the implied light
-    #    source. A flat fill here is what makes an orb look like a plastic ball.
-    glass = Image.new("RGB", (S, S), background)
-    gd = ImageDraw.Draw(glass)
-    steps = 90
-    light_x, light_y = cx - r * 0.35, cy - r * 0.35
-    for i in range(steps, 0, -1):
-        t = i / steps
-        rr = int(r * 1.45 * t)
-        col = lerp(SURFACE, LINE, 1 - t)
-        gd.ellipse([light_x - rr, light_y - rr, light_x + rr, light_y + rr], fill=col)
-
-    # Clip the gradient to the circle via a mask.
-    mask = Image.new("L", (S, S), 0)
-    ImageDraw.Draw(mask).ellipse(box, fill=255)
-    img.paste(glass, (0, 0), mask)
-
-    # ── Liquid, with the meniscus. Same maths as liquidPathString: the surface rides UP at
-    #    both walls and dips in the centre.
-    surface_y = (cy - r) + (2 * r) * (1 - fill)
-    meniscus = int(r * 0.06)
-    liquid = Image.new("RGB", (S, S), background)
-    ld = ImageDraw.Draw(liquid)
-    # Sweep the gradient vertically through the liquid: sage at the surface warming with
-    # depth, echoing the app's sweep gradient without needing a real conic.
-    for y in range(int(surface_y), cy + r + 1):
-        t = (y - surface_y) / max(1, (cy + r) - surface_y)
-        ld.line([(0, y), (S, y)], fill=lerp(accent, SAGE, t))
-
-    # The liquid mask is an INTERSECTION of two masks, not a union.
-    #
-    # Building it by drawing the meniscus chord straight onto the circle mask paints across
-    # the full width and spills the liquid outside the glass as two wings. The surface shape
-    # and the glass boundary are separate constraints, so they have to be combined with a
-    # multiply rather than by drawing one over the other.
-    below_surface = Image.new("L", (S, S), 0)
-    bd = ImageDraw.Draw(below_surface)
-    bd.rectangle([0, int(surface_y), S, S], fill=255)
-    # Meniscus: the liquid dips in the centre, so carve the dip out of the top edge…
-    bd.chord([0, int(surface_y - meniscus * 3), S, int(surface_y + meniscus * 3)], 0, 180, fill=255)
-
-    circle_mask = Image.new("L", (S, S), 0)
-    ImageDraw.Draw(circle_mask).ellipse(box, fill=255)
-
-    from PIL import ImageChops
-    liquid_mask = ImageChops.multiply(below_surface, circle_mask)
-    img.paste(liquid, (0, 0), liquid_mask)
-
-    # ── Rim, over the liquid, so it reads as contained rather than pasted on.
-    d = ImageDraw.Draw(img)
-    d.ellipse(box, outline=LINE, width=max(1, int(S * 0.006)))
-
-    return img.resize((size, size), Image.LANCZOS)
+    canvas.paste(resized, ((size - w) // 2, (size - h) // 2), resized)
+    return canvas if transparent else canvas.convert("RGB")
 
 
-def save(img, *paths):
+def save(img: Image.Image, *paths: Path) -> None:
     for p in paths:
         p.parent.mkdir(parents=True, exist_ok=True)
         img.save(p)
-        print(f"  {p.relative_to(p.parent.parent.parent)}  {img.size[0]}x{img.size[1]}")
+        print(f"  {p.name:22} {img.size[0]}x{img.size[1]}")
 
 
-def main():
-    print("Generating Bulle icons from the orb geometry…")
+def main() -> None:
+    if not MASTER.exists():
+        raise SystemExit(f"Missing {MASTER}. The master logo lives at the repo root.")
 
-    # App icon / logo. Generous margin so the orb survives iOS's rounded-rect mask.
-    icon = draw_orb(1024, fill=0.62, margin_ratio=0.16)
-    save(icon, ASSETS / "icon.png", ASSETS / "logo.png", PUBLIC / "icon.png", PUBLIC / "logo.png")
+    print("Generating Bulle icons from logo.png…")
 
-    # Android adaptive icon: the system crops to a circle/squircle and applies its own
-    # safe zone, so the orb needs a much bigger margin or it gets its edges shaved.
-    save(draw_orb(1024, fill=0.62, margin_ratio=0.26), ASSETS / "adaptive-icon.png")
+    # App icon. iOS masks to a rounded rect, so the mark needs room at the corners.
+    save(compose(1024, 0.08), ASSETS / "icon.png", PUBLIC / "icon.png")
 
-    # Splash: the orb nearly empty, matching what onboarding shows a second later.
-    save(draw_orb(1024, fill=0.08, margin_ratio=0.30), ASSETS / "splash-icon.png")
+    # The logo itself, transparent, for the README and the web.
+    save(compose(1024, 0.02, transparent=True), ASSETS / "logo.png", PUBLIC / "logo.png")
+
+    # Android adaptive: the system crops to a circle/squircle AND applies its own safe zone,
+    # so this needs a much bigger margin or the bubble's edges get shaved.
+    save(compose(1024, 0.22), ASSETS / "adaptive-icon.png")
+
+    # Splash.
+    save(compose(1024, 0.30), ASSETS / "splash-icon.png")
 
     # PWA.
-    save(draw_orb(192, fill=0.62, margin_ratio=0.16), ASSETS / "icon-192.png", PUBLIC / "icon-192.png")
-    save(draw_orb(512, fill=0.62, margin_ratio=0.16), ASSETS / "icon-512.png", PUBLIC / "icon-512.png")
+    save(compose(192, 0.08), ASSETS / "icon-192.png", PUBLIC / "icon-192.png")
+    save(compose(512, 0.08), ASSETS / "icon-512.png", PUBLIC / "icon-512.png")
 
-    # Favicon. Tight margin and a fuller orb: at 48px it must be a shape, not a detail.
-    fav = draw_orb(196, fill=0.66, margin_ratio=0.08)
+    # Favicon: tight margin. At 48px it must read as a shape, not a detail.
+    fav = compose(196, 0.02)
     save(fav, ASSETS / "favicon.png", PUBLIC / "favicon.png")
-    fav.resize((48, 48), Image.LANCZOS).save(ASSETS / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-    print(f"  assets/favicon.ico  multi-size")
+    fav.resize((48, 48), Image.LANCZOS).save(
+        ASSETS / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)]
+    )
+    print("  favicon.ico            multi-size")
 
-    # OG image, 1200x630. The orb off-centre, ivory field — it is the share card, so it
-    # must survive being cropped square by some networks.
+    # OG card, 1200x630. Off-centre so it survives a square crop by networks that do that.
     og = Image.new("RGB", (1200, 630), BG)
-    orb = draw_orb(460, fill=0.62, margin_ratio=0.10)
-    og.paste(orb, (int(1200 * 0.62), (630 - 460) // 2))
+    mark = compose(470, 0.02, transparent=True)
+    og.paste(mark, (int(1200 * 0.60), (630 - 470) // 2), mark)
     save(og, ASSETS / "og-image.png", PUBLIC / "og-image.png")
 
     print("Done.")
