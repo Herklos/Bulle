@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack } from '@/lib/go-back';
 import { enterPause } from '@/lib/use-pause';
 
 export default function SettingsPauseScreen() {
@@ -35,7 +36,7 @@ export default function SettingsPauseScreen() {
           {t('pause.enterBody')}
         </Text>
         <Button label={t('pause.enter')} onPress={handlePause} loading={busy} block />
-        <Button label={t('common.cancel')} tone="ghost" onPress={() => router.back()} block />
+        <Button label={t('common.cancel')} tone="ghost" onPress={() => goBack('/more')} block />
       </View>
     </Screen>
   );

@@ -18,7 +18,7 @@
  * button underneath (see components/DueDatePicker.tsx). Between fighting that and putting
  * confirm where both platforms already put it on a form sheet, the header wins.
  */
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,7 @@ import { randomId, type BulleEvent, type EventKind } from '@bulle/sdk';
 import { Row, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
 import { useEventsStore } from '@/store/useEventsStore';
 
@@ -58,10 +59,19 @@ function withTime(at: Date, from: Date): Date {
 
 export default function NewEventScreen() {
   const { t } = useTranslation();
+  // Android's back walks the steps first, then leaves.
+  useHardwareBack('/today', () => {
+    if (stepRef.current === 'kind') return false;
+    setStep(stepRef.current === 'time' ? 'date' : 'kind');
+    return true;
+  });
   const router = useRouter();
   const { colors, space } = useBulleTheme();
 
   const [step, setStep] = useState<Step>('kind');
+  // See memory/new: a ref, so the BackHandler closure reads the current step.
+  const stepRef = useRef<Step>('kind');
+  stepRef.current = step;
   const [kind, setKind] = useState<EventKind | null>(null);
   const [at, setAt] = useState<Date>(defaultAt());
 
@@ -79,13 +89,21 @@ export default function NewEventScreen() {
       updatedAt: nowIso,
     };
     useEventsStore.getState().addEvent(event);
-    router.back();
+    goBack();
   };
 
   // Kind first. Choosing the thing before its time is the order people think in.
   if (step === 'kind') {
     return (
       <Screen>
+        {/* See memory/new: the default arrow no-ops with no history. */}
+        <Stack.Screen
+          options={{
+            headerLeft: () => (
+              <HeaderAction label={t('common.back')} onPress={() => goBack('/today')} />
+            ),
+          }}
+        />
         <Text variant="display">{t('events.newTitle')}</Text>
         <View>
           <SectionHeader title={t('events.kindQuestion')} />

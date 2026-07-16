@@ -10,7 +10,7 @@
  * week they are in, when the app already knows, is the kind of small insult that makes
  * software feel like paperwork.
  */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,7 @@ import {
 import { Row, SectionHeader, Text, TextField } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useBulleStore } from '@/store/useBulleStore';
@@ -34,6 +35,13 @@ const KINDS: MemoryKind[] = ['note', 'milestone'];
 
 export default function NewMemoryScreen() {
   const { t } = useTranslation();
+  // Android's back must never strand a half-written entry outside the app. On the write
+  // step it means the kind step, matching the header's Back.
+  useHardwareBack('/memories', () => {
+    if (!kindRef.current) return false;
+    setKind(null);
+    return true;
+  });
   const router = useRouter();
   const { space } = useBulleTheme();
   const now = useNow();
@@ -41,6 +49,10 @@ export default function NewMemoryScreen() {
   const bulle = useBulleStore((s) => s.bulle);
 
   const [kind, setKind] = useState<MemoryKind | null>(null);
+  // A ref so the BackHandler closure sees the CURRENT step. Capturing `kind` directly would
+  // re-register the listener on every keystroke, and read a stale value in between.
+  const kindRef = useRef<MemoryKind | null>(null);
+  kindRef.current = kind;
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
 
@@ -64,12 +76,23 @@ export default function NewMemoryScreen() {
       updatedAt: nowIso,
     };
     useMemoriesStore.getState().addMemory(memory);
-    router.back();
+    goBack('/memories');
   };
 
   if (!kind) {
     return (
       <Screen>
+        {/* The FIRST step needs this as much as the second. The default arrow calls the
+            navigator's back, which no-ops on an empty stack — so arriving here from a deep
+            link, a notification, or a web reload left the screen with a back button that
+            did nothing at all. */}
+        <Stack.Screen
+          options={{
+            headerLeft: () => (
+              <HeaderAction label={t('common.back')} onPress={() => goBack('/memories')} />
+            ),
+          }}
+        />
         <Text variant="display">{t('memories.newTitle')}</Text>
         <View>
           <SectionHeader title={t('memories.kindQuestion')} />

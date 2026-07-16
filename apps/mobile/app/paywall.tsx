@@ -23,6 +23,7 @@ import { BulleOrb, Glyph } from '@bulle/ui/primitives';
 import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack } from '@/lib/go-back';
 import { usePremiumStore } from '@/store/usePremiumStore';
 import { getOffering } from '@/lib/revenuecat';
 import type { GateReason } from '@/lib/premium';
@@ -76,7 +77,7 @@ export default function PaywallScreen() {
   // Bought, or restored → leave immediately. Lingering on a paywall you have already paid
   // is the fastest way to make someone doubt the purchase went through.
   useEffect(() => {
-    if (isPremium) router.back();
+    if (isPremium) goBack();
   }, [isPremium, router]);
 
   const buy = async () => {
@@ -146,7 +147,7 @@ export default function PaywallScreen() {
           <Button label={t('paywall.cta')} onPress={buy} loading={purchasing} block />
 
           <Pressable
-            onPress={() => router.back()}
+            onPress={() => goBack()}
             accessibilityRole="button"
             style={{ alignSelf: 'center', minHeight: touch.min, justifyContent: 'center' }}
           >

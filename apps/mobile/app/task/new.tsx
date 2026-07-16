@@ -28,6 +28,7 @@ import { Row, SectionHeader, Text, TextField } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
@@ -39,6 +40,8 @@ const WHENS: CustomTaskWhen[] = ['thisWeek', 'soon', 'beforeBirth'];
 export default function NewTaskScreen() {
   const { projectId } = useLocalSearchParams<{ projectId: string }>();
   const { t } = useTranslation();
+  // Android's back must never strand a half-written entry outside the app.
+  useHardwareBack('/plan');
   const router = useRouter();
   const { space } = useBulleTheme();
   const now = useNow();
@@ -87,7 +90,7 @@ export default function NewTaskScreen() {
       updatedAt: nowIso,
     };
     usePlanStore.getState().addTask(task);
-    router.back();
+    goBack('/plan');
   };
 
   return (
@@ -96,6 +99,10 @@ export default function NewTaskScreen() {
           container the options never reached the navigator and the header stayed bare. */}
       <Stack.Screen
         options={{
+          // See memory/new: the default arrow no-ops with no history.
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/plan')} />
+          ),
           headerRight: () =>
             // Absent rather than greyed-out until there is something to save: a disabled
             // control invites tapping and explains nothing.

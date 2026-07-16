@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
@@ -43,7 +44,7 @@ export default function MemoryScreen() {
         style: 'destructive',
         onPress: () => {
           useMemoriesStore.getState().removeMemory(memory.id);
-          router.back();
+          goBack('/memories');
         },
       },
     ]);

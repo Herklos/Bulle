@@ -18,11 +18,14 @@ import { DateTimePicker } from '@expo/ui/community/datetime-picker';
 import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
 import { useBulleStore } from '@/store/useBulleStore';
 
 export default function NewBirthScreen() {
   const { t } = useTranslation();
+  // Android's back must never strand a half-written entry outside the app.
+  useHardwareBack('/more');
   const router = useRouter();
   const { colors, space } = useBulleTheme();
 
@@ -37,7 +40,7 @@ export default function NewBirthScreen() {
       birthDate: at.toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    router.back();
+    goBack('/more');
   };
 
   return (

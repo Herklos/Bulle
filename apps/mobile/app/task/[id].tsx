@@ -20,6 +20,7 @@ import { Button, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { goBack } from '@/lib/go-back';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
@@ -61,7 +62,7 @@ export default function TaskScreen() {
   const complete = () => {
     usePlanStore.getState().updateTask(task.id, { status: done ? 'todo' : 'done' });
     if (!done && task.essential) useReadinessStore.getState().pulse();
-    router.back();
+    goBack('/plan');
   };
 
   return (
