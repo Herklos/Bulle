@@ -15,8 +15,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "software.drakkar.bulle.app",
       "associatedDomains": [
+        "applinks:bulle.drakkar.software",
         "applinks:bulle.drakkar.software"
-      ]
+      ],
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "software.drakkar.bulle.app",
