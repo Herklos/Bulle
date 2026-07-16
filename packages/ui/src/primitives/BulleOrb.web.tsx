@@ -128,6 +128,17 @@ export function BulleOrb({
             Glass body. A radial gradient offset toward the upper left, matching the native
             orb: a flat fill reads as a plastic ball, and the offset centre supplies the
             implied light source that makes it read as glass.
+
+            KNOWN WEAK IN DARK MODE, and the numbers say why rather than a hunch: this runs
+            surface #26231F -> line #353028 against a bg of #1C1A17. All three sit within a
+            few percent of each other, so the glass barely separates from the page while the
+            liquid (sage #93A889 -> terracotta #D08461) is far brighter. The orb then reads
+            as a dark bowl with a bright stripe in it instead of a lit glass sphere.
+
+            A sphere in a dark room catches light rather than absorbing it, so dark mode
+            probably wants its own glass treatment instead of inheriting tokens that all
+            collapse toward the background. Not attempted here: it needs to be judged on a
+            screen, not reasoned about in a file.
           */}
           <div
             style={{

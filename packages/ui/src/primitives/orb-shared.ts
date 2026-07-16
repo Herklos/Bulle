@@ -63,7 +63,32 @@ export function orbGradientStops(colors: Palette, trimesterProgress: number): st
 
 // ─── Geometry ────────────────────────────────────────────────────────────────
 
-/** Meniscus depth in px — the liquid clings to the glass. Small enough to read as physics. */
+/**
+ * Meniscus depth as a FRACTION of the orb, not a pixel count.
+ *
+ * It was a flat 4px, which quietly made the orb not scale-invariant: the same primitive drew
+ * a different shape at every size. At the 180px default the curve is 2.2% of the width; on
+ * the 260px landing hero the identical 4px is 1.5%, so the surface flattens as the orb grows
+ * and the meniscus stops reading as one. The landing orb is the biggest instance in the
+ * product and therefore had the weakest version of the detail that says "liquid" — worst
+ * exactly where it is most looked at.
+ *
+ * The ratio is 4/180, so the default orb is pixel-identical to before and only the sizes
+ * that were already wrong move.
+ */
+export const MENISCUS_RATIO = 4 / 180;
+
+/** Meniscus depth in px for a given orb size. */
+export function meniscusFor(size: number): number {
+  'worklet';
+  return size * MENISCUS_RATIO;
+}
+
+/**
+ * @deprecated The depth at the 180px default. Kept only because it reads as a constant at
+ * call sites that have no size to hand; anything drawing a path must use `meniscusFor(size)`
+ * or it reintroduces the scale bug.
+ */
 export const MENISCUS = 4;
 
 /**
@@ -122,14 +147,15 @@ export function surfaceY(size: number, fill: number): number {
 export function liquidPathString(size: number, fill: number): string {
   'worklet';
   const y = surfaceY(size, fill);
+  const m = meniscusFor(size);
   // A SYMMETRIC meniscus: the surface starts and ends high (the liquid clings to the glass
   // at both walls) and both control points pull DOWN, so the centre dips evenly.
   //
   // Getting this wrong is easy and looks it: one control point above and one below produces
   // an S-curve, i.e. a wave sloshing to one side, which reads as a bug rather than physics.
   return [
-    `M 0 ${y - MENISCUS}`,
-    `C ${size * 0.3} ${y + MENISCUS * 1.4}, ${size * 0.7} ${y + MENISCUS * 1.4}, ${size} ${y - MENISCUS}`,
+    `M 0 ${y - m}`,
+    `C ${size * 0.3} ${y + m * 1.4}, ${size * 0.7} ${y + m * 1.4}, ${size} ${y - m}`,
     `L ${size} ${size}`,
     `L 0 ${size}`,
     'Z',
@@ -199,8 +225,9 @@ export const LIGHT = {
 export function meniscusLinePath(size: number, fill: number): string {
   'worklet';
   const y = surfaceY(size, fill);
+  const m = meniscusFor(size);
   return [
-    `M 0 ${y - MENISCUS}`,
-    `C ${size * 0.3} ${y + MENISCUS * 1.4}, ${size * 0.7} ${y + MENISCUS * 1.4}, ${size} ${y - MENISCUS}`,
+    `M 0 ${y - m}`,
+    `C ${size * 0.3} ${y + m * 1.4}, ${size * 0.7} ${y + m * 1.4}, ${size} ${y - m}`,
   ].join(' ');
 }

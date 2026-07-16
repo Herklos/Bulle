@@ -12,6 +12,7 @@ import { describe, expect, it } from 'vitest';
 import {
   MENISCUS,
   MIN_VISIBLE_FILL,
+  meniscusFor,
   liquidPathString,
   mix,
   orbGradientStops,
@@ -125,6 +126,27 @@ describe('liquidPathString', () => {
     for (const cy of [Number(curve![2]), Number(curve![4])]) {
       expect(Math.abs(cy - y)).toBeLessThanOrEqual(MENISCUS * 2);
     }
+  });
+
+  it('is SCALE-INVARIANT: the same shape at every size', () => {
+    // The bug this pins. A flat 4px meniscus made the curve 2.2% of a 180px orb and 1.5% of
+    // the 260px landing hero, so the surface flattened as the orb grew — the biggest
+    // instance in the product had the weakest version of the detail that says "liquid".
+    // Normalise both paths by their size and the curve depths must agree.
+    const depthRatio = (size: number) => {
+      const y = surfaceY(size, 0.5);
+      const c = liquidPathString(size, 0.5).match(
+        /C\s*([-\d.]+)[,\s]+([-\d.]+)[,\s]+([-\d.]+)[,\s]+([-\d.]+)/i,
+      );
+      return (Number(c![2]) - y) / size;
+    };
+    expect(depthRatio(260)).toBeCloseTo(depthRatio(180), 6);
+    expect(depthRatio(64)).toBeCloseTo(depthRatio(180), 6);
+  });
+
+  it('leaves the 180px default exactly where it was', () => {
+    // The ratio is 4/180 precisely so the orb everyone has already seen does not move.
+    expect(meniscusFor(180)).toBeCloseTo(4, 6);
   });
 
   it('never emits NaN, whatever it is handed', () => {
