@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import Animated, { FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { randomId, type BulleProfile, type Companionship } from '@bulle/sdk';
 import { deviceCountry } from '@/i18n';
+import { initStorage } from '@bulle/ui/utils/kv-storage';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
 import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
@@ -106,6 +107,21 @@ export default function OnboardingScreen() {
       seedPhrase,
       role: 'owner',
     });
+
+    /**
+     * Open the new bulle's storage BEFORE writing to it.
+     *
+     * `persist()` in the stores is guarded by `if (getStorage())` and silently does nothing
+     * when storage is not open yet. DatabaseProvider opens it in an effect, i.e. after this
+     * function returns, so the very first write of a bulle's life was dropped on the floor
+     * and then the hydrate replaced the in-memory copy with the nothing it found on disk.
+     * On web that was fatal and total: onboarding completed, landed on /today, and rendered
+     * an empty app with no error anywhere.
+     *
+     * initStorage is idempotent, so DatabaseProvider re-opening the same file after this
+     * costs a re-read and changes nothing.
+     */
+    await initStorage(entry.dbFileName);
 
     const nowIso = new Date().toISOString();
     useBulleStore.getState().saveBulle({

@@ -9,7 +9,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useBulleTheme } from '@bulle/ui/theme';
-import { defaultDueDate, type DueDatePickerProps } from './DueDatePicker';
+// NOT from './DueDatePicker': on web that resolves to THIS file, so the module imported
+// from itself and the re-exported getter recursed until the stack blew. See due-date.ts.
+import { defaultDueDate, type DueDatePickerProps } from './due-date';
 
 function toInputValue(date: Date): string {
   return date.toISOString().slice(0, 10);

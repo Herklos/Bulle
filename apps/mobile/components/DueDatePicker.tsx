@@ -16,11 +16,12 @@
 import React from 'react';
 import { DateTimePicker } from '@expo/ui/community/datetime-picker';
 import { useBulleTheme } from '@bulle/ui/theme';
+// From the neutral module, never from the sibling: `./DueDatePicker` resolves per platform
+// and would point a file at itself. See components/due-date.ts.
+import { defaultDueDate, type DueDatePickerProps } from './due-date';
 
-export interface DueDatePickerProps {
-  value: Date | null;
-  onChange: (date: Date) => void;
-}
+export type { DueDatePickerProps };
+export { defaultDueDate };
 
 export function DueDatePicker({ value, onChange }: DueDatePickerProps) {
   const { colors } = useBulleTheme();
@@ -42,12 +43,3 @@ export function DueDatePicker({ value, onChange }: DueDatePickerProps) {
   );
 }
 
-/**
- * Roughly 30 weeks out — a plausible mid-pregnancy default, so the wheel opens near the
- * answer instead of on today (which is never the answer).
- */
-export function defaultDueDate(): Date {
-  const d = new Date();
-  d.setDate(d.getDate() + 30 * 7);
-  return d;
-}
