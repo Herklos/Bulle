@@ -16,6 +16,7 @@ import { POSTS_COUPLE_EN, POSTS_COUPLE_FR } from './blog-posts-couple';
 import { POSTS_RETOUR_EN, POSTS_RETOUR_FR } from './blog-posts-retour';
 import { POSTS_LOGISTIQUE_EN, POSTS_LOGISTIQUE_FR } from './blog-posts-logistique';
 import { POSTS_ACHATS_EN, POSTS_ACHATS_FR } from './blog-posts-achats';
+import { POSTS_BUDGET_EN, POSTS_BUDGET_FR } from './blog-posts-budget';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
 /**
@@ -31,6 +32,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_RETOUR_FR,
     ...POSTS_LOGISTIQUE_FR,
     ...POSTS_ACHATS_FR,
+    ...POSTS_BUDGET_FR,
   ],
   en: [
     ...POSTS_ADMIN_EN,
@@ -40,6 +42,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_RETOUR_EN,
     ...POSTS_LOGISTIQUE_EN,
     ...POSTS_ACHATS_EN,
+    ...POSTS_BUDGET_EN,
   ],
 };
 

@@ -83,6 +83,14 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'preparer-laine-a-larrivee',
   'parent-solo-organiser-larrivee',
 
+  // ── Budget — high intent, and the queries the market answers with adverts ──
+  'baisse-revenu-conge-maternite',
+  'maintien-salaire-convention-collective',
+  'mode-de-garde-comparatif-cout',
+  'aides-caf-grossesse-simulateur',
+  'cout-reel-premiere-annee-bebe',
+  'conge-parental-prepare-vaut-il-le-coup',
+
   // ── Tier 3 — achats, on the anti-overbuying angle ──
   'liste-naissance-la-faire-sans-culpabiliser',
   'poussette-choisir-sans-se-tromper',
