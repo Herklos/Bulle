@@ -203,7 +203,12 @@ export default function TodayScreen() {
           size={156}
           label={orbLabel}
           pulseKey={pulseKey}
-          innerImage={bulleForWeekSG(display.sg)}
+          // Nothing inside it once the baby is out. The weekly illustration is keyed off the
+          // DUE DATE, so after the birth it keeps showing a fetus at whatever week the
+          // pregnancy would have been — a first-trimester embryo to someone holding a
+          // newborn. The orb still means something (the post-birth deadlines fill it); the
+          // picture does not.
+          innerImage={born ? undefined : bulleForWeekSG(display.sg)}
         />
 
         <Text variant="body" color="inkSoft">
