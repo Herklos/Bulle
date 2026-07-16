@@ -605,7 +605,9 @@ export const fr = {
         congeSupplementaireDetails: [
           'Ce congé s’ajoute au congé maternité ou paternité, à raison d’un à deux mois par parent, pour les naissances à partir du 1er janvier 2026. Il peut être pris en continu ou fractionné en deux périodes.',
           'Prévenez votre employeur par lettre recommandée ou remise en main propre contre décharge, en précisant la date de début, la durée et un éventuel fractionnement. Le préavis est d’un mois, ou de quinze jours si le congé suit directement le congé paternité.',
-          'Le congé doit démarrer dans les neuf mois qui suivent la naissance. Un modèle de lettre est disponible sur le site du ministère du Travail. Ce droit est individuel : ce que l’un ne prend pas, l’autre ne peut pas récupérer.',
+          'Ce congé ne peut pas s’intercaler : il ne démarre qu’une fois vos congés de maternité, de paternité et d’accueil de l’enfant terminés. Il s’enchaîne, il ne s’insère pas.',
+          'Il doit démarrer dans les neuf mois qui suivent la naissance. Une exception concerne les enfants nés ou arrivés au foyer entre le 1er janvier et le 30 juin 2026 : pour eux, les neuf mois se comptent à partir du 1er juillet 2026, soit une date limite au 31 mars 2027. Si votre enfant est né en janvier 2026, vous avez donc jusqu’en mars 2027, et non jusqu’en octobre 2026.',
+          'Un modèle de lettre est disponible sur le site du ministère du Travail. Ce droit est individuel : ce que l’un ne prend pas, l’autre ne peut pas récupérer.',
         ],
         employeurGrossesse: 'Informer l’employeur de la grossesse, par écrit',
         employeurGrossesseNote: 'Aucun délai légal, mais la protection contre le licenciement ne démarre qu’une fois l’employeur informé.',

@@ -15,9 +15,12 @@ PRADO and the postnatal EPP are all already there. What follows is what remains.
 
 ## Fix first: these are wrong today, and they cost the user
 
-### 1. The congé supplémentaire transitional rule is missing, and Bulle shortens a real right
+### 1. ~~The congé supplémentaire transitional rule is missing~~ — FIXED
 
-`adminFr.tasks.congeSupplementaireDetails[2]` says the congé must start within nine months
+**Fixed.** `congeSupplementaireDetails` now states the transitional rule and the
+must-follow condition. The rest of this section is kept as the reasoning.
+
+`adminFr.tasks.congeSupplementaireDetails[2]` said the congé must start within nine months
 of the birth. True for a child born **from 1 July 2026**. For a child born between
 **1 January and 30 June 2026** the nine months are counted from **1 July 2026**, so the
 deadline is **31 March 2027**.
