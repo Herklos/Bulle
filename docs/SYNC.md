@@ -68,6 +68,30 @@ configured. Bulle diverging here was a mistake.
 2. **Adopt Fiancé's model**: drop the default, store `serverUrl` per registry entry, and
    treat an unconfigured bulle as local-only.
 
+## Status of the dev harness (tools/dev-sync-server.mjs)
+
+It exists and the client talks to it. Progress so far, each step found by watching real
+traffic rather than reasoning about it:
+
+- `POST /v1/dk/push/spaces/{id}/_access -> 200`. The TOFU bootstrap SUCCEEDS: the owner
+  creates their own space. This is what proves the `ensureSpaceProvisioned` fix end to end,
+  because before it the client sent nothing at all.
+- `GET/POST /v1/dk/pull|push/spaces/{id}/objects/_index -> 403`. This is the harness's
+  remaining gap, not the app's.
+
+The 403 is a ROLE ENRICHER. The real server reads the `_access` doc on every request and
+grants `[space:owner, space:member]` from it; `starfish-server` ships
+`makeIdentityRoleEnricher` and `composeEnrichers`, but the dk-specific enricher that
+understands the `_access` document is server-side and not published. Until the harness grows
+one (or the real config appears), space-scoped collections deny.
+
+Two honest notes on the harness:
+- `cors: true` was not enough. Its defaults omit the cap auth headers, so the preflight
+  passed with 204 and the browser then silently refused to send the POST — indistinguishable
+  from a server that never answers. It now allows them explicitly.
+- `spaces/{id}/_access` needed its own collection. accountScope grants `spaces/**` over
+  [profile, devices, spaces, spaceregistry, inbox], so the name must come from that set.
+
 ## What a local dev server would need
 
 `@drakkar.software/starfish-server` is already installed, but it is a **library, not a

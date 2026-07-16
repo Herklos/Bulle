@@ -69,7 +69,11 @@ const dkCollections = [
   col('devices', 'users/:userId/_devices'),
   col('spaces', 'user/:userId/_spaces'),
   col('inbox', 'inbox/:userId/:box'),
-  col('spaceregistry', '_index/spaces/:shard'),
+  // `spaces/:spaceId/_access` is the space's access doc: owner, members, name. It is what
+  // writeSpaceAccess writes first, and the TOFU bootstrap depends on it. accountScope grants
+  // `spaces/**` over [profile, devices, spaces, spaceregistry, inbox], so the name has to come
+  // from that set; `spaceregistry` is the one that means "who may touch this space".
+  col('spaceregistry', 'spaces/:spaceId/_access'),
 
   // ── Space-scoped (spaceMemberScope / spaceOwnerScope) ──
   // `spaces/:spaceId` is the space keyring: the sealed space key per recipient. This is what
@@ -112,7 +116,28 @@ const roleResolver = createCapCertRoleResolver({
   allowAnonymous: true,
 });
 
-const sync = createSyncRouter({ store, config, roleResolver, cors: true });
+/**
+ * CORS, explicitly.
+ *
+ * `cors: true` takes defaults that do not list the cap headers, so the browser's preflight
+ * passed (204) and then it silently refused to send the real POST. From the app that is
+ * indistinguishable from "the server never answered": the request simply never leaves.
+ *
+ * A dev harness on localhost has nothing to protect, so this allows everything and lets the
+ * client's real behaviour be what is under test.
+ */
+const sync = createSyncRouter({
+  store,
+  config,
+  roleResolver,
+  cors: {
+    origin: '*',
+    allowMethods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+    allowHeaders: ['*', 'Authorization', 'Content-Type', 'If-Match', 'X-Cap', 'X-Nonce', 'X-Sig'],
+    exposeHeaders: ['*', 'ETag', 'If-Match'],
+    maxAge: 600,
+  },
+});
 
 const app = new Hono();
 
