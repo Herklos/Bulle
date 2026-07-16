@@ -79,8 +79,13 @@ export default function Root({ children }: PropsWithChildren) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-        {/* Ivory, so the browser chrome matches the app rather than fighting it. */}
-        <meta name="theme-color" content="#FAF7F2" />
+        {/* The browser chrome should match the app rather than fight it — which a single
+            value cannot do, because it stays ivory while the page turns warm-charcoal, and
+            the mismatch shows in the one place we do not control: the OS status bar above
+            our own header. `media` is how a static document reads the theme, since these
+            cannot come from the JS tokens. Values are color.light.bg / color.dark.bg. */}
+        <meta name="theme-color" content="#FAF7F2" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#1C1A17" media="(prefers-color-scheme: dark)" />
         <meta name="application-name" content={SITE_NAME} />
         <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
         <meta name="mobile-web-app-capable" content="yes" />
