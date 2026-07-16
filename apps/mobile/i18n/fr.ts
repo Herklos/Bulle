@@ -55,6 +55,11 @@ export const fr = {
     done: 'C’est fait',
     later: 'Plus tard',
     upcoming: 'À venir',
+    addEvent: 'Ajouter',
+    eventToday: 'Aujourd’hui à {{time}}',
+    eventTomorrow: 'Demain à {{time}}',
+    eventInDays: 'Dans {{count}} jours',
+    noEvents: 'Aucun rendez-vous prévu.',
     thisWeek: 'Cette semaine',
     together: 'Ensemble',
     // Rotating footer lines. Honest, never filler.
@@ -193,6 +198,20 @@ export const fr = {
   sync: {
     readOnly: 'Vous êtes en lecture seule dans cette bulle.',
     offline: 'Hors ligne. Vos changements sont gardés ici.',
+  },
+
+  events: {
+    newTitle: 'Un rendez-vous',
+    kindQuestion: 'De quel type ?',
+    dateQuestion: 'Quel jour ?',
+    timeQuestion: 'À quelle heure ?',
+    kinds: {
+      echo: 'Échographie',
+      consultation: 'Consultation',
+      prepa: 'Cours de préparation',
+      admin: 'Rendez-vous administratif',
+      autre: 'Autre',
+    },
   },
 
   welcome: {

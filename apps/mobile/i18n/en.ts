@@ -55,6 +55,11 @@ export const en = {
     done: 'Done',
     later: 'Later',
     upcoming: 'Coming up',
+    addEvent: 'Add',
+    eventToday: 'Today at {{time}}',
+    eventTomorrow: 'Tomorrow at {{time}}',
+    eventInDays: 'In {{count}} days',
+    noEvents: 'No appointments coming up.',
     thisWeek: 'This week',
     together: 'Together',
     calm: 'All is quiet this week.',
@@ -189,6 +194,20 @@ export const en = {
   sync: {
     readOnly: 'You have read-only access to this bubble.',
     offline: 'Offline. Your changes are kept here.',
+  },
+
+  events: {
+    newTitle: 'An appointment',
+    kindQuestion: 'What kind?',
+    dateQuestion: 'Which day?',
+    timeQuestion: 'At what time?',
+    kinds: {
+      echo: 'Scan',
+      consultation: 'Appointment',
+      prepa: 'Antenatal class',
+      admin: 'Paperwork appointment',
+      autre: 'Other',
+    },
   },
 
   welcome: {

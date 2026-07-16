@@ -72,6 +72,18 @@ export const taskSchema = z.object({
   updatedAt: iso,
 });
 
+export const eventKindSchema = z.enum(['echo', 'consultation', 'prepa', 'admin', 'autre']);
+
+export const eventSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  kind: eventKindSchema,
+  at: iso,
+  notes: z.string().optional(),
+  createdAt: iso,
+  updatedAt: iso,
+});
+
 export const memberSchema = z.object({
   id: z.string(),
   displayName: z.string(),

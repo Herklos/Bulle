@@ -8,30 +8,59 @@
  */
 import React, { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { Redirect } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
   currentWeekSA,
-  EFFORT_MINUTES,
+  daysUntilEvent,
+  nextEvents,
   pregnancyProgress,
   suggestFocus,
   weekDisplay,
   weekEssentials,
+  type BulleEvent,
 } from '@bulle/sdk';
-import { BulleOrb } from '@bulle/ui/primitives';
-import { Checkbox, EmptyState, FocusCard, SectionHeader, Text } from '@bulle/ui/components';
+import { BulleOrb, Glyph } from '@bulle/ui/primitives';
+import { Checkbox, EmptyState, FocusCard, Row, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
 import { bulleForWeekSG } from '@/assets/bulles';
 import { useBulleStore } from '@/store/useBulleStore';
 import { usePlanStore } from '@/store/usePlanStore';
+import { useEventsStore } from '@/store/useEventsStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
 import { useReadiness } from '@/lib/use-readiness';
 import { useNow } from '@/lib/use-now';
 
+/**
+ * "demain", "dans 3 jours", or a date. Relative for the near ones because that is how
+ * people actually hold an appointment in their head; absolute past a week, because
+ * "dans 23 jours" is not information.
+ */
+function formatEventWhen(
+  event: BulleEvent,
+  now: number,
+  t: (k: string, o?: Record<string, unknown>) => string,
+  language: string,
+): string {
+  const days = daysUntilEvent(event, now);
+  const time = new Intl.DateTimeFormat(language === 'en' ? 'en-GB' : 'fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(event.at));
+  if (days === 0) return t('today.eventToday', { time });
+  if (days === 1) return t('today.eventTomorrow', { time });
+  if (days <= 7) return t('today.eventInDays', { count: days });
+  return new Intl.DateTimeFormat(language === 'en' ? 'en-GB' : 'fr-FR', {
+    day: 'numeric',
+    month: 'long',
+  }).format(new Date(event.at));
+}
+
 export default function TodayScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const router = useRouter();
   const welcome = useFeatureWelcome('today');
   const { space } = useBulleTheme();
   const now = useNow();
@@ -52,6 +81,9 @@ export default function TodayScreen() {
     [tasks, weekSA, deferredIds],
   );
   const essentials = useMemo(() => weekEssentials(tasks, weekSA), [tasks, weekSA]);
+
+  const allEvents = useEventsStore((s) => s.events);
+  const upcoming = useMemo(() => nextEvents(allEvents, now), [allEvents, now]);
 
   if (!bulle) return null;
   // Pause hides the countdown and readiness entirely (§3.1).
@@ -144,6 +176,34 @@ export default function TodayScreen() {
       ) : (
         <EmptyState glyph="leaf" message={t('today.emptyFocus')} />
       )}
+
+      {/*
+        À venir (§5.1) — at most 2. The home screen answers "what now?", and a full calendar
+        here would turn it back into the backlog it exists to avoid.
+
+        The header renders even with NO events, because it carries the only "add" affordance
+        in the app: gating it on `upcoming.length > 0` means a new user has no way to add
+        their first appointment. One quiet line is the price of the feature being reachable.
+      */}
+      <View>
+        <SectionHeader
+          title={t('today.upcoming')}
+          action={{ label: t('today.addEvent'), onPress: () => router.push('/event/new') }}
+        />
+        {upcoming.length === 0 ? (
+          <Text variant="caption">{t('today.noEvents')}</Text>
+        ) : (
+          upcoming.map((event, index) => (
+            <Row
+              key={event.id}
+              title={event.title}
+              subtitle={formatEventWhen(event, now, t, i18n.language)}
+              leading={<Glyph name="calendar" size={20} color="dustyBlue" />}
+              divider={index < upcoming.length - 1}
+            />
+          ))
+        )}
+      </View>
 
       {/* This week — at most 3, essentials only. */}
       {essentials.length > 0 && (

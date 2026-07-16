@@ -15,6 +15,8 @@ export const BULLE_TYPES = {
   bulle: 'bulle',
   project: 'project',
   task: 'task',
+  /** The ONLY datetime-bearing entity. Everything else lives on week-windows. */
+  event: 'event',
   member: 'member',
   permissionRole: 'permissionRole',
   permissionAssignment: 'permissionAssignment',
@@ -29,6 +31,7 @@ export type BulleObjectType = (typeof BULLE_TYPES)[keyof typeof BULLE_TYPES];
 export const BULLE_COLLECTION_TYPES: BulleObjectType[] = [
   BULLE_TYPES.project,
   BULLE_TYPES.task,
+  BULLE_TYPES.event,
   BULLE_TYPES.permissionRole,
   BULLE_TYPES.permissionAssignment,
 ];
