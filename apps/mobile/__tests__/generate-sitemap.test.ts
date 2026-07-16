@@ -14,13 +14,9 @@ import { BLOG_FIRST_PUBLISH_DATE, BLOG_PUBLISH_PRIORITY } from '@/lib/blog-publi
 import { BASE_URL } from '@/lib/seo-urls';
 
 const DIST = path.resolve(__dirname, '..', 'dist');
-
-const ROBOTS = `User-agent: *
-Allow: /
-Disallow: /_expo/
-
-Sitemap: ${BASE_URL}/sitemap.xml
-`;
+// robots.txt is NOT generated: it is static, so it lives in public/ and expo export copies
+// it. Writing it from here as well would give it two sources of truth that disagree the
+// first time one is edited.
 
 describe('sitemap', () => {
   const firstSlug = BLOG_PUBLISH_PRIORITY[0];
@@ -80,11 +76,10 @@ describe('sitemap', () => {
     }
   });
 
-  it('writes dist/sitemap.xml and dist/robots.txt', () => {
+  it('writes dist/sitemap.xml', () => {
     const xml = buildSitemapXml();
     mkdirSync(DIST, { recursive: true });
     writeFileSync(path.join(DIST, 'sitemap.xml'), xml, 'utf8');
-    writeFileSync(path.join(DIST, 'robots.txt'), ROBOTS, 'utf8');
     expect(xml.length).toBeGreaterThan(0);
   });
 });

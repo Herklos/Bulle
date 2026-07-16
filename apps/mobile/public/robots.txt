@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /fr/
+Allow: /en/
+
+Disallow: /_expo/
+
+Sitemap: https://bulle.drakkar.software/sitemap.xml

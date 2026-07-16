@@ -1,0 +1,37 @@
+# Bulle
+
+> Bulle is a private, offline-first app for preparing for a baby, built for expecting couples in France. It handles the French administrative steps at the right moment, the hospital bag, and what is actually worth buying. No account, no ads, no data collection. Optional end-to-end encrypted sync between co-parents. Bought once, not a subscription.
+
+## What Bulle is not
+
+- Not a pregnancy tracker. No symptom logging, no kick counter, no contraction timer, no week-by-week fetal measurements. Those are deliberate anti-goals.
+- Not a medical device. Bulle schedules preparation, never care. It gives no diagnosis, no triage and no personalised medical advice, and directs every health question to a midwife or a doctor.
+- Not a vendor marketplace or a registry. There are no affiliate links anywhere, including in the buying guides.
+
+## App features
+
+- [Administratif](https://bulle.drakkar.software/fr): The French paperwork track — déclaration de grossesse, CPAM, CAF, congé maternité and paternité, inscription maternité, mode de garde. Each step arrives in its own week-window with a link to the official source.
+- [Préparer](https://bulle.drakkar.software/fr): Projects with progress rings rather than a flat task list. Progress counts essential tasks only; optional ones show as ideas and never count against you.
+- [Aujourd'hui](https://bulle.drakkar.software/fr): One focus task at a time. No backlog count, no streaks, no overdue shaming.
+- [À deux](https://bulle.drakkar.software/fr): Both co-parents get the same access and the same list, with no account. Sync is free and end-to-end encrypted.
+- [Pause](https://bulle.drakkar.software/fr): A mode that stops every notification and hides the journey, for a pregnancy that ends in loss. Reachable in two taps, with export or real deletion.
+
+## Privacy
+
+- No account. Identity is a recovery phrase generated on the device and kept in the OS keychain.
+- Data lives on the device. The app works fully offline.
+- Sync between co-parents is end-to-end encrypted; the publisher holds no key and cannot read user content.
+- Pregnancy data is treated as GDPR Article 9 health data. There are no advertising or analytics SDKs in the app.
+- [Privacy policy](https://bulle.drakkar.software/fr/privacy)
+- [Terms of use](https://bulle.drakkar.software/fr/terms)
+
+## Le Carnet (blog)
+
+<!-- BLOG:START -->
+<!-- Generated from lib/blog.ts at build time — do not hand-edit. See lib/llms-txt.ts. -->
+<!-- BLOG:END -->
+
+## Authors
+
+- [Paul](https://bulle.drakkar.software/fr/author/paul): Founder of Bulle. Writes on French paperwork, privacy, and preparing as a couple.
+- [Camille](https://bulle.drakkar.software/fr/author/sage-femme): Midwife. Reviews Bulle's health content and writes on pregnancy care and the postpartum period.
