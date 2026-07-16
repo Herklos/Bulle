@@ -23,6 +23,7 @@
  * deliberately not buried under a "danger zone".
  */
 import React from 'react';
+import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Host, List, ListItem, Switch } from '@expo/ui';
@@ -31,6 +32,8 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { usePermissions } from '@/lib/permissions/usePermissions';
 import { useSettingsStore } from '@/store/useSettingsStore';
+import { usePremiumStore } from '@/store/usePremiumStore';
+import { useBulleStore } from '@/store/useBulleStore';
 import { useBulleRegistryStore } from '@/store/useBulleRegistryStore';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 
@@ -43,8 +46,17 @@ export default function MoreScreen() {
   const language = useSettingsStore((s) => s.language);
   const notifications = useSettingsStore((s) => s.notifications);
   const registry = useBulleRegistryStore((s) => s.registry);
+  const isPremium = usePremiumStore((s) => s.isPremium);
+  const bulle = useBulleStore((s) => s.bulle);
 
   const bulles = registry?.bulles ?? [];
+
+  // Says something either way. A restore that silently does nothing reads as a broken
+  // button, and the user has no way to tell "nothing to restore" from "it failed".
+  const restore = async () => {
+    const ok = await usePremiumStore.getState().restore();
+    Alert.alert(t(ok ? 'settings.restoreDone' : 'settings.restoreEmpty'));
+  };
 
   return (
     <Screen scroll={false}>
@@ -104,6 +116,33 @@ export default function MoreScreen() {
                 {entry.label}
               </ListItem>
             ))}
+
+          {/* Recording the birth is what starts every post-birth deadline (see
+              domain/postnatal.ts). Hidden once it is recorded — a bulle only has one birth,
+              and leaving the control there invites re-announcing it. */}
+          {!bulle?.birthDate && (
+            <ListItem onPress={() => router.push('/birth/new')} supportingText={t('birth.announceBody')}>
+              {t('birth.announce')}
+            </ListItem>
+          )}
+
+          {/* Premium had NO entry point outside a gate. Restore especially: both stores
+              require it to be reachable, and with no account a reinstall leaves restore as
+              the only way back to a purchase — a paying user should never have to go hunting
+              for a paywall to get their own product back. */}
+          {isPremium ? (
+            <ListItem supportingText={t('settings.premiumActiveBody')}>
+              {t('settings.premiumActive')}
+            </ListItem>
+          ) : (
+            <ListItem onPress={() => router.push('/paywall')} supportingText={t('settings.premiumBody')}>
+              {t('settings.premium')}
+            </ListItem>
+          )}
+
+          <ListItem onPress={restore} supportingText={t('settings.restoreBody')}>
+            {t('settings.restore')}
+          </ListItem>
 
           <ListItem onPress={() => router.push('/more/pause')} supportingText={t('pause.enterBody')}>
             {t('pause.enter')}

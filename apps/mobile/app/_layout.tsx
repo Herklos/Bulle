@@ -119,6 +119,7 @@ function AppContent() {
         <Stack.Screen name="event" />
         <Stack.Screen name="task" />
         <Stack.Screen name="memory" />
+        <Stack.Screen name="birth" />
         {/* A modal: a paywall interrupts a flow and must return you to exactly where you
             were, whether you buy or not. */}
         <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />

@@ -8,6 +8,7 @@ export * from './domain/tasks.js';
 export * from './domain/events.js';
 export * from './domain/ensemble.js';
 export * from './domain/memories.js';
+export * from './domain/postnatal.js';
 export * from './domain/templates.js';
 export * from './domain/suggest.js';
 export * from './domain/permissions.js';

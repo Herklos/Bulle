@@ -49,6 +49,15 @@ export interface Bulle {
   name: string;
   profile: BulleProfile;
   pause: PauseState;
+  /**
+   * The actual birth. Absent until the baby arrives, which is the normal state.
+   *
+   * This is the ONLY thing that can drive a post-birth deadline. A due date cannot: the
+   * baby does not arrive on it, and every French post-birth clock (5 days for the mairie,
+   * 6 months for the congé paternité) runs from the real birth, not the estimate. See
+   * `afterBirthDays` on Task.
+   */
+  birthDate?: Iso;
   createdAt: Iso;
   updatedAt: Iso;
 }
@@ -121,6 +130,21 @@ export interface Task {
    * nothing is correct, Ensemble crediting a partner who did nothing is not.
    */
   completedBy?: string;
+  /**
+   * Deadline in DAYS FROM THE BIRTH, for the tasks that have one.
+   *
+   * Week-windows are the right model for everything that happens during a pregnancy, and
+   * the wrong one for everything after it: a deadline of "5 days from the birth" (Art. 55
+   * du Code civil, déclaration de naissance) or "6 months from the birth" (Art. L1225-35,
+   * congé paternité) simply cannot be said in semaines d'aménorrhée. These tasks used to
+   * carry a 41+ SA window as a display convenience, which put them on the list but gave
+   * them no real clock — and the congé paternité is a non-transferable individual right, so
+   * a parent who misses the window does not get it back.
+   *
+   * Present ⇒ the task is a post-birth task: its window is inert and `Bulle.birthDate` is
+   * what times it. Absent ⇒ an ordinary week-window task.
+   */
+  afterBirthDays?: number;
   /** Max depth 1 by design — a checklist inside a task, never a task tree. */
   checklist?: { id: string; label: string; done: boolean }[];
   createdAt: Iso;
@@ -186,6 +210,8 @@ export interface TaskTemplate {
   notesKey?: string;
   weekStart: number;
   weekEnd: number;
+  /** See `Task.afterBirthDays`. Present ⇒ this task is timed by the birth, not the window. */
+  afterBirthDays?: number;
   effort: Effort;
   domain: ReadinessDomain;
   essential: boolean;

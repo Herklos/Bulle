@@ -56,6 +56,9 @@ export function instantiateTemplate(
       notes: tt.notesKey ? deps.t(tt.notesKey) : undefined,
       weekStart: tt.weekStart,
       weekEnd: tt.weekEnd,
+      // Carried through, so a post-birth task keeps its real clock instead of being timed
+      // by the decorative 41+ SA window it also has (see domain/postnatal.ts).
+      afterBirthDays: tt.afterBirthDays,
       effort: tt.effort,
       domain: tt.domain,
       essential: tt.essential,

@@ -38,6 +38,7 @@ export const bulleSchema = z.object({
   name: z.string(),
   profile: bulleProfileSchema,
   pause: pauseStateSchema,
+  birthDate: iso.optional(),
   createdAt: iso,
   updatedAt: iso,
 });
@@ -66,6 +67,7 @@ export const taskSchema = z.object({
   status: taskStatusSchema,
   assigneeId: z.string().optional(),
   completedBy: z.string().optional(),
+  afterBirthDays: z.number().optional(),
   checklist: z
     .array(z.object({ id: z.string(), label: z.string(), done: z.boolean() }))
     .optional(),

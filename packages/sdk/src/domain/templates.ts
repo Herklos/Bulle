@@ -157,14 +157,17 @@ const ADMIN_FR: ProjectTemplate = {
     },
     // ── After the birth ──
     //
-    // These sit at 41+ SA, i.e. past the DPA. The window is a display convenience: the real
-    // clocks here run from the BIRTH DATE, not from a gestational week, and two of them are
-    // strict (5 days for the mairie, 60 days for the impôts). See the note in
-    // domain/tasks.ts — SA cannot express a post-birth deadline, so these must not be the
-    // only reminder a parent gets.
+    // `afterBirthDays` is what actually times these; the 41+ SA window is inert and kept
+    // only so they sort to the end of a week-grouped list. SA cannot express "5 days after
+    // the birth" — the baby does not arrive on the DPA, so a window computed from an
+    // estimate is simply the wrong date. See domain/postnatal.ts.
     {
+      // 5 days, jour de l'accouchement non compté (Art. 55 du Code civil). The single
+      // hardest deadline in the app: miss it and the birth can only be recorded by a
+      // jugement déclaratif de naissance.
       titleKey: 'templates.adminFr.tasks.declarationNaissance',
       notesKey: 'templates.adminFr.tasks.declarationNaissanceNote',
+      afterBirthDays: 5,
       weekStart: 41,
       weekEnd: 42,
       effort: 'S',
@@ -173,8 +176,11 @@ const ADMIN_FR: ProjectTemplate = {
       href: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F961',
     },
     {
+      // No statutory deadline of its own — it follows the déclaration. A fortnight is a
+      // practical prompt, not a legal one.
       titleKey: 'templates.adminFr.tasks.acteNaissance',
       notesKey: 'templates.adminFr.tasks.acteNaissanceNote',
+      afterBirthDays: 14,
       weekStart: 41,
       weekEnd: 44,
       effort: 'S',
@@ -185,6 +191,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.rattachementVitale',
       notesKey: 'templates.adminFr.tasks.rattachementVitaleNote',
+      afterBirthDays: 30,
       weekStart: 41,
       weekEnd: 43,
       effort: 'S',
@@ -194,8 +201,14 @@ const ADMIN_FR: ProjectTemplate = {
     },
     {
       // Mutuelle AFTER the CPAM rattachement, never before — the reverse order is rejected.
+      //
+      // 30 days is a PROMPT, not a rule: research found no universal legal deadline for
+      // adding a newborn to a mutuelle. It is purely contractual and ranges from 15 days to
+      // 6 months by insurer, so the copy tells people to check their own contract rather
+      // than quoting a number the app cannot stand behind.
       titleKey: 'templates.adminFr.tasks.rattachementMutuelle',
       notesKey: 'templates.adminFr.tasks.rattachementMutuelleNote',
+      afterBirthDays: 30,
       weekStart: 41,
       weekEnd: 45,
       effort: 'S',
@@ -203,14 +216,32 @@ const ADMIN_FR: ProjectTemplate = {
       essential: true,
     },
     {
+      // 60 days to report the birth to the impôts (prélèvement à la source).
       titleKey: 'templates.adminFr.tasks.impots',
       notesKey: 'templates.adminFr.tasks.impotsNote',
+      afterBirthDays: 60,
       weekStart: 41,
       weekEnd: 49,
       effort: 'S',
       domain: 'finances',
       essential: true,
       href: 'https://www.impots.gouv.fr',
+    },
+    {
+      // THE reason this whole model exists (Art. L1225-35 du Code du travail): the 25 days
+      // (32 for multiples) must be taken within 6 MONTHS of the birth. It is an individual,
+      // non-transferable right — what a parent does not take is not deferred, it is lost.
+      // A 41+ SA window gave it no real clock at all, so the app could watch someone forfeit
+      // it in silence. ~182 days rather than "6 months" because the model counts days.
+      titleKey: 'templates.adminFr.tasks.prendreCongePaternite',
+      notesKey: 'templates.adminFr.tasks.prendreCongePaterniteNote',
+      afterBirthDays: 182,
+      weekStart: 41,
+      weekEnd: 41,
+      effort: 'M',
+      domain: 'administratif',
+      essential: true,
+      href: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F583',
     },
   ],
 };
@@ -801,6 +832,308 @@ const SOLO: ProjectTemplate = {
   ],
 };
 
+
+/**
+ * Budget (§5.3) — the money side of an arrival, in France.
+ *
+ * FR-only, like the admin module and for the same reason (§7.1): almost every task here is
+ * a French institution (IJ, CAF, PAJE, CMG, convention collective). An English version
+ * would be a translation of a system the reader is not in, which is worse than not shipping
+ * one.
+ *
+ * NO EUROS ANYWHERE, deliberately. The prime à la naissance, the allocation de base and the
+ * IJ ceiling are all revalorised (usually each April), so a figure encoded here is a figure
+ * that goes silently wrong. Every task carries the official link instead and lets the
+ * source state the number.
+ */
+const BUDGET: ProjectTemplate = {
+  id: 'tpl-budget',
+  titleKey: 'templates.budget.title',
+  descriptionKey: 'templates.budget.description',
+  glyph: 'stamp',
+  locales: ['fr'],
+  tasks: [
+    {
+      // The single biggest financial surprise: IJ are computed from the last 3 gross
+      // salaries and capped at the plafond, so they do not reproduce the usual net.
+      titleKey: 'templates.budget.tasks.revenu',
+      notesKey: 'templates.budget.tasks.revenuNote',
+      weekStart: 20,
+      weekEnd: 30,
+      effort: 'M',
+      domain: 'finances',
+      essential: true,
+      href: 'https://www.ameli.fr/assure/remboursements/indemnites-journalieres-maladie-maternite-paternite/indemnites-journalieres-et-prestations-maternite-paternite-adoption/conge-maternite-salariee',
+    },
+    {
+      // NOT a legal right: the Code du travail does not oblige an employer to top IJ up to
+      // 100%. It is conventional, which is exactly why it has to be checked rather than
+      // assumed.
+      titleKey: 'templates.budget.tasks.maintienSalaire',
+      notesKey: 'templates.budget.tasks.maintienSalaireNote',
+      weekStart: 20,
+      weekEnd: 30,
+      effort: 'S',
+      domain: 'finances',
+      essential: true,
+      href: 'https://code.travail.gouv.fr/contribution/quelles-sont-les-conditions-dindemnisation-pendant-le-conge-de-maternite',
+    },
+    {
+      // Secteur 2 dépassements are never reimbursed by l'Assurance Maladie. Worth knowing
+      // BEFORE choosing the maternité, not on the bill.
+      titleKey: 'templates.budget.tasks.secteur',
+      notesKey: 'templates.budget.tasks.secteurNote',
+      weekStart: 16,
+      weekEnd: 28,
+      effort: 'M',
+      domain: 'finances',
+      essential: true,
+      href: 'https://annuairesante.ameli.fr/',
+    },
+    {
+      // The largest recurring cost after the birth, and the one with real queues. The
+      // window is a practical prompt, NOT a rule: no official source fixes a week to start
+      // looking, so the copy says "tôt" rather than inventing a deadline.
+      titleKey: 'templates.budget.tasks.garde',
+      notesKey: 'templates.budget.tasks.gardeNote',
+      weekStart: 16,
+      weekEnd: 26,
+      effort: 'L',
+      domain: 'finances',
+      essential: true,
+      href: 'https://monenfant.fr/choisir-un-mode-d-accueil-collectif',
+    },
+    {
+      titleKey: 'templates.budget.tasks.simulateur',
+      notesKey: 'templates.budget.tasks.simulateurNote',
+      weekStart: 14,
+      weekEnd: 30,
+      effort: 'S',
+      domain: 'finances',
+      essential: false,
+      href: 'https://www.mesdroitssociaux.gouv.fr/votre-simulateur/accueil',
+    },
+    {
+      // Paid BEFORE the birth (7e mois), and conditional on the grossesse having been
+      // declared in time — which is why the declaration task is the flagship of the admin
+      // template. The window is an approximate conversion from a calendar month, so the
+      // copy does not quote a week.
+      titleKey: 'templates.budget.tasks.prime',
+      notesKey: 'templates.budget.tasks.primeNote',
+      weekStart: 28,
+      weekEnd: 34,
+      effort: 'S',
+      domain: 'finances',
+      essential: false,
+      href: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F2550',
+    },
+    {
+      titleKey: 'templates.budget.tasks.paje',
+      notesKey: 'templates.budget.tasks.pajeNote',
+      weekStart: 28,
+      weekEnd: 34,
+      effort: 'S',
+      domain: 'finances',
+      essential: false,
+      href: 'https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/vie-personnelle/l-allocation-de-base-ab',
+    },
+    {
+      titleKey: 'templates.budget.tasks.equipement',
+      notesKey: 'templates.budget.tasks.equipementNote',
+      weekStart: 25,
+      weekEnd: 35,
+      effort: 'M',
+      domain: 'achats',
+      essential: false,
+    },
+    {
+      titleKey: 'templates.budget.tasks.foyer',
+      notesKey: 'templates.budget.tasks.foyerNote',
+      weekStart: 32,
+      weekEnd: 38,
+      effort: 'M',
+      domain: 'finances',
+      essential: false,
+    },
+    {
+      // Post-birth and strict: the CMG must be claimed in the month the employment starts,
+      // and each Pajemploi déclaration is due by the 5th of the following month. A late
+      // month is simply not reimbursed. 30 days is the prompt for the first one.
+      titleKey: 'templates.budget.tasks.cmg',
+      notesKey: 'templates.budget.tasks.cmgNote',
+      afterBirthDays: 30,
+      weekStart: 41,
+      weekEnd: 41,
+      effort: 'M',
+      domain: 'finances',
+      essential: true,
+      href: 'https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/vie-personnelle/le-complement-de-libre-choix-du-mode-de-garde',
+    },
+    {
+      // Notice runs from the END of the congé maternité/paternité, which itself runs from
+      // the birth. ~120 days is a prompt well inside any of those chains, not the deadline
+      // itself — the note carries the real rule because the app cannot know the leave dates.
+      titleKey: 'templates.budget.tasks.prepare',
+      notesKey: 'templates.budget.tasks.prepareNote',
+      afterBirthDays: 120,
+      weekStart: 41,
+      weekEnd: 41,
+      effort: 'M',
+      domain: 'finances',
+      essential: true,
+      href: 'https://code.travail.gouv.fr/fiche-ministere-travail/le-conge-parental-deducation',
+    },
+  ],
+};
+
+
+/**
+ * Le retour à la maison (§5.3) — preparing, during the pregnancy, for after it.
+ *
+ * FR-only: PRADO, the PMI, the 20 examens obligatoires and the 3114 are French
+ * institutions, and the whole point of the project is knowing which door to knock on.
+ *
+ * REGULATORY LINE (§7.3), and this template is where it is thinnest: every task here
+ * schedules PREPARATION, never care. It says "this appointment exists, here is its window"
+ * and "here is who to call", never "here is what you might be feeling". Specifically, the
+ * mal-être task lists CONTACTS and nothing else: some French sites offer a post-partum
+ * depression self-assessment quiz, and replicating one would put Bulle squarely inside EU
+ * MDR scope as well as being the wrong thing to hand someone at 3am.
+ */
+const POSTNATAL: ProjectTemplate = {
+  id: 'tpl-postnatal',
+  titleKey: 'templates.postnatal.title',
+  descriptionKey: 'templates.postnatal.description',
+  glyph: 'nest',
+  locales: ['fr'],
+  tasks: [
+    {
+      // Offered AT the maternité, not requested in advance — so the task is to know it
+      // exists before someone asks you to decide while holding a newborn.
+      titleKey: 'templates.postnatal.tasks.prado',
+      notesKey: 'templates.postnatal.tasks.pradoNote',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'postpartum',
+      essential: false,
+      href: 'https://www.ameli.fr/assure/sante/devenir-parent/accouchement-nouveau-ne-et-retour-la-maison/suivi-domicile',
+    },
+    {
+      titleKey: 'templates.postnatal.tasks.reeducation',
+      notesKey: 'templates.postnatal.tasks.reeducationNote',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'postpartum',
+      essential: false,
+      href: 'https://www.ameli.fr',
+    },
+    {
+      titleKey: 'templates.postnatal.tasks.pediatre',
+      notesKey: 'templates.postnatal.tasks.pediatreNote',
+      weekStart: 25,
+      weekEnd: 35,
+      effort: 'M',
+      domain: 'postpartum',
+      essential: false,
+      href: 'https://www.ameli.fr/assure/droits-demarches/principes/choisir-et-declarer-votre-medecin-traitant',
+    },
+    {
+      titleKey: 'templates.postnatal.tasks.examens',
+      notesKey: 'templates.postnatal.tasks.examensNote',
+      weekStart: 34,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'postpartum',
+      essential: true,
+      href: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F967',
+    },
+    {
+      titleKey: 'templates.postnatal.tasks.allaitement',
+      notesKey: 'templates.postnatal.tasks.allaitementNote',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'entourage',
+      essential: false,
+    },
+    {
+      titleKey: 'templates.postnatal.tasks.repas',
+      notesKey: 'templates.postnatal.tasks.repasNote',
+      weekStart: 32,
+      weekEnd: 38,
+      effort: 'M',
+      domain: 'maison',
+      essential: false,
+    },
+    {
+      titleKey: 'templates.postnatal.tasks.aide',
+      notesKey: 'templates.postnatal.tasks.aideNote',
+      weekStart: 32,
+      weekEnd: 40,
+      effort: 'M',
+      domain: 'entourage',
+      essential: false,
+    },
+    {
+      titleKey: 'templates.postnatal.tasks.visites',
+      notesKey: 'templates.postnatal.tasks.visitesNote',
+      weekStart: 32,
+      weekEnd: 40,
+      effort: 'S',
+      domain: 'entourage',
+      essential: false,
+    },
+    {
+      // Solo bulles never see this: `.coparent` is the suffix instantiateTemplate filters on.
+      titleKey: 'templates.postnatal.tasks.nuits.coparent',
+      notesKey: 'templates.postnatal.tasks.nuitsNote',
+      weekStart: 32,
+      weekEnd: 40,
+      effort: 'S',
+      domain: 'entourage',
+      essential: false,
+    },
+    {
+      // CONTACTS ONLY. No symptom list, no self-assessment — see the header.
+      titleKey: 'templates.postnatal.tasks.malEtre',
+      notesKey: 'templates.postnatal.tasks.malEtreNote',
+      weekStart: 32,
+      weekEnd: 40,
+      effort: 'S',
+      domain: 'postpartum',
+      essential: true,
+      href: 'https://www.ameli.fr/assure/sante/devenir-parent/accouchement-nouveau-ne-et-retour-la-maison/baby-blues-depression-post-partum-grossesse',
+    },
+    {
+      // The professional must OFFER it (art. 86 LFSS 2022, C. santé publique L2122-1);
+      // the parent is under no obligation and faces no penalty. Window: weeks 4 to 8.
+      titleKey: 'templates.postnatal.tasks.epp',
+      notesKey: 'templates.postnatal.tasks.eppNote',
+      afterBirthDays: 56,
+      weekStart: 41,
+      weekEnd: 41,
+      effort: 'S',
+      domain: 'postpartum',
+      essential: true,
+      href: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044628790',
+    },
+    {
+      // 6 to 8 weeks after the birth; 56 days is the far end of that window.
+      titleKey: 'templates.postnatal.tasks.consultation',
+      notesKey: 'templates.postnatal.tasks.consultationNote',
+      afterBirthDays: 56,
+      weekStart: 41,
+      weekEnd: 41,
+      effort: 'S',
+      domain: 'postpartum',
+      essential: true,
+      href: 'https://www.ameli.fr',
+    },
+  ],
+};
+
 export const PROJECT_TEMPLATES: ProjectTemplate[] = [
   ADMIN_FR,
   DECISIONS,
@@ -809,6 +1142,8 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
   NID,
   ACHATS,
   SECURITE,
+  BUDGET,
+  POSTNATAL,
   JUMEAUX,
   SOLO,
 ];

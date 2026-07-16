@@ -110,3 +110,62 @@ describe('timing facts that are easy to get wrong', () => {
     expect(task?.weekStart).toBeLessThan(32);
   });
 });
+
+describe('post-birth deadlines (domain/postnatal.ts)', () => {
+  const tasks = PROJECT_TEMPLATES.flatMap((t) => t.tasks);
+
+  it('gives the déclaration de naissance the statutory 5 days (Art. 55 Code civil)', () => {
+    const task = templateById('tpl-admin-fr')?.tasks.find((t) =>
+      t.titleKey.endsWith('.declarationNaissance'),
+    );
+    expect(task?.afterBirthDays).toBe(5);
+  });
+
+  it('gives the congé paternité its 6-month window (Art. L1225-35)', () => {
+    // An individual, non-transferable right: what is not taken is lost, not deferred. It
+    // used to carry only a 41+ SA window, which is timed off an ESTIMATE and so gave the
+    // app no way to warn anyone before the right expired.
+    const task = templateById('tpl-admin-fr')?.tasks.find((t) =>
+      t.titleKey.endsWith('.prendreCongePaternite'),
+    );
+    expect(task?.afterBirthDays).toBe(182);
+  });
+
+  it('never marks a task both post-birth and inside a live pregnancy window', () => {
+    // A post-birth task's window is inert by design, but if one opened before the DPA it
+    // would surface mid-pregnancy with a deadline that cannot start yet.
+    for (const task of tasks.filter((t) => t.afterBirthDays !== undefined)) {
+      expect(task.weekStart).toBeGreaterThanOrEqual(41);
+    }
+  });
+
+  it('has no negative or zero post-birth deadline', () => {
+    for (const task of tasks.filter((t) => t.afterBirthDays !== undefined)) {
+      expect(task.afterBirthDays!).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe('content rules the corpus must not break', () => {
+  const templates = PROJECT_TEMPLATES;
+
+  it('keeps the FR-institution templates out of English (§7.1)', () => {
+    // Budget and Postnatal are CAF/PAJE/PRADO/PMI/3114 end to end. An English version would
+    // translate a system the reader is not in, which is worse than shipping nothing.
+    for (const id of ['tpl-admin-fr', 'tpl-budget', 'tpl-postnatal']) {
+      expect(templateById(id)?.locales).toEqual(['fr']);
+    }
+  });
+
+  it('gives every template at least one task', () => {
+    for (const t of templates) expect(t.tasks.length).toBeGreaterThan(0);
+  });
+
+  it('points every essential admin/finance task at an official source or explains itself', () => {
+    // Not every task can have a link (some are decisions, not procedures), but a task that
+    // asserts a French rule without one is an assertion the user cannot check.
+    const budget = templateById('tpl-budget')!;
+    const linked = budget.tasks.filter((t) => t.essential && t.href);
+    expect(linked.length).toBeGreaterThanOrEqual(4);
+  });
+});

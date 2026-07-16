@@ -12,14 +12,18 @@ import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
   currentWeekSA,
+  daysLeftAfterBirth,
+  daysSinceBirth,
   daysUntilEvent,
   nextEvents,
+  openPostBirthTasks,
   partnerActivity,
   pregnancyProgress,
   suggestFocus,
   weekDisplay,
   weekEssentials,
   type BulleEvent,
+  type Task,
 } from '@bulle/sdk';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
 import { Checkbox, EmptyState, FocusCard, Row, SectionHeader, Text } from '@bulle/ui/components';
@@ -60,6 +64,26 @@ function formatEventWhen(
   }).format(new Date(event.at));
 }
 
+/**
+ * "Encore 4 jours", "Aujourd'hui", or "Le délai est passé".
+ *
+ * An expired deadline says so plainly rather than turning red or vanishing. §15.1 reserves
+ * red for destructive actions and never for lateness — and a right that has been forfeited
+ * is a fact to state calmly, not an alarm to sound at someone holding a newborn.
+ */
+function deadlineLabel(
+  task: Task,
+  birthDate: string,
+  now: number,
+  t: (k: string, o?: Record<string, unknown>) => string,
+): string {
+  const left = daysLeftAfterBirth(task, birthDate, now);
+  if (left === null) return '';
+  if (left < 0) return t('birth.deadlinePassed');
+  if (left === 0) return t('birth.deadlineToday');
+  return t('birth.deadlineDays', { count: left });
+}
+
 export default function TodayScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
@@ -87,6 +111,13 @@ export default function TodayScreen() {
   const allEvents = useEventsStore((s) => s.events);
   const upcoming = useMemo(() => nextEvents(allEvents, now), [allEvents, now]);
 
+  // Once the baby is here, the legal clock outranks the gestational one: the week no longer
+  // advances, but "5 days to declare the birth" very much does (see domain/postnatal.ts).
+  const postBirth = useMemo(
+    () => (bulle ? openPostBirthTasks(tasks, bulle, now) : []),
+    [tasks, bulle, now],
+  );
+
   // Ensemble (§5.1). Solo bulles have no partner, so the module does not exist for them —
   // a "Ton co-parent…" ghost on a solo screen is exactly the failure §3 exists to prevent.
   const solo = bulle?.profile.companionship === 'solo';
@@ -102,6 +133,9 @@ export default function TodayScreen() {
 
   const display = weekDisplay(bulle.profile.dueDate, now);
   const focusProject = projects.find((p) => p.id === focus?.projectId);
+
+  const born = !!bulle.birthDate;
+  const daysSince = bulle.birthDate ? daysSinceBirth(bulle.birthDate, now) : 0;
 
   /**
    * The orb's text equivalent (§15.8 item 4). Three cases, not two:
@@ -134,17 +168,26 @@ export default function TodayScreen() {
       <View style={{ alignItems: 'center', gap: space[2] }}>
         <Text variant="caption">{t('today.greeting')}</Text>
 
-        <Text
-          variant="caption"
-          onPress={() => setShowSG((v) => !v)}
-          // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of the
-          // world quotes SG. Showing both, on demand, is a small competence signal.
-          accessibilityRole="button"
-        >
-          {showSG
-            ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
-            : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
-        </Text>
+        {/* After the birth the countdown is meaningless — the gestational week has stopped
+            and "J-0" is not information. Days since the birth is what a new parent is
+            actually keeping track of, and it is the unit every deadline below uses. */}
+        {born ? (
+          <Text variant="caption">
+            {daysSince === 0 ? t('birth.dayOne') : t('birth.dayN', { count: daysSince + 1 })}
+          </Text>
+        ) : (
+          <Text
+            variant="caption"
+            onPress={() => setShowSG((v) => !v)}
+            // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of the
+            // world quotes SG. Showing both, on demand, is a small competence signal.
+            accessibilityRole="button"
+          >
+            {showSG
+              ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
+              : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
+          </Text>
+        )}
 
         {/*
           The baby lives INSIDE the bulle, not beside it. That is the product's metaphor made
@@ -196,6 +239,28 @@ export default function TodayScreen() {
         in the app: gating it on `upcoming.length > 0` means a new user has no way to add
         their first appointment. One quiet line is the price of the feature being reachable.
       */}
+      {/*
+        After the birth (§5.4). These carry real legal deadlines counted in DAYS from the
+        birth — 5 for the mairie, 6 months for the congé paternité — so they are the one
+        place in Bulle that shows a countdown at all. It is not a nudge: the congé is an
+        individual, non-transferable right, and what is not taken is lost rather than
+        deferred.
+      */}
+      {postBirth.length > 0 && (
+        <View>
+          <SectionHeader title={t('birth.afterBirth')} />
+          {postBirth.map((task, index) => (
+            <Row
+              key={task.id}
+              title={task.title}
+              subtitle={deadlineLabel(task, bulle.birthDate!, now, t)}
+              leading={<Glyph name="stamp" size={20} color="sage" />}
+              divider={index < postBirth.length - 1}
+            />
+          ))}
+        </View>
+      )}
+
       <View>
         <SectionHeader
           title={t('today.upcoming')}
