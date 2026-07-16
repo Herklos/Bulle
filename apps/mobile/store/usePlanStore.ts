@@ -9,6 +9,7 @@
 import { create } from 'zustand';
 import type { Project, Task } from '@bulle/sdk';
 import { syncedSlice } from '@/lib/synced-slice';
+import { getSession } from '@/lib/starfish';
 
 export const PROJECTS_KEY = 'projects';
 export const TASKS_KEY = 'tasks';
@@ -62,7 +63,23 @@ export const usePlanStore = create<PlanState>((set, get) => {
 
     addTask: tasks.add,
     addTasks: tasks.addMany,
-    updateTask: tasks.update,
+
+    /**
+     * Stamps `completedBy` when a task leaves `todo`, so Ensemble (§5.1) can tell the
+     * partner's work from mine.
+     *
+     * This lives here rather than at the call sites because it is an invariant of resolving
+     * a task, not something each screen should remember. `getSession()` is null when sync
+     * is off, which leaves the field absent — correct, since a bulle with no sync has no
+     * partner. Only ever reached from the mutator, never from the pure `setTasks` the
+     * hydrate path uses, so a pulled task keeps the stamp its author gave it.
+     */
+    updateTask: (id, updates) => {
+      const resolving = updates.status !== undefined && updates.status !== 'todo';
+      const userId = getSession()?.userId;
+      tasks.update(id, resolving && userId ? { ...updates, completedBy: userId } : updates);
+    },
+
     removeTask: tasks.remove,
 
     addProjectWithTasks: (project, newTasks) => {

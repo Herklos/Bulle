@@ -60,6 +60,8 @@ export const en = {
     eventTomorrow: 'Tomorrow at {{time}}',
     eventInDays: 'In {{count}} days',
     noEvents: 'No appointments coming up.',
+    partnerDid: 'Your co-parent ticked “{{title}}”',
+    partnerDismissed: 'Your co-parent set aside “{{title}}”',
     thisWeek: 'This week',
     together: 'Together',
     calm: 'All is quiet this week.',

@@ -14,6 +14,7 @@ import {
   currentWeekSA,
   daysUntilEvent,
   nextEvents,
+  partnerActivity,
   pregnancyProgress,
   suggestFocus,
   weekDisplay,
@@ -32,6 +33,7 @@ import { useEventsStore } from '@/store/useEventsStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
 import { useReadiness } from '@/lib/use-readiness';
 import { useNow } from '@/lib/use-now';
+import { getSession } from '@/lib/starfish';
 
 /**
  * "demain", "dans 3 jours", or a date. Relative for the near ones because that is how
@@ -84,6 +86,15 @@ export default function TodayScreen() {
 
   const allEvents = useEventsStore((s) => s.events);
   const upcoming = useMemo(() => nextEvents(allEvents, now), [allEvents, now]);
+
+  // Ensemble (§5.1). Solo bulles have no partner, so the module does not exist for them —
+  // a "Ton co-parent…" ghost on a solo screen is exactly the failure §3 exists to prevent.
+  const solo = bulle?.profile.companionship === 'solo';
+  const myUserId = getSession()?.userId;
+  const partner = useMemo(
+    () => (solo ? [] : partnerActivity(tasks, { myUserId, now })),
+    [solo, tasks, myUserId, now],
+  );
 
   if (!bulle) return null;
   // Pause hides the countdown and readiness entirely (§3.1).
@@ -228,6 +239,28 @@ export default function TodayScreen() {
                 {task.title}
               </Text>
             </View>
+          ))}
+        </View>
+      )}
+
+      {/*
+        Ensemble (§5.1) — at most 2 lines, and nothing at all when there is nothing to say.
+        No counts, no comparison, no "Alex: 12, toi: 4". Most of the work of preparing is
+        invisible to the other person; this makes a little of it visible. It must never
+        become a scoreboard between two people about to have a child.
+      */}
+      {partner.length > 0 && (
+        <View>
+          <SectionHeader title={t('today.together')} />
+          {partner.map((task, index) => (
+            <Row
+              key={task.id}
+              title={t(task.status === 'dismissed' ? 'today.partnerDismissed' : 'today.partnerDid', {
+                title: task.title,
+              })}
+              leading={<Glyph name="members" size={20} color="sage" />}
+              divider={index < partner.length - 1}
+            />
           ))}
         </View>
       )}

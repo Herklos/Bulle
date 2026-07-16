@@ -17,6 +17,12 @@
  *
  * The dismiss is always present and immediate — a first-run screen you cannot leave is the
  * oldest dark pattern there is.
+ *
+ * The CTA is PINNED, outside the scroll. It used to sit at the end of the scrolling column,
+ * which meant that on a short screen (or at large Dynamic Type, where the bullets grow) the
+ * one action the screen exists for was below the fold — the user met a wall of text with no
+ * visible way forward and had to discover it by scrolling. The content scrolls; the button
+ * does not move.
  */
 import React from 'react';
 import { Modal, Pressable, ScrollView, View } from 'react-native';
@@ -95,11 +101,15 @@ export function FeatureWelcome({
         </View>
 
         <ScrollView
+          // flexShrink is what lets the footer win the height fight: without it the
+          // ScrollView measures to its content and pushes the CTA off the bottom, which is
+          // the whole bug this layout exists to fix.
+          style={{ flex: 1, flexShrink: 1 }}
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: 'center',
             paddingHorizontal: space[5],
-            paddingBottom: insets.bottom + space[6],
+            paddingBottom: space[5],
           }}
         >
           <View
@@ -149,15 +159,23 @@ export function FeatureWelcome({
                 </View>
               ))}
             </Animated.View>
-
-            <Animated.View
-              entering={reduced ? undefined : FadeInDown.delay(320).duration(420)}
-              style={{ alignSelf: 'stretch' }}
-            >
-              <Button label={primaryLabel} onPress={onPrimary} block />
-            </Animated.View>
           </View>
         </ScrollView>
+
+        {/* Pinned. Always on screen, whatever the content height or the type scale. */}
+        <Animated.View
+          entering={reduced ? undefined : FadeInDown.delay(320).duration(420)}
+          style={{
+            paddingHorizontal: space[5],
+            paddingBottom: insets.bottom + space[5],
+            paddingTop: space[4],
+            backgroundColor: colors.bg,
+          }}
+        >
+          <View style={{ width: '100%', maxWidth: layout.maxContentWidth, alignSelf: 'center' }}>
+            <Button label={primaryLabel} onPress={onPrimary} block />
+          </View>
+        </Animated.View>
       </View>
     </Modal>
   );

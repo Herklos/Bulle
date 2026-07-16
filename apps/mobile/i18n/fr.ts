@@ -60,6 +60,8 @@ export const fr = {
     eventTomorrow: 'Demain à {{time}}',
     eventInDays: 'Dans {{count}} jours',
     noEvents: 'Aucun rendez-vous prévu.',
+    partnerDid: 'Ton co-parent a coché « {{title}} »',
+    partnerDismissed: 'Ton co-parent a écarté « {{title}} »',
     thisWeek: 'Cette semaine',
     together: 'Ensemble',
     // Rotating footer lines. Honest, never filler.

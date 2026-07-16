@@ -65,6 +65,7 @@ export const taskSchema = z.object({
   essential: z.boolean(),
   status: taskStatusSchema,
   assigneeId: z.string().optional(),
+  completedBy: z.string().optional(),
   checklist: z
     .array(z.object({ id: z.string(), label: z.string(), done: z.boolean() }))
     .optional(),

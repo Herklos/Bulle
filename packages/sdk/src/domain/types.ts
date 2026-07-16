@@ -112,6 +112,15 @@ export interface Task {
   essential: boolean;
   status: TaskStatus;
   assigneeId?: string;
+  /**
+   * userId of whoever resolved this task, stamped when it leaves `todo`. Feeds the Ensemble
+   * module (§5.1) — the only thing it answers is "was this someone other than me?".
+   *
+   * Absent on tasks resolved before sync was ever on, and on locally-created ones with no
+   * session. Absent therefore reads as "me", which is the safe default: Ensemble showing
+   * nothing is correct, Ensemble crediting a partner who did nothing is not.
+   */
+  completedBy?: string;
   /** Max depth 1 by design — a checklist inside a task, never a task tree. */
   checklist?: { id: string; label: string; done: boolean }[];
   createdAt: Iso;
