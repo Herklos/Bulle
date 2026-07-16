@@ -42,6 +42,16 @@ export interface BulleRegistryEntry {
   /** The invite's ephemeral subject id — how this device resolves its own role. */
   inviteSubjectId?: string;
   ownerId?: string;
+  /**
+   * Revocation bookkeeping, owner side. `revokeSpaceAccess` needs a monotonically
+   * increasing generation and the cumulative prior entries; both live here because they
+   * are device-local facts about THIS owner's roster, not synced content.
+   *
+   * Reusing a generation would let a rotated-out member's cap look current again, so it
+   * only ever increments (see lib/permissions/revoke.ts).
+   */
+  revocationGeneration?: number;
+  revokedEntries?: unknown[];
   syncDisabled?: boolean;
   createdAt: string;
 }

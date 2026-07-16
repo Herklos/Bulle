@@ -24,7 +24,7 @@ import { roleCanWrite } from '@bulle/sdk';
 import { APP_ORIGIN } from './config';
 
 /** KV key holding the serialized invite store, needed later to revoke. */
-const INVITE_STORE_KEY = 'spaceInviteStore';
+export const INVITE_STORE_KEY = 'spaceInviteStore';
 
 export interface MintedInvite {
   link: string;

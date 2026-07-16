@@ -8,6 +8,7 @@
  * document limit instead.
  */
 import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import { View, useWindowDimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import * as Clipboard from 'expo-clipboard';
@@ -16,6 +17,7 @@ import { DEFAULT_PERMISSION_ROLES, type RoleDefinition } from '@bulle/sdk';
 import { Button, Row, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { revokeCollaborator } from '@/lib/permissions/revoke';
 import { mintInvite } from '@/lib/invite-link';
 import { getSession, getSpaceId } from '@/lib/starfish';
 import { usePermissionsStore } from '@/store/usePermissionsStore';
@@ -29,6 +31,8 @@ export default function InviteScreen() {
   const { width } = useWindowDimensions();
   const active = useActiveBulle();
   const roles = usePermissionsStore((s) => s.roles);
+
+  const assignments = usePermissionsStore((s) => s.assignments);
 
   const [link, setLink] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -92,6 +96,27 @@ export default function InviteScreen() {
    * to "L" and the code must be big: a real camera needs ~2px per module, and at 125
    * modules anything under ~250px simply will not scan.
    */
+  /**
+   * Revocation is destructive and cannot be undone by re-inviting the same link (the cap is
+   * rotated out), so it asks first and says plainly what it does and does not do.
+   */
+  const confirmRevoke = (assignment: { id: string; subjectUserId: string }) => {
+    Alert.alert(t('settings.revoke'), t('settings.revokeConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('settings.revoke'),
+        style: 'destructive',
+        onPress: () => {
+          void revokeCollaborator(assignment.subjectUserId, assignment.id).then(({ evicted }) =>
+            // Honest either way: a roster-only drop still cuts the server, but their existing
+            // copy can outlive it, and saying "done" would overstate what happened.
+            Alert.alert(t(evicted ? 'settings.revokeDone' : 'settings.revokePartial')),
+          );
+        },
+      },
+    ]);
+  };
+
   const qrSize = Math.max(250, Math.min(320, Math.round(width - 64)));
 
   return (
@@ -117,6 +142,38 @@ export default function InviteScreen() {
       )}
 
       {busy && <Text variant="caption">{t('common.loading')}</Text>}
+
+      {/*
+        The roster. Without it, revoking was implemented and unreachable, which is the same
+        gap wearing a different hat: an owner could hand out access and had no way to take
+        it back.
+      */}
+      {!link && (
+        <View>
+          <SectionHeader title={t('settings.withAccess')} />
+          {assignments.length === 0 ? (
+            <Text variant="caption">{t('settings.noMembers')}</Text>
+          ) : (
+            assignments.map((assignment, index) => (
+              <Row
+                key={assignment.id}
+                title={assignment.label ?? t('settings.roles.role-coparent')}
+                subtitle={
+                  roles.find((r) => r.id === assignment.roleId)
+                    ? t(`settings.roles.${roles.find((r) => r.id === assignment.roleId)!.name}`)
+                    : undefined
+                }
+                trailing={
+                  <Text variant="caption" color="danger" onPress={() => confirmRevoke(assignment)}>
+                    {t('settings.revoke')}
+                  </Text>
+                }
+                divider={index < assignments.length - 1}
+              />
+            ))
+          )}
+        </View>
+      )}
 
       {link && (
         <View style={{ gap: space[5], alignItems: 'center' }}>
