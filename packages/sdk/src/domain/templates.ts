@@ -573,11 +573,15 @@ const DECISIONS: ProjectTemplate = {
     },
     {
       // Must be decided BEFORE 32 SA, because one of the two options happens at 32-36.
+      // weekEnd is therefore 32 and not 34: at 34 the task went on presenting itself as
+      // live for two weeks AFTER the deadline its own note and details both state, which is
+      // the one thing a window must never do. A window that outlives its own deadline
+      // teaches the user that the deadlines are decorative.
       titleKey: 'templates.decisions.tasks.vrs',
       notesKey: 'templates.decisions.tasks.vrsNote',
       detailsKey: 'templates.decisions.tasks.vrsDetails',
       weekStart: 28,
-      weekEnd: 34,
+      weekEnd: 32,
       effort: 'M',
       domain: 'sante',
       essential: true,
