@@ -291,6 +291,8 @@ export const en = {
   },
 
   events: {
+    change: 'Change',
+    delete: 'Delete appointment',
     newTitle: 'An appointment',
     kindQuestion: 'What kind?',
     dateQuestion: 'Which day?',

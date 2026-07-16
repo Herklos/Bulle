@@ -29,33 +29,10 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { EVENT_KINDS, defaultEventAt, withDate, withTime } from '@/lib/event-when';
 import { useEventsStore } from '@/store/useEventsStore';
 
-/** The kinds that matter in a French pregnancy. `autre` catches everything else. */
-const KINDS: EventKind[] = ['echo', 'consultation', 'prepa', 'admin', 'autre'];
-
 type Step = 'kind' | 'date' | 'time';
-
-function defaultAt(): Date {
-  const d = new Date();
-  d.setDate(d.getDate() + 7);
-  d.setHours(9, 0, 0, 0);
-  return d;
-}
-
-/** Take the calendar day from `from`, keep the clock time already chosen. */
-function withDate(at: Date, from: Date): Date {
-  const d = new Date(at);
-  d.setFullYear(from.getFullYear(), from.getMonth(), from.getDate());
-  return d;
-}
-
-/** Take the clock time from `from`, keep the calendar day already chosen. */
-function withTime(at: Date, from: Date): Date {
-  const d = new Date(at);
-  d.setHours(from.getHours(), from.getMinutes(), 0, 0);
-  return d;
-}
 
 export default function NewEventScreen() {
   const { t } = useTranslation();
@@ -73,7 +50,7 @@ export default function NewEventScreen() {
   const stepRef = useRef<Step>('kind');
   stepRef.current = step;
   const [kind, setKind] = useState<EventKind | null>(null);
-  const [at, setAt] = useState<Date>(defaultAt());
+  const [at, setAt] = useState<Date>(defaultEventAt());
 
   const save = () => {
     if (!kind) return;
@@ -107,7 +84,7 @@ export default function NewEventScreen() {
         <Text variant="display">{t('events.newTitle')}</Text>
         <View>
           <SectionHeader title={t('events.kindQuestion')} />
-          {KINDS.map((k, index) => (
+          {EVENT_KINDS.map((k, index) => (
             <Row
               key={k}
               title={t(`events.kinds.${k}`)}
@@ -116,7 +93,7 @@ export default function NewEventScreen() {
                 setStep('date');
               }}
               chevron
-              divider={index < KINDS.length - 1}
+              divider={index < EVENT_KINDS.length - 1}
             />
           ))}
         </View>

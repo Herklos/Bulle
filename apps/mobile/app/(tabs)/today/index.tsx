@@ -283,6 +283,10 @@ export default function TodayScreen() {
               title={event.title}
               subtitle={formatEventWhen(event, now, t, i18n.language)}
               leading={<Glyph name="calendar" size={20} color="dustyBlue" />}
+              // A scan gets MOVED; that is the normal case. Inert, this row showed a date
+              // the user knew was wrong and offered nothing to do about it.
+              onPress={() => router.push(`/event/${event.id}` as never)}
+              chevron
               divider={index < upcoming.length - 1}
             />
           ))

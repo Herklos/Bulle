@@ -295,6 +295,8 @@ export const fr = {
   },
 
   events: {
+    change: 'Modifier',
+    delete: 'Supprimer le rendez-vous',
     newTitle: 'Un rendez-vous',
     kindQuestion: 'De quel type ?',
     dateQuestion: 'Quel jour ?',

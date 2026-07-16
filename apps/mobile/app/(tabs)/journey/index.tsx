@@ -213,6 +213,11 @@ export default function JourneyScreen() {
               title={event.title}
               subtitle={formatTime(event.at)}
               leading={<Glyph name="calendar" size={20} color="dustyBlue" />}
+              // The tasks and souvenirs beside it were already tappable; the appointment was
+              // the odd one out, which reads as "this one is broken" rather than "this one
+              // is different".
+              onPress={() => router.push(`/event/${event.id}` as never)}
+              chevron
             />
           ))}
 
