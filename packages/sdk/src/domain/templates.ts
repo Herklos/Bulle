@@ -820,6 +820,11 @@ const JUMEAUX: ProjectTemplate = {
   descriptionKey: 'templates.jumeaux.description',
   glyph: 'members',
   locales: ['fr'],
+  // FR-only, and it always was: the tasks name the CPAM, the CAF and the ASF.
+  // `countries` was simply never declared, and an undeclared `countries` means "applies
+  // everywhere" (templateAppliesInCountry fails open on purpose), so a francophone bulle in
+  // Belgium was being told to file with French institutions.
+  countries: ['FR'],
   appliesTo: (profile) => profile.multiples === true,
   tasks: [
     {
@@ -878,6 +883,11 @@ const SOLO: ProjectTemplate = {
   descriptionKey: 'templates.solo.description',
   glyph: 'leaf',
   locales: ['fr'],
+  // FR-only, and it always was: the tasks name the CPAM, the CAF and the ASF.
+  // `countries` was simply never declared, and an undeclared `countries` means "applies
+  // everywhere" (templateAppliesInCountry fails open on purpose), so a francophone bulle in
+  // Belgium was being told to file with French institutions.
+  countries: ['FR'],
   appliesTo: (profile) => profile.companionship === 'solo',
   tasks: [
     {

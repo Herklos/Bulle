@@ -227,17 +227,21 @@ describe('country vs language (multi-country readiness)', () => {
       // relationship with.
       'tpl-decisions',
       'tpl-securite',
+      // These two used to be exempted, on the grounds that twins and solo parenting are not
+      // French subjects. True, and beside the point: the rule above is about CONTENT, and
+      // their content names French institutions. `templates.jumeaux.tasks.signaler` says
+      // "Signalez la grossesse multiple à votre CPAM et à votre CAF"; the solo copy names the
+      // CAF and the mairie. The exemption contradicted the very rule it sat under, and the
+      // consequence was live: `countries` undefined means "applies everywhere"
+      // (templateAppliesInCountry fails open), so a francophone bulle in Belgium expecting
+      // twins was handed tasks telling it to file with French institutions.
+      //
+      // The subject being universal is an argument for TRANSLATING them, not for shipping
+      // French copy outside France.
+      'tpl-jumeaux',
+      'tpl-solo',
     ]) {
       expect(templateById(id)?.countries).toEqual(['FR']);
-    }
-  });
-
-  it('does not claim a country for templates that are merely untranslated', () => {
-    // Twins and solo parenting are not French. They are FR-only because that is the copy
-    // we have, and `locales` is the honest way to say that.
-    for (const id of ['tpl-jumeaux', 'tpl-solo']) {
-      expect(templateById(id)?.countries).toBeUndefined();
-      expect(templateById(id)?.locales).toEqual(['fr']);
     }
   });
 });
