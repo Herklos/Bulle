@@ -34,6 +34,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.declaration',
       notesKey: 'templates.adminFr.tasks.declarationNote',
+      detailsKey: 'templates.adminFr.tasks.declarationDetails',
       // 6–16 SA, NOT 8–15. The deadline is "avant la fin du 3e mois de grossesse", which is
       // 14 weeks of GESTATION = 16 SA. Bulle counts in SA everywhere (§7.2), and conflating
       // the two scales here shortens the single most consequential deadline in the app by a
@@ -51,6 +52,7 @@ const ADMIN_FR: ProjectTemplate = {
       // which is exactly why it belongs in a preparation app rather than an HR page.
       titleKey: 'templates.adminFr.tasks.congeSupplementaire',
       notesKey: 'templates.adminFr.tasks.congeSupplementaireNote',
+      detailsKey: 'templates.adminFr.tasks.congeSupplementaireDetails',
       weekStart: 34,
       weekEnd: 40,
       effort: 'S',
@@ -61,6 +63,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.employeurGrossesse',
       notesKey: 'templates.adminFr.tasks.employeurGrossesseNote',
+      detailsKey: 'templates.adminFr.tasks.employeurGrossesseDetails',
       weekStart: 12,
       weekEnd: 30,
       effort: 'S',
@@ -71,6 +74,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.verifierDeclaration',
       notesKey: 'templates.adminFr.tasks.verifierDeclarationNote',
+      detailsKey: 'templates.adminFr.tasks.verifierDeclarationDetails',
       weekStart: 16,
       weekEnd: 22,
       effort: 'S',
@@ -79,6 +83,7 @@ const ADMIN_FR: ProjectTemplate = {
     },
     {
       titleKey: 'templates.adminFr.tasks.maternite',
+      detailsKey: 'templates.adminFr.tasks.materniteDetails',
       weekStart: 10,
       weekEnd: 18,
       effort: 'M',
@@ -88,6 +93,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.consultations',
       notesKey: 'templates.adminFr.tasks.consultationsNote',
+      detailsKey: 'templates.adminFr.tasks.consultationsDetails',
       weekStart: 10,
       weekEnd: 40,
       effort: 'S',
@@ -97,6 +103,7 @@ const ADMIN_FR: ProjectTemplate = {
     },
     {
       titleKey: 'templates.adminFr.tasks.echographies',
+      detailsKey: 'templates.adminFr.tasks.echographiesDetails',
       weekStart: 10,
       weekEnd: 32,
       effort: 'S',
@@ -105,6 +112,7 @@ const ADMIN_FR: ProjectTemplate = {
     },
     {
       titleKey: 'templates.adminFr.tasks.mutuelle',
+      detailsKey: 'templates.adminFr.tasks.mutuelleDetails',
       weekStart: 12,
       weekEnd: 24,
       effort: 'S',
@@ -113,6 +121,7 @@ const ADMIN_FR: ProjectTemplate = {
     },
     {
       titleKey: 'templates.adminFr.tasks.congeMaternite',
+      detailsKey: 'templates.adminFr.tasks.congeMaterniteDetails',
       weekStart: 16,
       weekEnd: 24,
       effort: 'S',
@@ -122,6 +131,7 @@ const ADMIN_FR: ProjectTemplate = {
     },
     {
       titleKey: 'templates.adminFr.tasks.congePaternite',
+      detailsKey: 'templates.adminFr.tasks.congePaterniteDetails',
       weekStart: 20,
       weekEnd: 30,
       effort: 'S',
@@ -132,6 +142,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.reconnaissance',
       notesKey: 'templates.adminFr.tasks.reconnaissanceNote',
+      detailsKey: 'templates.adminFr.tasks.reconnaissanceDetails',
       weekStart: 12,
       weekEnd: 30,
       effort: 'S',
@@ -141,6 +152,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.garde',
       notesKey: 'templates.adminFr.tasks.gardeNote',
+      detailsKey: 'templates.adminFr.tasks.gardeDetails',
       weekStart: 12,
       weekEnd: 24,
       effort: 'L',
@@ -149,6 +161,7 @@ const ADMIN_FR: ProjectTemplate = {
     },
     {
       titleKey: 'templates.adminFr.tasks.paje',
+      detailsKey: 'templates.adminFr.tasks.pajeDetails',
       weekStart: 14,
       weekEnd: 28,
       effort: 'S',
@@ -168,6 +181,7 @@ const ADMIN_FR: ProjectTemplate = {
       // jugement déclaratif de naissance.
       titleKey: 'templates.adminFr.tasks.declarationNaissance',
       notesKey: 'templates.adminFr.tasks.declarationNaissanceNote',
+      detailsKey: 'templates.adminFr.tasks.declarationNaissanceDetails',
       afterBirthDays: 5,
       weekStart: 41,
       weekEnd: 42,
@@ -181,6 +195,7 @@ const ADMIN_FR: ProjectTemplate = {
       // practical prompt, not a legal one.
       titleKey: 'templates.adminFr.tasks.acteNaissance',
       notesKey: 'templates.adminFr.tasks.acteNaissanceNote',
+      detailsKey: 'templates.adminFr.tasks.acteNaissanceDetails',
       afterBirthDays: 14,
       weekStart: 41,
       weekEnd: 44,
@@ -192,6 +207,7 @@ const ADMIN_FR: ProjectTemplate = {
     {
       titleKey: 'templates.adminFr.tasks.rattachementVitale',
       notesKey: 'templates.adminFr.tasks.rattachementVitaleNote',
+      detailsKey: 'templates.adminFr.tasks.rattachementVitaleDetails',
       afterBirthDays: 30,
       weekStart: 41,
       weekEnd: 43,
@@ -209,6 +225,7 @@ const ADMIN_FR: ProjectTemplate = {
       // than quoting a number the app cannot stand behind.
       titleKey: 'templates.adminFr.tasks.rattachementMutuelle',
       notesKey: 'templates.adminFr.tasks.rattachementMutuelleNote',
+      detailsKey: 'templates.adminFr.tasks.rattachementMutuelleDetails',
       afterBirthDays: 30,
       weekStart: 41,
       weekEnd: 45,
@@ -220,6 +237,7 @@ const ADMIN_FR: ProjectTemplate = {
       // 60 days to report the birth to the impôts (prélèvement à la source).
       titleKey: 'templates.adminFr.tasks.impots',
       notesKey: 'templates.adminFr.tasks.impotsNote',
+      detailsKey: 'templates.adminFr.tasks.impotsDetails',
       afterBirthDays: 60,
       weekStart: 41,
       weekEnd: 49,
@@ -236,6 +254,7 @@ const ADMIN_FR: ProjectTemplate = {
       // it in silence. ~182 days rather than "6 months" because the model counts days.
       titleKey: 'templates.adminFr.tasks.prendreCongePaternite',
       notesKey: 'templates.adminFr.tasks.prendreCongePaterniteNote',
+      detailsKey: 'templates.adminFr.tasks.prendreCongePaterniteDetails',
       afterBirthDays: 182,
       weekStart: 41,
       weekEnd: 41,
@@ -485,6 +504,7 @@ const DECISIONS: ProjectTemplate = {
   descriptionKey: 'templates.decisions.description',
   glyph: 'chemin',
   locales: ['fr'],
+  countries: ['FR'],
   tasks: [
     {
       titleKey: 'templates.decisions.tasks.suivi',
@@ -672,6 +692,7 @@ const SECURITE: ProjectTemplate = {
   descriptionKey: 'templates.securite.description',
   glyph: 'stamp',
   locales: ['fr'],
+  countries: ['FR'],
   tasks: [
     {
       titleKey: 'templates.securite.tasks.fumee',

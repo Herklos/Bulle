@@ -69,6 +69,8 @@ export const taskSchema = z.object({
   assigneeId: z.string().optional(),
   completedBy: z.string().optional(),
   afterBirthDays: z.number().optional(),
+  details: z.array(z.string()).optional(),
+  href: z.string().optional(),
   checklist: z
     .array(z.object({ id: z.string(), label: z.string(), done: z.boolean() }))
     .optional(),

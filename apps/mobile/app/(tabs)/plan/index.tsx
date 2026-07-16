@@ -127,6 +127,13 @@ export default function PlanScreen() {
     const { project, tasks: newTasks } = instantiateTemplate(template, bulle.profile, {
       now,
       t: (key) => t(key),
+      // returnObjects, so a detailsKey resolves to its array of paragraphs rather than to
+      // "[object Object]". Guarded: i18next hands back the KEY on a miss, and a detail body
+      // reading "templates.valise.tasks.docsDetails" would be worse than none at all.
+      tList: (key) => {
+        const value = t(key, { returnObjects: true });
+        return Array.isArray(value) ? (value as string[]) : [];
+      },
       makeId: () => randomId(),
       order: projects.length,
     });

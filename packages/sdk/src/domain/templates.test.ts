@@ -215,7 +215,19 @@ describe('country vs language (multi-country readiness)', () => {
   it('tags every template that names French institutions', () => {
     // The corpus rule: if it talks about the CAF, the CPAM or the mairie, it must say so in
     // `countries`. Missing the tag is how the Brussels bug comes back.
-    for (const id of ['tpl-admin-fr', 'tpl-budget', 'tpl-postnatal', 'tpl-garde']) {
+    for (const id of [
+      'tpl-admin-fr',
+      'tpl-budget',
+      'tpl-postnatal',
+      'tpl-garde',
+      // Their SUBJECT is universal (decisions to make, car-seat safety), but their copy and
+      // every link in them is French: ameli.fr, service-public.gouv.fr, has-sante.fr,
+      // cnil.fr. A template is French when its CONTENT is French, whatever the topic —
+      // otherwise a parent in Brussels gets these with links to institutions they have no
+      // relationship with.
+      'tpl-decisions',
+      'tpl-securite',
+    ]) {
       expect(templateById(id)?.countries).toEqual(['FR']);
     }
   });
@@ -223,9 +235,64 @@ describe('country vs language (multi-country readiness)', () => {
   it('does not claim a country for templates that are merely untranslated', () => {
     // Twins and solo parenting are not French. They are FR-only because that is the copy
     // we have, and `locales` is the honest way to say that.
-    for (const id of ['tpl-jumeaux', 'tpl-solo', 'tpl-decisions', 'tpl-securite']) {
+    for (const id of ['tpl-jumeaux', 'tpl-solo']) {
       expect(templateById(id)?.countries).toBeUndefined();
       expect(templateById(id)?.locales).toEqual(['fr']);
+    }
+  });
+});
+
+describe('links must match the countries the template claims', () => {
+  /** Hosts that only describe the French system. */
+  const FR_HOSTS = [
+    'ameli.fr',
+    'service-public.gouv.fr',
+    'service-public.fr',
+    'caf.fr',
+    'legifrance.gouv.fr',
+    'code.travail.gouv.fr',
+    'impots.gouv.fr',
+    'monenfant.fr',
+    'mesdroitssociaux.gouv.fr',
+    'urssaf.fr',
+    'has-sante.fr',
+    'cnil.fr',
+    'securite-routiere.gouv.fr',
+  ];
+
+  const isFrenchLink = (href: string) => FR_HOSTS.some((h) => href.includes(h));
+
+  it('never cites a French institution from a template that applies everywhere', () => {
+    // The bug this catches, which shipped once already: tpl-decisions and tpl-securite were
+    // tagged universal (their SUBJECT is universal) while every link in them pointed at
+    // ameli.fr and service-public.gouv.fr. A parent in Brussels would have been sent to
+    // institutions they have no relationship with. A template is French when its CONTENT is
+    // French, whatever the topic.
+    for (const template of PROJECT_TEMPLATES) {
+      if (template.countries) continue; // claims its countries, so its links are its own business
+      for (const task of template.tasks) {
+        const links = [task.href, ...Object.values(task.hrefByCountry ?? {})].filter(
+          (h): h is string => !!h,
+        );
+        for (const href of links) {
+          // A per-country link is fine; a bare `href` on a universal template is not.
+          if (task.hrefByCountry && !task.href) continue;
+          expect(
+            isFrenchLink(href),
+            `${template.id} applies everywhere but links to ${href}`,
+          ).toBe(false);
+        }
+      }
+    }
+  });
+
+  it('gives every FR-tagged template French sources, not foreign ones', () => {
+    for (const template of PROJECT_TEMPLATES) {
+      if (template.countries?.join() !== 'FR') continue;
+      for (const task of template.tasks) {
+        if (!task.href) continue;
+        expect(isFrenchLink(task.href), `${template.id}: ${task.href}`).toBe(true);
+      }
     }
   });
 });

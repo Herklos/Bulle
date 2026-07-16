@@ -156,6 +156,22 @@ export interface Task {
    * what times it. Absent ⇒ an ordinary week-window task.
    */
   afterBirthDays?: number;
+  /**
+   * What to actually DO, as paragraphs. Resolved at instantiation like `title`, so it stays
+   * editable and survives a language change the same way the rest of the task does.
+   *
+   * A task title is a reminder, not an instruction: "Rassembler les documents pour la
+   * maternité" tells you nothing if you do not already know which documents. This is where
+   * the answer lives.
+   */
+  details?: string[];
+  /**
+   * ONE official source, already resolved for the bulle's country (see resolveTaskHref).
+   *
+   * One, deliberately. A task that opens with six links is a research project, and the
+   * whole promise is that the app did the reading.
+   */
+  href?: string;
   /** Max depth 1 by design — a checklist inside a task, never a task tree. */
   checklist?: { id: string; label: string; done: boolean }[];
   createdAt: Iso;
@@ -226,8 +242,25 @@ export interface TaskTemplate {
   effort: Effort;
   domain: ReadinessDomain;
   essential: boolean;
-  /** Official source, shown as a link on the task (spec §5.4). */
+  /**
+   * i18n key resolving to an ARRAY of paragraphs explaining what to do. Resolved to literal
+   * strings at instantiation, like `titleKey`.
+   */
+  detailsKey?: string;
+  /**
+   * Official source, shown as a link on the task (spec §5.4). Used wherever the template
+   * applies, which for a `countries`-tagged template means exactly one country.
+   */
   href?: string;
+  /**
+   * Per-country override, for the templates that apply everywhere but whose source does
+   * not. A hospital bag is universal; the page describing what to bring is not.
+   *
+   * Keyed by ISO 3166-1 alpha-2. Falls back to `href` — see resolveTaskHref. Without this,
+   * a universal template could only ever cite one country's institution, which is how you
+   * end up linking a parent in Brussels to ameli.fr.
+   */
+  hrefByCountry?: Record<string, string>;
 }
 
 export interface ProjectTemplate {

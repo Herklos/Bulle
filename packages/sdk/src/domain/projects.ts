@@ -5,7 +5,8 @@
  * or a global.
  */
 
-import type { BulleProfile, Project, ProjectTemplate, Task } from './types.js';
+import { DEFAULT_COUNTRY } from './templates.js';
+import type { BulleProfile, Project, ProjectTemplate, Task, TaskTemplate } from './types.js';
 
 /** Everything impure a template instantiation needs, supplied by the caller. */
 export interface InstantiateDeps {
@@ -13,10 +14,37 @@ export interface InstantiateDeps {
   now: number;
   /** Resolves an i18n key to the user's language. */
   t: (key: string) => string;
+  /**
+   * Resolves an i18n key to an ARRAY of paragraphs (i18next `returnObjects`).
+   *
+   * Separate from `t` because a missing array and a missing string fail differently: `t`
+   * returns the key itself when it misses, which as a detail body would render the literal
+   * string "templates.valise.tasks.docsDetails" to the user. Omit it and tasks simply have
+   * no details, which is the safe direction.
+   */
+  tList?: (key: string) => string[];
   /** Fresh unique id (e.g. starfish's `randomId`). */
   makeId: () => string;
   /** Where the project sorts among existing ones. */
   order?: number;
+  /**
+   * ISO 3166-1 alpha-2, for resolving per-country links. Defaults to the profile's country.
+   */
+  country?: string;
+}
+
+/**
+ * The official source for a task, in a given country.
+ *
+ * `hrefByCountry` wins, then the plain `href`. A template that applies everywhere but cites
+ * one country's institution is worse than citing none: it is confidently wrong, and the
+ * reader has no way to know the page does not describe their system.
+ */
+export function resolveTaskHref(
+  task: Pick<TaskTemplate, 'href' | 'hrefByCountry'>,
+  country: string,
+): string | undefined {
+  return task.hrefByCountry?.[country.toUpperCase()] ?? task.href;
 }
 
 /**
@@ -59,6 +87,11 @@ export function instantiateTemplate(
       // Carried through, so a post-birth task keeps its real clock instead of being timed
       // by the decorative 41+ SA window it also has (see domain/postnatal.ts).
       afterBirthDays: tt.afterBirthDays,
+      details: tt.detailsKey ? deps.tList?.(tt.detailsKey) : undefined,
+      // `href` was declared on the template and then dropped on the floor here: it never
+      // reached the Task and nothing rendered it, so every official source in the corpus
+      // was invisible. That is the one thing making the admin module trustworthy.
+      href: resolveTaskHref(tt, deps.country ?? profile.country ?? DEFAULT_COUNTRY),
       effort: tt.effort,
       domain: tt.domain,
       essential: tt.essential,

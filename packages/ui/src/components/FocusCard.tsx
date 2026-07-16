@@ -10,7 +10,7 @@
  * that is never written down, precisely so it can never become a guilt surface.
  */
 import React from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useBulleTheme } from '../theme/context.js';
 import { Button } from './Button.js';
@@ -26,6 +26,11 @@ export interface FocusCardProps {
   laterLabel: string;
   onDone: () => void;
   onLater: () => void;
+  /**
+   * Opens the task's details. Only the TEXT is pressable, never the whole card: the card
+   * carries its own actions, and a card-wide target would swallow taps meant for them.
+   */
+  onOpen?: () => void;
 }
 
 export function FocusCard({
@@ -36,6 +41,7 @@ export function FocusCard({
   laterLabel,
   onDone,
   onLater,
+  onOpen,
 }: FocusCardProps) {
   const { colors, radius, space } = useBulleTheme();
 
@@ -49,9 +55,11 @@ export function FocusCard({
         gap: space[2],
       }}
     >
-      <Text variant="overline">{projectTitle}</Text>
-      <Text variant="title">{taskTitle}</Text>
-      <Text variant="caption">{effortLabel}</Text>
+      <Pressable onPress={onOpen} disabled={!onOpen} accessibilityRole={onOpen ? 'button' : undefined}>
+        <Text variant="overline">{projectTitle}</Text>
+        <Text variant="title">{taskTitle}</Text>
+        <Text variant="caption">{effortLabel}</Text>
+      </Pressable>
 
       <View style={{ flexDirection: 'row', gap: space[3], marginTop: space[3] }}>
         <Button label={doneLabel} tone="accent" onPress={onDone} />

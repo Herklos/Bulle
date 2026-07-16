@@ -7,7 +7,7 @@
  * focus task however many are waiting.
  */
 import React, { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
@@ -226,6 +226,7 @@ export default function TodayScreen() {
           laterLabel={t('today.later')}
           onDone={() => complete(focus.id, focus.essential)}
           onLater={() => useReadinessStore.getState().defer(focus.id)}
+          onOpen={() => router.push(`/task/${focus.id}` as never)}
         />
       ) : (
         <EmptyState glyph="leaf" message={t('today.emptyFocus')} />
@@ -255,6 +256,8 @@ export default function TodayScreen() {
               title={task.title}
               subtitle={deadlineLabel(task, bulle.birthDate!, now, t)}
               leading={<Glyph name="stamp" size={20} color="sage" />}
+              onPress={() => router.push(`/task/${task.id}` as never)}
+              chevron
               divider={index < postBirth.length - 1}
             />
           ))}
@@ -300,9 +303,13 @@ export default function TodayScreen() {
                 onChange={() => complete(task.id, task.essential)}
                 accessibilityLabel={task.title}
               />
-              <Text variant="body" style={{ flex: 1 }}>
-                {task.title}
-              </Text>
+              <Pressable
+                style={{ flex: 1 }}
+                onPress={() => router.push(`/task/${task.id}` as never)}
+                accessibilityRole="button"
+              >
+                <Text variant="body">{task.title}</Text>
+              </Pressable>
             </View>
           ))}
         </View>

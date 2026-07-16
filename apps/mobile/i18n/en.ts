@@ -139,6 +139,13 @@ export const en = {
     afterBirth: 'After the birth',
   },
 
+  task: {
+    optional: 'An idea, not an essential. It never counts against you.',
+    openSource: 'Read the official page',
+    markTodo: 'Not done after all',
+    afterBirthPending: 'Once the baby is here',
+  },
+
   memories: {
     title: 'Memories',
     placeholder: 'Nothing here yet. Write something when you feel like it.',

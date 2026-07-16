@@ -7,7 +7,7 @@
  * the difference between a companion and a todo app.
  */
 import React, { useMemo } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { currentWeekSA, groupByWindow, isLingering, isResolved } from '@bulle/sdk';
@@ -95,7 +95,13 @@ export default function ProjectScreen() {
                   onChange={() => toggle(task.id, task.essential, done)}
                   accessibilityLabel={task.title}
                 />
-                <View style={{ flex: 1, gap: 2 }}>
+                {/* The title opens the task. The checkbox stays a checkbox: ticking is the
+                    common action and must not cost a round trip through a detail screen. */}
+                <Pressable
+                  style={{ flex: 1, gap: 2 }}
+                  onPress={() => router.push(`/task/${task.id}` as never)}
+                  accessibilityRole="button"
+                >
                   <Text
                     variant="body"
                     color={done ? 'inkSoft' : 'ink'}
@@ -109,7 +115,7 @@ export default function ProjectScreen() {
                     {lingering ? ` · ${t('plan.lingering')}` : ''}
                   </Text>
                   {task.notes && <Text variant="caption">{task.notes}</Text>}
-                </View>
+                </Pressable>
                 {canEdit && (
                   <TaskMenu
                     dismissLabel={t('plan.dismiss')}
