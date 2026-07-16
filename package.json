@@ -17,5 +17,8 @@
       "esbuild",
       "unrs-resolver"
     ]
+  },
+  "devDependencies": {
+    "@hono/node-server": "^2.0.10"
   }
 }

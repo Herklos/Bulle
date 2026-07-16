@@ -1,9 +1,44 @@
-# Sync: what is built, and the one thing that is missing
+# Sync: what is built, and the two things that block it
 
-Everything in the sync stack is implemented and unit-tested. None of it has run against a
-server, because there isn't one.
+Everything in the sync stack is implemented and unit-tested. None of it has ever run,
+because of two independent blockers: a missing function that makes sharing impossible, and
+a server host that does not exist.
 
-## The blocker
+The first is the important one. It is a code bug, it is in our code, and it means the
+sharing feature has never worked at all.
+
+## Blocker 1: sharing is dead on arrival (a code bug, not infrastructure)
+
+Found by building a local dev server (`tools/dev-sync-server.mjs`) and watching a real
+client against it: the app never sends a single request, and it never can.
+
+There is a circular dependency with nothing to break it:
+
+- `invite()` opens with `const session = getSession(); const spaceId = getSpaceId();
+  if (!session || !spaceId || !active) return;` and **silently returns**.
+- Both come from the sync singletons, which only `activateSync` sets.
+- `activateSync` bails on `if (!bulle.seedPhrase || bulle.syncDisabled || !bulle.spaceId) return;`
+- **Nothing ever sets `spaceId` for an owner.** The only writer is `lib/join-space.ts`,
+  which is the *joiner's* side and needs a link that can never be minted.
+
+So: you cannot invite without a space, and the space is only created by inviting. An owner
+can never create their first invite link. The screen just does nothing, with no error. Sync
+therefore never starts even if a server existed, which is why the missing host had never
+been noticed.
+
+**The missing piece is `ensureSpaceProvisioned`.** Fiancé has it at
+`apps/mobile/lib/space-provision.ts`; Bulle never got it. It bootstraps the owner's space
+and is not a small function: `writeSpaceAccess` (which succeeds by TOFU — with no `_access`
+doc, the server enricher grants `[space:owner, space:member]` to any authenticated identity,
+letting the owner bootstrap their own space), `seedSpaceObjectIndex`, `ownerEnsureSpaceKeyring`,
+a `_spaces` registry entry, all under `withIndexLock`, then persists the `sp-` id onto the
+registry entry. It is idempotent, and member entries short-circuit because join already set
+their `spaceId`.
+
+Porting it is the next piece of work. It was not done here because it is a real feature, not
+a fix, and it needs a working server to verify against rather than being written blind.
+
+## Blocker 2: there is no server
 
 `SYNC_BASE` defaults to `https://sync.drakkar.software`, which **does not resolve**:
 
@@ -81,7 +116,9 @@ not done.
 
 ## What this blocks
 
-The plan's end-to-end gates, and only these:
+The plan's end-to-end gates, and only these. Both blockers must clear: porting
+`ensureSpaceProvisioned` without a server gets you a mint that fails on the first request,
+and a server without it gets you a screen that still does nothing.
 
 - Phase 4: "two simulators sharing a seed converge"
 - Phase 6: "second device with the same seed converges"
