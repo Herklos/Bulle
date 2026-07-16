@@ -90,7 +90,14 @@ export default function Root({ children }: PropsWithChildren) {
         <meta property="og:locale:alternate" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
 
-        <link rel="icon" href="/favicon.ico" />
+        {/* The manifest is what makes "add to home screen" produce an app rather than a
+            bookmark: name, standalone display, and the icon set. Without it the PWA icons
+            in public/assets were generated and then referenced by nothing. */}
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" href="/assets/favicon.png" />
+        {/* iOS ignores the manifest's icons and uses this instead. */}
+        <link rel="apple-touch-icon" href="/assets/icon.png" />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
         {/* Non-blocking font load: preload as style, then promote to stylesheet on load, so

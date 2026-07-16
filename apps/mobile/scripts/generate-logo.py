@@ -69,10 +69,16 @@ def main() -> None:
 
     # Android adaptive: the system crops to a circle/squircle AND applies its own safe zone,
     # so this needs a much bigger margin or the bubble's edges get shaved.
-    save(compose(1024, 0.22), ASSETS / "adaptive-icon.png")
+    #
+    # TRANSPARENT: an adaptive icon is a foreground layer composited over the background
+    # colour declared in app.json. Baking an opaque ivory square in makes that layer opaque,
+    # which defeats the compositing the format exists for and leaves the launcher no way to
+    # apply its own masking or themed-icon treatment.
+    save(compose(1024, 0.22, transparent=True), ASSETS / "adaptive-icon.png")
 
-    # Splash.
-    save(compose(1024, 0.30), ASSETS / "splash-icon.png")
+    # Splash. Also transparent, so the background colour can differ per theme: an opaque
+    # ivory square would render as a light block on the dark splash (§15.1 dark bg).
+    save(compose(1024, 0.30, transparent=True), ASSETS / "splash-icon.png")
 
     # PWA.
     save(compose(192, 0.08), ASSETS / "icon-192.png", PUBLIC / "icon-192.png")
@@ -81,9 +87,11 @@ def main() -> None:
     # Favicon: tight margin. At 48px it must read as a shape, not a detail.
     fav = compose(196, 0.02)
     save(fav, ASSETS / "favicon.png", PUBLIC / "favicon.png")
-    fav.resize((48, 48), Image.LANCZOS).save(
-        ASSETS / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)]
-    )
+    # Written to public/ as well: +html.tsx links /favicon.ico, which is served from there.
+    # Only writing it to assets/ left that link resolving to nothing.
+    for ico in (ASSETS / "favicon.ico", PUBLIC.parent / "favicon.ico"):
+        ico.parent.mkdir(parents=True, exist_ok=True)
+        fav.resize((48, 48), Image.LANCZOS).save(ico, sizes=[(16, 16), (32, 32), (48, 48)])
     print("  favicon.ico            multi-size")
 
     # OG card, 1200x630. Off-centre so it survives a square crop by networks that do that.

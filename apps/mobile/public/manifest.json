@@ -1,0 +1,63 @@
+{
+  "id": "/",
+  "name": "Bulle — Préparer l'arrivée de bébé, à deux",
+  "short_name": "Bulle",
+  "description": "Application privée et locale pour préparer l'arrivée de bébé à deux : démarches administratives françaises, valise maternité, chambre, achats essentiels. Une seule chose à la fois, jamais de compteur ni de culpabilité. Fonctionne hors ligne.",
+  "start_url": "/today",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#FAF7F2",
+  "background_color": "#FAF7F2",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["lifestyle", "productivity", "utilities"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/assets/favicon.png",
+      "sizes": "196x196",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Aujourd'hui",
+      "short_name": "Aujourd'hui",
+      "url": "/today",
+      "description": "La prochaine chose à faire",
+      "icons": [{ "src": "/assets/favicon.png", "sizes": "196x196" }]
+    },
+    {
+      "name": "Préparer",
+      "short_name": "Préparer",
+      "url": "/plan",
+      "description": "Vos projets et vos démarches",
+      "icons": [{ "src": "/assets/favicon.png", "sizes": "196x196" }]
+    },
+    {
+      "name": "Chemin",
+      "short_name": "Chemin",
+      "url": "/journey",
+      "description": "Où vous en êtes, semaine par semaine",
+      "icons": [{ "src": "/assets/favicon.png", "sizes": "196x196" }]
+    }
+  ]
+}

@@ -4,18 +4,22 @@
     "slug": "bulle",
     "version": "0.1.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "scheme": "bulle",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "software.drakkar.bulle.app",
-      "associatedDomains": ["applinks:bulle.drakkar.software"]
+      "associatedDomains": [
+        "applinks:bulle.drakkar.software"
+      ]
     },
     "android": {
       "package": "software.drakkar.bulle.app",
-      "edgeToEdgeEnabled": true,
       "intentFilters": [
         {
           "action": "VIEW",
@@ -27,9 +31,16 @@
               "path": "/join"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
-      ]
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAF7F2"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -43,13 +54,28 @@
       "expo-sqlite",
       "expo-localization",
       "expo-font",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#FAF7F2",
+          "dark": {
+            "backgroundColor": "#1C1A17"
+          }
+        }
+      ],
       "expo-notifications",
       [
         "expo-build-properties",
         {
-          "android": { "kotlinVersion": "2.1.20" },
-          "ios": { "deploymentTarget": "16.4" }
+          "android": {
+            "kotlinVersion": "2.1.20"
+          },
+          "ios": {
+            "deploymentTarget": "16.4"
+          }
         }
       ]
     ],
