@@ -50,6 +50,7 @@ export const fr = {
     greeting: 'Bonjour',
     weekLine: 'Semaine {{sa}} SA · J-{{days}}',
     weekLineSG: 'Semaine {{sg}} SG · J-{{days}}',
+    weekBulleLabel: 'Illustration : {{week}} semaines de grossesse.',
     focusTitle: 'À faire maintenant',
     done: 'C’est fait',
     later: 'Plus tard',

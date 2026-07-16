@@ -1,0 +1,202 @@
+{
+  "1": {
+    "file": "bulles/week-01.png",
+    "sourceWeek": 1,
+    "exact": true
+  },
+  "2": {
+    "file": "bulles/week-02.png",
+    "sourceWeek": 2,
+    "exact": true
+  },
+  "3": {
+    "file": "bulles/week-03.png",
+    "sourceWeek": 3,
+    "exact": true
+  },
+  "4": {
+    "file": "bulles/week-04.png",
+    "sourceWeek": 4,
+    "exact": true
+  },
+  "5": {
+    "file": "bulles/week-05.png",
+    "sourceWeek": 5,
+    "exact": true
+  },
+  "6": {
+    "file": "bulles/week-06.png",
+    "sourceWeek": 6,
+    "exact": true
+  },
+  "7": {
+    "file": "bulles/week-07.png",
+    "sourceWeek": 7,
+    "exact": true
+  },
+  "8": {
+    "file": "bulles/week-08.png",
+    "sourceWeek": 8,
+    "exact": true
+  },
+  "9": {
+    "file": "bulles/week-09.png",
+    "sourceWeek": 9,
+    "exact": true
+  },
+  "10": {
+    "file": "bulles/week-10.png",
+    "sourceWeek": 10,
+    "exact": true
+  },
+  "11": {
+    "file": "bulles/week-11.png",
+    "sourceWeek": 11,
+    "exact": true
+  },
+  "12": {
+    "file": "bulles/week-12.png",
+    "sourceWeek": 12,
+    "exact": true
+  },
+  "13": {
+    "file": "bulles/week-13.png",
+    "sourceWeek": 13,
+    "exact": true
+  },
+  "14": {
+    "file": "bulles/week-14.png",
+    "sourceWeek": 13,
+    "exact": false
+  },
+  "15": {
+    "file": "bulles/week-15.png",
+    "sourceWeek": 16,
+    "exact": false
+  },
+  "16": {
+    "file": "bulles/week-16.png",
+    "sourceWeek": 16,
+    "exact": true
+  },
+  "17": {
+    "file": "bulles/week-17.png",
+    "sourceWeek": 16,
+    "exact": false
+  },
+  "18": {
+    "file": "bulles/week-18.png",
+    "sourceWeek": 16,
+    "exact": false
+  },
+  "19": {
+    "file": "bulles/week-19.png",
+    "sourceWeek": 20,
+    "exact": false
+  },
+  "20": {
+    "file": "bulles/week-20.png",
+    "sourceWeek": 20,
+    "exact": true
+  },
+  "21": {
+    "file": "bulles/week-21.png",
+    "sourceWeek": 20,
+    "exact": false
+  },
+  "22": {
+    "file": "bulles/week-22.png",
+    "sourceWeek": 20,
+    "exact": false
+  },
+  "23": {
+    "file": "bulles/week-23.png",
+    "sourceWeek": 24,
+    "exact": false
+  },
+  "24": {
+    "file": "bulles/week-24.png",
+    "sourceWeek": 24,
+    "exact": true
+  },
+  "25": {
+    "file": "bulles/week-25.png",
+    "sourceWeek": 24,
+    "exact": false
+  },
+  "26": {
+    "file": "bulles/week-26.png",
+    "sourceWeek": 24,
+    "exact": false
+  },
+  "27": {
+    "file": "bulles/week-27.png",
+    "sourceWeek": 28,
+    "exact": false
+  },
+  "28": {
+    "file": "bulles/week-28.png",
+    "sourceWeek": 28,
+    "exact": true
+  },
+  "29": {
+    "file": "bulles/week-29.png",
+    "sourceWeek": 28,
+    "exact": false
+  },
+  "30": {
+    "file": "bulles/week-30.png",
+    "sourceWeek": 28,
+    "exact": false
+  },
+  "31": {
+    "file": "bulles/week-31.png",
+    "sourceWeek": 32,
+    "exact": false
+  },
+  "32": {
+    "file": "bulles/week-32.png",
+    "sourceWeek": 32,
+    "exact": true
+  },
+  "33": {
+    "file": "bulles/week-33.png",
+    "sourceWeek": 32,
+    "exact": false
+  },
+  "34": {
+    "file": "bulles/week-34.png",
+    "sourceWeek": 32,
+    "exact": false
+  },
+  "35": {
+    "file": "bulles/week-35.png",
+    "sourceWeek": 36,
+    "exact": false
+  },
+  "36": {
+    "file": "bulles/week-36.png",
+    "sourceWeek": 36,
+    "exact": true
+  },
+  "37": {
+    "file": "bulles/week-37.png",
+    "sourceWeek": 36,
+    "exact": false
+  },
+  "38": {
+    "file": "bulles/week-38.png",
+    "sourceWeek": 38,
+    "exact": true
+  },
+  "39": {
+    "file": "bulles/week-39.png",
+    "sourceWeek": 38,
+    "exact": false
+  },
+  "40": {
+    "file": "bulles/week-40.png",
+    "sourceWeek": 40,
+    "exact": true
+  }
+}

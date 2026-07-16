@@ -22,6 +22,7 @@ import { BulleOrb } from '@bulle/ui/primitives';
 import { Checkbox, EmptyState, FocusCard, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { WeekBulle } from '@/components/WeekBulle';
 import { useBulleStore } from '@/store/useBulleStore';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
@@ -86,17 +87,24 @@ export default function TodayScreen() {
       {/* Header */}
       <View style={{ alignItems: 'center', gap: space[2] }}>
         <Text variant="caption">{t('today.greeting')}</Text>
-        <Text
-          variant="caption"
-          onPress={() => setShowSG((v) => !v)}
-          // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of the
-          // world quotes SG. Showing both, on demand, is a small competence signal.
-          accessibilityRole="button"
-        >
-          {showSG
-            ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
-            : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
-        </Text>
+
+        {/* The week's illustration sits WITH the week line, not with the orb: it belongs to
+            gestational age, which is what this line states. The orb below states readiness.
+            Keeping them visually separate is what stops the two being read as one number. */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space[3] }}>
+          <WeekBulle weekSG={display.sg} size={56} />
+          <Text
+            variant="caption"
+            onPress={() => setShowSG((v) => !v)}
+            // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of
+            // the world quotes SG. Showing both, on demand, is a small competence signal.
+            accessibilityRole="button"
+          >
+            {showSG
+              ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
+              : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
+          </Text>
+        </View>
 
         <BulleOrb
           fill={readiness?.fill ?? 0}
