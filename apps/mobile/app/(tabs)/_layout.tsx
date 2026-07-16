@@ -72,10 +72,6 @@ export default function TabLayout() {
       {/* "Plus" (§4.1). Family management, language, and Pause live here rather than in
           their own tab: a tab must earn daily taps, and "manage members" does not. Without
           it, none of those screens is reachable on native at all. */}
-      <NativeTabs.Trigger name="more">
-        <NativeTabs.Trigger.Icon sf={{ default: 'ellipsis', selected: 'ellipsis' }} md="more_horiz" />
-        <NativeTabs.Trigger.Label>{t('tabs.more')}</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }

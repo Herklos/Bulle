@@ -164,6 +164,45 @@ export default function TodayScreen() {
   return (
     <Screen>
       <FeatureWelcomeFor area='today' visible={welcome.visible} onDismiss={welcome.dismiss} />
+
+      {/*
+        Plus, in the corner rather than in the tab bar.
+        A tab is a place you go daily; settings is not one, and spending a fifth of the tab
+        bar on it said otherwise. Moving it here also buys the Chemin, Préparer and Souvenirs
+        more room, and drops the bar to four — which is what the app actually has.
+
+        Absolute, so it does not push the greeting off centre. The greeting is centred and a
+        row would either shove it left or need a phantom spacer on the other side to keep it
+        honest; both are worse than taking the button out of flow.
+
+        It scrolls with the content on purpose. Pinning it would need a header on a screen
+        that deliberately has none — the orb is meant to be the first thing, with nothing
+        above it.
+      */}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('tabs.more')}
+        onPress={() => router.push('/more')}
+        style={({ pressed }) => ({
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          // 44 square: this is a lone glyph, and the glyph is 22 (§15.8 item 5).
+          width: 44,
+          height: 44,
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1,
+          opacity: pressed ? 0.5 : 1,
+        })}
+      >
+        {/* `more`, not `settings`: the destination is called Plus and carried this exact
+            glyph as a tab. Changing the icon while moving the button would make it a new
+            thing rather than the same thing in a better place — and the settings glyph reads
+            as brightness at 22px anyway. */}
+        <Glyph name="more" size={22} color="inkSoft" />
+      </Pressable>
+
       {/* Header */}
       <View style={{ alignItems: 'center', gap: space[2] }}>
         <Text variant="caption">{t('today.greeting')}</Text>

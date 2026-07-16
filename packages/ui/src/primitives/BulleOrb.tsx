@@ -178,36 +178,32 @@ export function BulleOrb({
       pointerEvents="none"
     >
       {/*
-        OPEN BUG (Android, emulator-5554, home screen at size={156}, density 2).
-        The orb paints inside a hard-edged grey square. Survives reloads and breathing, so
-        it is not a repaint artifact.
+        ANDROID SURFACE ARTIFACT, not a layout bug. Corrected after chasing it wrongly.
+        Symptom: the orb paints inside a hard-edged grey square, ~size * HALO_SCALE.
 
-        MEASURED, and the arithmetic is exact rather than suggestive:
-          square  ~405 device px  =  size * HALO_SCALE  (156 * 1.3 = 202.8 logical)  <- layout
-          sphere  ~312 device px  =  size               (156 logical)
-          box                     =  size * CANVAS_SCALE (374 logical = 749 device px,
-                                     i.e. WIDER THAN THE 720px SCREEN)
-        So the square is exactly this View's `layout` box, and the Canvas is far bigger than
-        it — which is the whole `margin: -bleed` trick: the Canvas view is 374 wide while its
-        layout footprint is 203. That trick is the prime suspect.
+        It appears after a native window covers the canvas (the RN dev menu dialog did it
+        reliably) and CLEARS on a fresh mount — navigating away and back removes it. Skia
+        backs <Canvas> with a surface on Android; when another window overlaps and leaves, the
+        surface can repaint its own background until it is recreated.
 
-        SIX hypotheses are dead. Each cost a screenshot; none survived contact with one:
-        1. NOT the meniscusFor worklet change (logcat clean, sphere renders; the only RNSkia
-           line is the benign "updateAndRelease() failed ... can safely be ignored").
-        2. NOT the bulle PNGs lacking alpha (all 40 colortype 6, corner alpha 0).
-        3. NOT the PNGs being square blobs (week-01 alpha bbox is round-ish, corners cut).
-        4. NOT `opaque` on <Canvas> (opaque={false} changed nothing; already the default).
-        5. NOT the parent clipping the canvas. The size match to `layout` fit perfectly —
-           until the same screenshots showed the halo, and then the unblurred contact shadow,
-           painting OUTSIDE and BELOW the square. A clip would forbid that.
-        6. NOT the BlurMasks. Bisected both to blur={0}: the contact shadow went hard-edged,
-           proving the probe landed, and the square did not move.
+        The trap, recorded because it cost six hypotheses: a JS reload does NOT recreate the
+        surface, so "it survives reloads" felt like proof the artifact theory was dead. It
+        proved nothing. Reload tests the JS tree; only a remount tests the surface. Ruling
+        something out needs a test that could actually have shown it.
 
-        Nothing INSIDE the canvas draws it, and the canvas is not clipped. What is left is
-        the negative-margin layout itself. Next: try box-sizing the parent View and dropping
-        `margin: -bleed`, or `collapsable={false}`, ON A DEVICE — and check whether
-        CANVAS_SCALE 2.4 is even doing its job, since a 749px canvas on a 720px screen is
-        suspicious on its own.
+        Dead ends, all of which read as correct in this file and died on a screenshot: the
+        meniscusFor worklet (logcat clean, sphere renders), the bulle PNGs lacking alpha (all
+        40 are colortype 6, corner alpha 0), the PNGs being square blobs (week-01's alpha
+        bbox is round with cut corners), `opaque={false}` on Canvas (already the default, a
+        no-op), the parent clipping the canvas (the halo and the unblurred contact shadow
+        both paint outside the square, which a clip forbids), and the BlurMasks (bisected to
+        0: the shadow went hard-edged, proving the probe landed, and the square did not
+        move).
+
+        Left alone deliberately. It is transient, it needs a native window over the orb to
+        appear, and the candidate fixes (forcing a TextureView, remounting on AppState) each
+        cost real performance or complexity to paper over an emulator-visible artifact. Worth
+        re-checking on a physical device before spending anything on it.
       */}
       <Canvas style={{ width: box, height: box, margin: -bleed }}>
         <Group transform={transform} origin={{ x: box / 2, y: box / 2 }}>

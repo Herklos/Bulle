@@ -71,15 +71,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <Glyph name="souvenirs" size={22} tint={color as string} />,
         }}
       />
-      <Tabs.Screen
-        name="more"
-        options={{
-          title: t('tabs.more'),
-          // The sidebar already lists More on desktop, so the bottom bar would duplicate it.
-          href: isWide ? null : undefined,
-          tabBarIcon: ({ color }) => <Glyph name="more" size={22} tint={color as string} />,
-        }}
-      />
     </Tabs>
   );
 
