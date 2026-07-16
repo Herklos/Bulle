@@ -236,6 +236,14 @@ export const en = {
   },
 
   settings: {
+    sections: {
+      pregnancy: 'The pregnancy',
+      family: 'Your people',
+      app: 'The app',
+      bulles: 'Your bulles',
+      account: 'Your account',
+      quiet: 'Quieter',
+    },
     title: 'More',
     family: 'Family',
     invite: 'Invite',

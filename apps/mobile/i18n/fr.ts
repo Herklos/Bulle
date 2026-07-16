@@ -240,6 +240,14 @@ export const fr = {
   },
 
   settings: {
+    sections: {
+      pregnancy: 'La grossesse',
+      family: 'Votre entourage',
+      app: 'L’application',
+      bulles: 'Vos bulles',
+      account: 'Votre compte',
+      quiet: 'Plus discret',
+    },
     title: 'Plus',
     family: 'Famille',
     invite: 'Inviter',
