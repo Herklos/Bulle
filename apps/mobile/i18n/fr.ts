@@ -86,6 +86,7 @@ export const fr = {
     projects: 'Projets',
     addProject: 'Ajouter un projet',
     templates: 'Modèles',
+    allTemplates: 'Tout le reste',
     ideas_one: '+{{count}} idée',
     ideas_other: '+{{count}} idées',
     progress: '{{resolved}} sur {{total}}',
@@ -103,6 +104,19 @@ export const fr = {
     suggestTemplate: 'Bulle propose : {{title}}',
     premiumTemplate: 'Avec Complète',
     addTemplate: 'Ajouter à Préparer',
+    tasks: 'Tâches',
+    addTask: 'Ajouter une tâche',
+    newTaskTitle: 'Une tâche à toi',
+    taskLabel: 'C’est quoi ?',
+    taskPlaceholder: 'Acheter un tire-lait',
+    taskHint: 'Tes tâches restent facultatives. Elles ne comptent jamais contre toi.',
+    effortQuestion: 'Ça demande quoi ?',
+    whenQuestion: 'Quand ?',
+    when: {
+      thisWeek: 'Cette semaine',
+      soon: 'Dans les prochaines semaines',
+      beforeBirth: 'Avant l’arrivée',
+    },
   },
 
   memories: {

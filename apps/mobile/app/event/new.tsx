@@ -19,7 +19,7 @@
  * confirm where both platforms already put it on a form sheet, the header wins.
  */
 import React, { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { DateTimePicker } from '@expo/ui/community/datetime-picker';
@@ -27,29 +27,13 @@ import { randomId, type BulleEvent, type EventKind } from '@bulle/sdk';
 import { Row, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { HeaderAction } from '@/components/HeaderAction';
 import { useEventsStore } from '@/store/useEventsStore';
 
 /** The kinds that matter in a French pregnancy. `autre` catches everything else. */
 const KINDS: EventKind[] = ['echo', 'consultation', 'prepa', 'admin', 'autre'];
 
 type Step = 'kind' | 'date' | 'time';
-
-/** A text action for the native header. `touch.min` keeps it a legitimate target. */
-function HeaderAction({ label, onPress }: { label: string; onPress: () => void }) {
-  const { colors, space, touch } = useBulleTheme();
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      hitSlop={space[2]}
-      style={{ minHeight: touch.min, justifyContent: 'center', paddingHorizontal: space[2] }}
-    >
-      <Text variant="body" style={{ color: colors.sage }}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 function defaultAt(): Date {
   const d = new Date();

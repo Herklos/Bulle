@@ -53,6 +53,20 @@ export default function ProjectScreen() {
         {project.description && <Text variant="body" color="inkSoft">{project.description}</Text>}
       </View>
 
+      {/*
+        Always rendered, even with no tasks: it carries the only way to add one, and the
+        empty state below is otherwise a dead end.
+      */}
+      {canEdit && (
+        <SectionHeader
+          title={t('plan.tasks')}
+          action={{
+            label: t('plan.addTask'),
+            onPress: () => router.push(`/task/new?projectId=${project.id}`),
+          }}
+        />
+      )}
+
       {tasks.length === 0 && <EmptyState glyph="plan" message={t('plan.empty')} />}
 
       {groups.map((group) => (

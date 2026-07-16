@@ -117,6 +117,7 @@ function AppContent() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="pause" />
         <Stack.Screen name="event" />
+        <Stack.Screen name="task" />
         {/* A modal: a paywall interrupts a flow and must return you to exactly where you
             were, whether you buy or not. */}
         <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />

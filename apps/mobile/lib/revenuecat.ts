@@ -37,6 +37,24 @@ export async function configurePurchases(): Promise<void> {
   try {
     const Purchases = (await import('react-native-purchases')).default;
     const { LOG_LEVEL } = await import('react-native-purchases');
+
+    /*
+      The JS module imports fine even when the native side is absent — every method is then
+      a call on a null bridge, and the first one (`setLogLevel`) throws
+      "Cannot read property 'setLogLevel' of null" from deep inside the vendor bundle. That
+      stack names nothing actionable, so check first and say the real thing: the native
+      module is missing, which means the dependency was added after the last native build
+      and autolinking has not seen it. `npx expo run:android` (or `run:ios`) fixes it; a
+      Metro reload never will.
+    */
+    if (typeof Purchases?.setLogLevel !== 'function') {
+      console.warn(
+        '[revenuecat] native module missing — rebuild the app (npx expo run:android / run:ios). ' +
+          'Continuing without purchases.',
+      );
+      return;
+    }
+
     if (__DEV__) await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
     await Purchases.configure({ apiKey: API_KEY });
     configured = true;

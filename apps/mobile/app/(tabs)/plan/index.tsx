@@ -54,11 +54,22 @@ export default function PlanScreen() {
   const concern = useSettingsStore((s) => s.concern);
   const isPremium = usePremiumStore((s) => s.isPremium);
 
+  /**
+   * Every template that applies and is not already in the plan.
+   *
+   * templatesFor, NOT templatesForLocale: the latter ignores appliesTo and leaks the twins
+   * template to a single pregnancy and the solo template to a couple.
+   */
+  const available = useMemo(() => {
+    if (!bulle) return [];
+    const instantiated = new Set(
+      projects.map((p) => p.templateId).filter((id): id is string => !!id),
+    );
+    return templatesFor(i18n.language, bulle.profile).filter((tpl) => !instantiated.has(tpl.id));
+  }, [bulle, projects, i18n.language]);
+
   const suggestions = useMemo(() => {
     if (!bulle) return [];
-    // templatesFor, NOT templatesForLocale: the latter ignores appliesTo and leaks the
-    // twins template to a single pregnancy and the solo template to a couple.
-    const available = templatesFor(i18n.language, bulle.profile);
     const instantiated = new Set(
       projects.map((p) => p.templateId).filter((id): id is string => !!id),
     );
@@ -75,7 +86,21 @@ export default function PlanScreen() {
       const bi = preferred.indexOf(b.templateId);
       return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
     });
-  }, [bulle, projects, weekSA, i18n.language, concern]);
+  }, [bulle, projects, weekSA, available, concern]);
+
+  /**
+   * Everything applicable that the week-ranking did not surface.
+   *
+   * suggestTemplates only proposes what opens within ~4 weeks, which is right for keeping
+   * the screen calm but wrong as the ONLY door to the catalogue: early in a pregnancy — and
+   * in EN, which ships without the FR admin module (§7.1) — nothing qualifies, so Préparer
+   * rendered an empty state telling you to add a project and gave you no way to add one.
+   * The ranking decides the ORDER; it must never decide what exists.
+   */
+  const later = useMemo(() => {
+    const suggested = new Set(suggestions.map((s) => s.templateId));
+    return available.filter((tpl) => !suggested.has(tpl.id));
+  }, [available, suggestions]);
 
   const ordered = useMemo(() => sortProjects(projects), [projects]);
 
@@ -113,7 +138,8 @@ export default function PlanScreen() {
       <FeatureWelcomeFor area='plan' visible={welcome.visible} onDismiss={welcome.dismiss} />
       <Text variant="display">{t('plan.title')}</Text>
 
-      {ordered.length === 0 && suggestions.length === 0 && (
+      {/* Only when there is genuinely nothing to offer — never while templates exist. */}
+      {ordered.length === 0 && suggestions.length === 0 && later.length === 0 && (
         <EmptyState glyph="plan" message={t('plan.empty')} />
       )}
 
@@ -176,6 +202,33 @@ export default function PlanScreen() {
               />
             );
           })}
+        </View>
+      )}
+
+      {/*
+        The rest of the catalogue. Quieter than the suggestions above it — these are not due
+        yet — but always reachable, so the plan is never a locked room.
+      */}
+      {canEdit && later.length > 0 && (
+        <View>
+          <SectionHeader title={t('plan.allTemplates')} />
+          {later.map((template, index) => (
+            <Row
+              key={template.id}
+              title={t(template.titleKey)}
+              subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
+              leading={<Glyph name={template.glyph as GlyphName} size={22} color="inkSoft" />}
+              trailing={
+                <Text variant="caption" color="sage">
+                  {!isPremium && isPremiumTemplate(template.id)
+                    ? t('plan.premiumTemplate')
+                    : t('plan.addTemplate')}
+                </Text>
+              }
+              onPress={() => addTemplate(template.id)}
+              divider={index < later.length - 1}
+            />
+          ))}
         </View>
       )}
 

@@ -85,6 +85,7 @@ export const en = {
     projects: 'Projects',
     addProject: 'Add a project',
     templates: 'Templates',
+    allTemplates: 'Everything else',
     ideas_one: '+{{count}} idea',
     ideas_other: '+{{count}} ideas',
     progress: '{{resolved}} of {{total}}',
@@ -101,6 +102,19 @@ export const en = {
     suggestTemplate: 'Bulle suggests: {{title}}',
     premiumTemplate: 'With Complète',
     addTemplate: 'Add to Prepare',
+    tasks: 'Tasks',
+    addTask: 'Add a task',
+    newTaskTitle: 'A task of your own',
+    taskLabel: 'What is it?',
+    taskPlaceholder: 'Buy a breast pump',
+    taskHint: 'Your own tasks stay optional. They never count against you.',
+    effortQuestion: 'How much of a job?',
+    whenQuestion: 'When?',
+    when: {
+      thisWeek: 'This week',
+      soon: 'In the next few weeks',
+      beforeBirth: 'Before the baby arrives',
+    },
   },
 
   memories: {

@@ -7,7 +7,8 @@
  * this module's vocabulary.
  */
 
-import type { Effort, Task, TaskStatus } from './types.js';
+import { DPA_WEEKS_SA } from './pregnancy.js';
+import type { Effort, ReadinessDomain, Task, TaskStatus } from './types.js';
 
 /** Minutes an effort estimate implies — shown as "~20 min" on the focus card (§5.1). */
 export const EFFORT_MINUTES: Record<Effort, number> = { S: 20, M: 60, L: 180 };
@@ -45,6 +46,59 @@ export function groupByWindow(tasks: Task[]): { weekStart: number; weekEnd: numb
     else buckets.set(key, { weekStart: task.weekStart, weekEnd: task.weekEnd, tasks: [task] });
   }
   return [...buckets.values()].sort((a, b) => a.weekStart - b.weekStart || a.weekEnd - b.weekEnd);
+}
+
+// ─── Custom tasks (§5.3) ─────────────────────────────────────────────────────
+
+/**
+ * When a hand-written task should sit. Three coarse choices, not a week picker: a person
+ * adding "acheter un tire-lait" knows "bientôt", not "semaines 29 à 33". Asking for
+ * precision nobody has is how a companion turns into a project-management tool.
+ */
+export type CustomTaskWhen = 'thisWeek' | 'soon' | 'beforeBirth';
+
+/** How many weeks past the current one "soon" reaches. */
+const SOON_WEEKS = 4;
+
+/**
+ * The window for a custom task. Always opens at the CURRENT week: a task you just typed is
+ * something you are thinking about now, so it must never be filed as upcoming and hidden.
+ *
+ * Clamped to the DPA so a window cannot open after the date it would close on — otherwise a
+ * task added at 40 SA gets `weekStart > weekEnd` and matches no week at all, silently
+ * vanishing from every list that filters by window.
+ */
+export function customTaskWindow(
+  weekSA: number,
+  when: CustomTaskWhen,
+): { weekStart: number; weekEnd: number } {
+  const weekStart = Math.max(1, Math.min(Math.round(weekSA), DPA_WEEKS_SA));
+  const weekEnd =
+    when === 'thisWeek'
+      ? weekStart
+      : when === 'soon'
+        ? Math.min(weekStart + SOON_WEEKS, DPA_WEEKS_SA)
+        : DPA_WEEKS_SA;
+  return { weekStart, weekEnd: Math.max(weekStart, weekEnd) };
+}
+
+/**
+ * The domain a project mostly belongs to, from the tasks already in it.
+ *
+ * A Project carries a glyph but no domain of its own, so a hand-written task has to get its
+ * readiness bucket from its neighbours rather than by asking the user to classify their own
+ * shopping. Ties break toward the first task seen, which is stable because the caller passes
+ * tasks in insertion order.
+ */
+export function dominantDomain(tasks: Task[], fallback: ReadinessDomain = 'maison'): ReadinessDomain {
+  if (tasks.length === 0) return fallback;
+  const counts = new Map<ReadinessDomain, number>();
+  for (const task of tasks) counts.set(task.domain, (counts.get(task.domain) ?? 0) + 1);
+  let best: ReadinessDomain = tasks[0]!.domain;
+  for (const [domain, count] of counts) {
+    if (count > (counts.get(best) ?? 0)) best = domain;
+  }
+  return best;
 }
 
 // ─── Pure reducers (the store delegates to these) ─────────────────────────────
