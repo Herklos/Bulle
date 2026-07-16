@@ -37,7 +37,7 @@ const JSON_LD = {
       publisher: { '@id': `${BASE_URL}/#organization` },
       offers: {
         '@type': 'Offer',
-        price: '29.99',
+        price: '4.99',
         priceCurrency: 'EUR',
         category: 'One-time purchase',
       },

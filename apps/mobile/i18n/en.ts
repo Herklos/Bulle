@@ -361,7 +361,7 @@ export const en = {
       unlimited: 'As many projects as you want',
       allTemplates: 'Every template, including twins and solo',
     },
-    price: '€29.99 · once, for the whole pregnancy',
+    price: '€4.99 · once, for the whole pregnancy',
     priceOnce: '{{price}} · once, for the whole pregnancy',
     cta: 'Unlock Bulle Complète',
     later: 'Later',

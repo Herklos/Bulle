@@ -365,7 +365,7 @@ export const fr = {
       unlimited: 'Autant de projets que vous voulez',
       allTemplates: 'Tous les modèles, y compris jumeaux et solo',
     },
-    price: '29,99 € · une fois, pour toute la grossesse',
+    price: '4,99 € · une fois, pour toute la grossesse',
     priceOnce: '{{price}} · une fois, pour toute la grossesse',
     cta: 'Débloquer Bulle Complète',
     later: 'Plus tard',
