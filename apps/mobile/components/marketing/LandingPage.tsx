@@ -16,6 +16,7 @@ import { Link } from 'expo-router';
 import { Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BulleOrb } from '@bulle/ui/primitives';
+import { bulleForWeekSG } from '@/assets/bulles';
 import { Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Seo } from '@/components/Seo';
@@ -102,13 +103,31 @@ export function LandingPage({ lang }: { lang: MarketingLang }) {
             <Text variant="caption">{t('marketing.landing.ctaNote')}</Text>
           </View>
 
-          {/* The signature element, live. Not a screenshot of one. */}
+          {/*
+            The signature element, live. Not a screenshot of one.
+
+            The baby sits INSIDE it, exactly as on Aujourd'hui: the bubble contains the thing
+            it protects (§1.1), and an empty orb here reads as a grey ball rather than as the
+            product. A late week is deliberate: it is the most legible of the set at a glance,
+            and the landing has one moment to be understood.
+
+            `trimesterProgress` is pushed to match. The gradient runs cool to warm across the
+            pregnancy, so a near-term baby in a mid-pregnancy orb would be the one detail that
+            quietly contradicts itself.
+
+            `fill` is LOW on purpose, and it is not a readiness claim: the liquid is drawn
+            over the baby (which sits low, as a fetus does), so a marketing-pretty 0.62
+            submerged the hero of the shot entirely and left a faint ring of noise where a
+            baby should be. A shallow pool keeps the glass reading as glass and the baby
+            visible, which is the whole point of putting it there.
+          */}
           <View style={{ alignItems: 'center' }}>
             <BulleOrb
-              fill={0.62}
-              trimesterProgress={0.55}
+              fill={0.16}
+              trimesterProgress={0.92}
               size={isNarrow ? 200 : 260}
               label={t('marketing.landing.orbLabel')}
+              innerImage={bulleForWeekSG(38)}
             />
           </View>
         </View>
