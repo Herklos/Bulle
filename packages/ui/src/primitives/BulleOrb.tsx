@@ -178,34 +178,36 @@ export function BulleOrb({
       pointerEvents="none"
     >
       {/*
-        OPEN BUG (Android, seen on emulator-5554 at "Jour 11"): the orb paints inside a hard
-        edged grey square, ~404x404 against a ~320px sphere, on the ivory background.
-        Reproduced across reloads and breathing cycles, so not a repaint artifact.
+        OPEN BUG (Android, emulator-5554, home screen at size={156}, density 2).
+        The orb paints inside a hard-edged grey square. Survives reloads and breathing, so
+        it is not a repaint artifact.
 
-        FIVE hypotheses are dead. Recorded because the negative results are the expensive
-        half of this and cost a screenshot each:
+        MEASURED, and the arithmetic is exact rather than suggestive:
+          square  ~405 device px  =  size * HALO_SCALE  (156 * 1.3 = 202.8 logical)  <- layout
+          sphere  ~312 device px  =  size               (156 logical)
+          box                     =  size * CANVAS_SCALE (374 logical = 749 device px,
+                                     i.e. WIDER THAN THE 720px SCREEN)
+        So the square is exactly this View's `layout` box, and the Canvas is far bigger than
+        it — which is the whole `margin: -bleed` trick: the Canvas view is 374 wide while its
+        layout footprint is 203. That trick is the prime suspect.
 
-        1. NOT a worklet failure from meniscusFor/liquidPathString (the first guess, and the
-           self-serving one, since the square appeared on the reload that picked that change
-           up). logcat shows no Reanimated or JS error and the sphere renders correctly. The
-           only RNSkia line is "updateAndRelease() failed. The exception above can safely be
-           ignored", which is benign.
-        2. NOT the bulle PNGs lacking transparency. All 40 are colortype 6 (RGB+ALPHA) and
-           their corner pixels are alpha 0.
-        3. NOT the bulle PNG being a square blob either. week-01's alpha bbox is
-           (24, 69, 487, 512) of 512 and its diagonal is opaque only from 117 to 448 — a big
-           round-ish shape with cut corners, not a hard square.
-        4. NOT `opaque` on <Canvas>. Setting opaque={false} explicitly changed nothing; it
-           is already the default.
-        5. NOT the parent clipping the canvas. The square is ~1.3x the sphere, which matches
-           `layout` (HALO_SCALE) and not `box` (CANVAS_SCALE, 2.4x) — which looked like the
-           parent clipping the surface. But the halo is VISIBLE outside the square's corners
-           in the same screenshot, so the canvas is demonstrably not clipped there.
+        SIX hypotheses are dead. Each cost a screenshot; none survived contact with one:
+        1. NOT the meniscusFor worklet change (logcat clean, sphere renders; the only RNSkia
+           line is the benign "updateAndRelease() failed ... can safely be ignored").
+        2. NOT the bulle PNGs lacking alpha (all 40 colortype 6, corner alpha 0).
+        3. NOT the PNGs being square blobs (week-01 alpha bbox is round-ish, corners cut).
+        4. NOT `opaque` on <Canvas> (opaque={false} changed nothing; already the default).
+        5. NOT the parent clipping the canvas. The size match to `layout` fit perfectly —
+           until the same screenshots showed the halo, and then the unblurred contact shadow,
+           painting OUTSIDE and BELOW the square. A clip would forbid that.
+        6. NOT the BlurMasks. Bisected both to blur={0}: the contact shadow went hard-edged,
+           proving the probe landed, and the square did not move.
 
-        So: something draws a hard-edged square at roughly HALO_SCALE while the canvas keeps
-        painting outside it. Next: bisect the Group children on a device (the contact shadow
-        and the BlurMask halo are the two that use box-sized geometry), rather than reason
-        about it. Every hypothesis above sounded right in a file and died on a screenshot.
+        Nothing INSIDE the canvas draws it, and the canvas is not clipped. What is left is
+        the negative-margin layout itself. Next: try box-sizing the parent View and dropping
+        `margin: -bleed`, or `collapsable={false}`, ON A DEVICE — and check whether
+        CANVAS_SCALE 2.4 is even doing its job, since a 749px canvas on a 720px screen is
+        suspicious on its own.
       */}
       <Canvas style={{ width: box, height: box, margin: -bleed }}>
         <Group transform={transform} origin={{ x: box / 2, y: box / 2 }}>
