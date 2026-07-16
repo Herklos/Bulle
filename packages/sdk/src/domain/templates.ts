@@ -437,11 +437,18 @@ const GARDE: ProjectTemplate = {
       href: 'https://monenfant.fr',
     },
     {
+      // 24, not 14. Paris does not accept a demande before the 6th month (~26 SA), so the
+      // old 14-24 window sat ENTIRELY before the desk opens in the biggest city of the only
+      // shipped country. The task fired, the user went, the portal refused them.
+      //
+      // That is worse than a late reminder. A late reminder is a miss; this manufactured a
+      // failure and then let the user read it as their own. `garde.tasks.guichet` (12-20 SA)
+      // already does the honest upstream job: find out YOUR commune's calendar.
       titleKey: 'templates.garde.tasks.preinscription',
       notesKey: 'templates.garde.tasks.preinscriptionNote',
       detailsKey: 'templates.garde.tasks.preinscriptionDetails',
-      weekStart: 14,
-      weekEnd: 24,
+      weekStart: 24,
+      weekEnd: 32,
       effort: 'M',
       domain: 'entourage',
       essential: true,
@@ -481,13 +488,29 @@ const GARDE: ProjectTemplate = {
       href: 'https://monenfant.fr',
     },
     {
+      // POST-BIRTH, and it always was: the confirmation requires the copie intégrale de
+      // l'acte de naissance, which does not exist at 34 SA. The old 24-34 window asked for a
+      // document the pregnancy had not produced yet, so the task was not merely early, it was
+      // impossible — and its own note says "une confirmation oubliée fait perdre le rang",
+      // which is exactly what the mistiming caused. A place bought with six months of
+      // anticipation, lost in the fortnight after coming home: the one stretch when nobody
+      // does paperwork, and precisely why this needs to be a real deadline rather than a
+      // week window.
+      //
+      // `weekStart: 41` is inert padding, the same shape adminFr.tasks.acteNaissance uses:
+      // afterBirthDays is what actually drives it (domain/postnatal.ts).
       titleKey: 'templates.garde.tasks.confirmer',
       notesKey: 'templates.garde.tasks.confirmerNote',
       detailsKey: 'templates.garde.tasks.confirmerDetails',
-      weekStart: 24,
-      weekEnd: 34,
+      afterBirthDays: 14,
+      weekStart: 41,
+      weekEnd: 44,
       effort: 'S',
       domain: 'entourage',
+      // Left optional, though it is arguably the most expensive miss in the template.
+      // Promoting it would change the readiness denominator, which is a product decision
+      // about what the orb measures rather than part of fixing the window, and the audit
+      // did not ask for it. Worth revisiting on its own.
       essential: false,
     },
     {

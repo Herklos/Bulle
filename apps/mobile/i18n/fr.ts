@@ -1100,6 +1100,7 @@ export const fr = {
         preinscription: 'Se préinscrire en crèche, dans plusieurs structures',
         preinscriptionNote: 'Les listes se remplissent avant la naissance, et la préinscription est souvent impossible après. Une préinscription n’est pas une place.',
         preinscriptionDetails: [
+          'La date d’ouverture des inscriptions varie selon la commune, et « le plus tôt possible » est un mauvais conseil : beaucoup de villes n’acceptent rien avant le 6e mois de grossesse, Paris comprise. Avant cette date, il n’y a rien à déposer.',
           'Déposez une préinscription dans plusieurs crèches en parallèle plutôt que dans une seule : les listes se remplissent avant la naissance. Renseignez-vous sur les modalités propres à chaque structure.',
           'Une préinscription n’est pas une place : elle vous inscrit sur une liste examinée ensuite par la commission d’attribution, selon des critères propres à votre commune.',
           'Préparez déjà les pièces courantes, justificatif de domicile, avis d’imposition, certificat de grossesse. Elles seront redemandées lors de la confirmation après la commission.',
@@ -1126,8 +1127,9 @@ export const fr = {
           'Vérifiez l’agrément en cours de validité auprès du conseil départemental, et demandez les conditions du contrat avant de vous engager, horaires, congés, indemnités d’entretien.',
         ],
         confirmer: 'Confirmer la préinscription après la commission',
-        confirmerNote: 'La commission siège selon un calendrier municipal. Une confirmation oubliée fait perdre le rang.',
+        confirmerNote: 'À faire après la naissance : l’acte de naissance est demandé. Une confirmation oubliée fait perdre le rang.',
         confirmerDetails: [
+          'Cette confirmation se fait après la naissance, et pas avant : la copie intégrale de l’acte de naissance est demandée. C’est le piège de cette démarche. Le rang obtenu au prix de six mois d’anticipation se perd dans les semaines qui suivent le retour à la maison, c’est-à-dire exactement la période où l’on ne fait aucune démarche.',
           'La commission d’attribution des places se réunit selon un calendrier propre à la mairie, souvent trois ou quatre fois par an. Une place proposée doit généralement être confirmée dans un délai court.',
           'Une confirmation oubliée ou tardive fait perdre le rang obtenu : vérifiez régulièrement votre espace en ligne ou contactez directement le service petite enfance après chaque commission.',
           'Si la réponse est négative, demandez votre position sur liste d’attente et la date de la prochaine commission plutôt que de considérer la démarche comme terminée.',

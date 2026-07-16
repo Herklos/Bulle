@@ -15,6 +15,9 @@ PRADO and the postnatal EPP are all already there. What follows is what remains.
 
 ## Fix first: these are wrong today, and they cost the user
 
+**All four in this section are now FIXED.** The reasoning is kept because it is the
+evidence, and because §4's declaration question below is still open.
+
 ### 1. ~~The congé supplémentaire transitional rule is missing~~ — FIXED
 
 **Fixed.** `congeSupplementaireDetails` now states the transitional rule and the
@@ -36,7 +39,7 @@ l'enfant ou d'adoption". It cannot be interleaved, only chained.
 
 Source: https://www.service-public.gouv.fr/particuliers/actualites/A18939
 
-### 2. `garde.tasks.preinscription` fires before the guichet opens
+### 2. ~~`garde.tasks.preinscription` fires before the guichet opens~~ — FIXED (24-32 SA)
 
 Window is 14-24 SA. Paris: "La demande d'inscription se fait **à partir du 6e mois de
 grossesse**" (~26 SA). The window sits **entirely before** the desk opens in the largest
@@ -51,7 +54,7 @@ the upstream job correctly — find out your own commune's calendar.
 
 Source: https://www.paris.fr/pages/petite-enfance-les-demarches-217
 
-### 3. `garde.tasks.confirmer` is structurally impossible in its own window
+### 3. ~~`garde.tasks.confirmer` is structurally impossible~~ — FIXED (afterBirthDays: 14)
 
 Window is 24-34 SA. The confirmation must happen **after the birth**, and the required
 document is the copie intégrale de l'acte de naissance — which does not exist at 34 SA.
@@ -66,7 +69,7 @@ this task simply does not use it.
 
 Source: https://www.paris.fr/pages/petite-enfance-les-demarches-217
 
-### 4. `decisions.tasks.vrs` contradicts itself
+### 4. ~~`decisions.tasks.vrs` contradicts itself~~ — FIXED (weekEnd: 32)
 
 Note and details both say "à trancher avant 32 SA". The window runs to 34, so the task can
 show as live two weeks after its own deadline. Proposed: `weekEnd: 32`.
