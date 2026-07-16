@@ -67,8 +67,27 @@ export function orbGradientStops(colors: Palette, trimesterProgress: number): st
 export const MENISCUS = 4;
 
 /**
+ * The shallowest the liquid is ever drawn — a pool, not a percentage.
+ *
+ * At week 5 readiness is legitimately 0: nothing is due yet, so nothing is done. Rendering
+ * that literally gives an empty glass, and an empty glass does not read as "0% ready" — it
+ * reads as broken, or as an image that failed to load. It is the first thing a new user
+ * sees, on the screen that is supposed to be the calm one.
+ *
+ * A floor rather than a rescale, because the two lies are not the same size. A rescale
+ * (`0.06 + fill * 0.94`) would shift EVERY value, so a real 50% would draw at 53% forever.
+ * A floor is wrong only in the narrow band it covers, and only ever in the direction of
+ * "there is a little something here", which is true — there is a pregnancy.
+ *
+ * This stays honest because the orb is a mood, not a gauge: §15.2 makes it a liquid level
+ * and §15.6 bans a number in the centre precisely so nobody reads a value off it. The
+ * readiness sentence in the accessibility label is the exact channel, and it is untouched.
+ */
+export const MIN_VISIBLE_FILL = 0.06;
+
+/**
  * The liquid surface's y for a given fill, in a box of `size`.
- * fill 0 → the very bottom, fill 1 → the very top.
+ * fill 0 → a shallow pool (see MIN_VISIBLE_FILL), fill 1 → the very top.
  *
  * Marked as a worklet: the native orb rebuilds the path inside a `useDerivedValue`, which
  * runs on the UI thread. Without the directive, Reanimated treats it as a remote function
@@ -77,7 +96,9 @@ export const MENISCUS = 4;
  */
 export function surfaceY(size: number, fill: number): number {
   'worklet';
-  const f = Math.max(0, Math.min(1, fill));
+  // The floor lives HERE, not in the callers: both orbs and every future one route their
+  // geometry through this, so an empty glass cannot come back via a screen that forgot.
+  const f = Math.max(MIN_VISIBLE_FILL, Math.min(1, fill));
   return size - f * size;
 }
 
