@@ -30,7 +30,11 @@ export function Screen({ children, scroll = true, center }: ScreenProps) {
         alignSelf: 'center',
         paddingHorizontal: space[4],
         gap: space[5],
-        flex: center ? 1 : undefined,
+        // A non-scrolling screen FILLS: its content owns the height (a native list, a
+        // centred column). Without this, a `flex: 1` child measures to zero — and an
+        // @expo/ui List measured with an unbounded/zero height is a hard native crash, not
+        // a layout glitch.
+        flex: center || !scroll ? 1 : undefined,
         justifyContent: center ? 'center' : undefined,
       }}
     >
