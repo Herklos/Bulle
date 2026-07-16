@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/mobile/assets/logo.png" alt="Bulle" width="140" style="border-radius: 32px;" />
+  <img src="logo.png" alt="Bulle" width="160" />
 
   <h1>Bulle</h1>
 

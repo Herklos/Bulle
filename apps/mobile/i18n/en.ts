@@ -348,6 +348,26 @@ export const en = {
   },
 
   templates: {
+    achats: {
+      title: 'The essentials',
+      description: 'What actually gets used. The rest can wait.',
+      tasks: {
+        siegeAuto: 'Choose and buy the car seat',
+        siegeAutoNote: 'i-Size (R129). Required from the moment you leave hospital. Never second-hand without its history.',
+        installer: 'Fit the car seat and try it empty',
+        installerNote: 'At home, calmly, not in the hospital car park. A great seat fitted badly protects less than a decent seat fitted well.',
+        liste: 'Open the registry',
+        listeNote: 'After the anomaly scan. Opening early avoids duplicates.',
+        poussette: 'Choose the pushchair',
+        poussetteNote: 'Test the fold, measure your boot and your lift before buying. Four questions beat forty reviews.',
+        occasion: 'Check second-hand before accepting it',
+        occasionNote: 'Search the product name plus the word recall. Thirty seconds. Never a car seat, never a dipped mattress.',
+        tailleNaissance: 'Go easy on newborn-size clothes',
+        tailleNaissanceNote: 'Three to five newborn bodysuits, the rest in 1 month. The most common buying regret.',
+        trousse: 'Put together the care kit',
+        trousseNote: 'Saline, thermometer, nasal aspirator, compresses. Before, not on the evening you get home.',
+      },
+    },
     valise: {
       title: 'Hospital bag',
       description: 'Ready well before the day.',
