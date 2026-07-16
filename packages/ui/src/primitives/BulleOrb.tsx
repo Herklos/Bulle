@@ -178,27 +178,34 @@ export function BulleOrb({
       pointerEvents="none"
     >
       {/*
-        OPEN BUG (Android, seen on emulator-5554): the orb paints inside a visible grey
-        square against the ivory background. Reproduced across reloads and breathing cycles,
-        so it is not a repaint artifact.
+        OPEN BUG (Android, seen on emulator-5554 at "Jour 11"): the orb paints inside a hard
+        edged grey square, ~404x404 against a ~320px sphere, on the ivory background.
+        Reproduced across reloads and breathing cycles, so not a repaint artifact.
 
-        Measured, not guessed: the square is ~1.3x the sphere, which is `layout`
-        (size * HALO_SCALE) — the PARENT View's bounds — and NOT `box` (size * CANVAS_SCALE
-        = 2.4x). Android clips a Skia surface to its parent, so a surface painting its own
-        background would show at exactly the parent's size. That is the leading hypothesis.
+        FIVE hypotheses are dead. Recorded because the negative results are the expensive
+        half of this and cost a screenshot each:
 
-        Ruled out with evidence, so nobody buys them twice:
-        - NOT a worklet failure from meniscusFor/liquidPathString. logcat has no Reanimated
-          or JS error, and the sphere itself renders correctly. The only RNSkia line is
-          "updateAndRelease() failed. The exception above can safely be ignored", which is
-          benign and unrelated.
-        - NOT the bulle PNGs lacking transparency. All 40 are colortype 6 (RGB+ALPHA) and
-          their corner pixels are alpha 0.
-        - NOT the canvas bleed itself: the square is 1.3x, and the canvas is 2.4x.
+        1. NOT a worklet failure from meniscusFor/liquidPathString (the first guess, and the
+           self-serving one, since the square appeared on the reload that picked that change
+           up). logcat shows no Reanimated or JS error and the sphere renders correctly. The
+           only RNSkia line is "updateAndRelease() failed. The exception above can safely be
+           ignored", which is benign.
+        2. NOT the bulle PNGs lacking transparency. All 40 are colortype 6 (RGB+ALPHA) and
+           their corner pixels are alpha 0.
+        3. NOT the bulle PNG being a square blob either. week-01's alpha bbox is
+           (24, 69, 487, 512) of 512 and its diagonal is opaque only from 117 to 448 — a big
+           round-ish shape with cut corners, not a hard square.
+        4. NOT `opaque` on <Canvas>. Setting opaque={false} explicitly changed nothing; it
+           is already the default.
+        5. NOT the parent clipping the canvas. The square is ~1.3x the sphere, which matches
+           `layout` (HALO_SCALE) and not `box` (CANVAS_SCALE, 2.4x) — which looked like the
+           parent clipping the surface. But the halo is VISIBLE outside the square's corners
+           in the same screenshot, so the canvas is demonstrably not clipped there.
 
-        Next step is `opaque` / surface-backing on <Canvas>, checked ON A DEVICE. Note that
-        if the parent really does clip at 1.3x, then CANVAS_SCALE 2.4 is buying nothing and
-        the halo is being clipped anyway — which would make this two bugs, not one.
+        So: something draws a hard-edged square at roughly HALO_SCALE while the canvas keeps
+        painting outside it. Next: bisect the Group children on a device (the contact shadow
+        and the BlurMask halo are the two that use box-sized geometry), rather than reason
+        about it. Every hypothesis above sounded right in a file and died on a screenshot.
       */}
       <Canvas style={{ width: box, height: box, margin: -bleed }}>
         <Group transform={transform} origin={{ x: box / 2, y: box / 2 }}>
