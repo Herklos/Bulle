@@ -11,6 +11,7 @@ import { getLocales } from 'expo-localization';
 // No `.js` suffix here: the app uses bundler resolution, unlike packages/* which are
 // NodeNext and need the extension (metro strips it for them — see metro.config.js).
 import { DEFAULT_COUNTRY } from '@bulle/sdk';
+import { SUPPORTED_COUNTRY_CODES } from '@/lib/countries';
 import { fr } from './fr';
 import { en } from './en';
 
@@ -39,11 +40,17 @@ export function deviceLanguage(): Language {
  * actual region, so fr-BE resolves to BE and en-FR resolves to FR, which are both the right
  * answers.
  *
- * Falls back to the launch market. A wrong guess is recoverable (the profile is editable);
- * having no country at all is not, because every template filter would then open.
+ * Falls back to the launch market — not only when the device reports no region at all, but
+ * also when it reports one outside `SUPPORTED_COUNTRY_CODES`. A fresh simulator's default
+ * "US", or a traveller whose device region is nothing this app has a switcher row for, is
+ * not "automatically set" in any sense the profile or Settings can act on; stamping it
+ * verbatim just produces a country the settings country switcher shows no selection for.
+ * A wrong guess is recoverable (the profile is editable); having no country at all is not,
+ * because every template filter would then open.
  */
 export function deviceCountry(): string {
-  return getLocales()[0]?.regionCode?.toUpperCase() || DEFAULT_COUNTRY;
+  const region = getLocales()[0]?.regionCode?.toUpperCase();
+  return region && SUPPORTED_COUNTRY_CODES.includes(region) ? region : DEFAULT_COUNTRY;
 }
 
 let initialised = false;

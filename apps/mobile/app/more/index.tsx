@@ -46,20 +46,7 @@ import { usePremiumStore } from '@/store/usePremiumStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useBulleRegistryStore } from '@/store/useBulleRegistryStore';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
-
-/**
- * The countries whose administrative templates `templateAppliesInCountry` knows about — see
- * the SDK's templates.ts. Everything else (the hospital bag, the readiness score) applies
- * regardless of country; this only decides whether the French system's tasks (CAF, CPAM, the
- * 5-day mairie deadline) show up. Not an exhaustive country list on purpose — these are the
- * francophone markets the SDK already reasons about by name.
- */
-const SUPPORTED_COUNTRIES: { code: string; labelKey: string }[] = [
-  { code: 'FR', labelKey: 'settings.countryFr' },
-  { code: 'BE', labelKey: 'settings.countryBe' },
-  { code: 'CH', labelKey: 'settings.countryCh' },
-  { code: 'CA', labelKey: 'settings.countryCa' },
-];
+import { SUPPORTED_COUNTRIES } from '@/lib/countries';
 
 export default function MoreScreen() {
   const { t, i18n } = useTranslation();

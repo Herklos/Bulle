@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import Animated, { FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { randomId, type BulleProfile, type Companionship } from '@bulle/sdk';
 import { deviceCountry } from '@/i18n';
+import { bulleForWeekSG } from '@/assets/bulles';
 import { initStorage } from '@bulle/ui/utils/kv-storage';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
 import { Button, Text } from '@bulle/ui/components';
@@ -164,9 +165,20 @@ export default function OnboardingScreen() {
       <Screen center scroll={false}>
         <View style={{ alignItems: 'center', gap: space[6] }}>
           <Animated.View entering={reduced ? undefined : FadeIn.duration(600)}>
-            {/* Nearly empty, already breathing. Nothing is prepared yet, and the orb
-                says so honestly before a single word does. */}
-            <BulleOrb fill={0.06} trimesterProgress={0} size={168} label={t('common.tagline')} />
+            {/* Nearly empty, already breathing. Nothing is prepared yet, and the orb says
+                so honestly before a single word does — but there is already a baby. A late
+                week on purpose, same reasoning as the marketing hero (LandingPage.tsx): it
+                is the most legible of the set at a glance, and this is the one moment before
+                anyone has answered a single question. `trimesterProgress` is pushed to match
+                for the same reason it is there — a near-term baby against the cool, week-1
+                end of the gradient would be the one detail that quietly contradicts itself. */}
+            <BulleOrb
+              fill={0.06}
+              trimesterProgress={1}
+              size={168}
+              label={t('common.tagline')}
+              innerImage={bulleForWeekSG(40)}
+            />
           </Animated.View>
 
           <Animated.View
