@@ -12,6 +12,7 @@ import { Link, usePathname } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Text } from '@bulle/ui/components';
+import { BulleOrb } from '@bulle/ui/primitives';
 import { localizedPath, swapLocaleInPath, type MarketingLang } from '@/lib/seo-urls';
 
 export function MarketingNav({ lang }: { lang: MarketingLang }) {
@@ -43,7 +44,17 @@ export function MarketingNav({ lang }: { lang: MarketingLang }) {
         }}
       >
         <Link href={localizedPath(lang, '/') as never} asChild>
-          <Pressable accessibilityRole="link">
+          <Pressable
+            accessibilityRole="link"
+            style={{ flexDirection: 'row', alignItems: 'center', gap: space[2] }}
+          >
+            {/* The orb IS the brand mark (§15.2) — no icon pack, no wordmark graphic. Nearly
+                empty and cool, the same "pure identity" treatment as onboarding's welcome
+                screen: a nav mark reads as a brand, not a data display, so it carries no
+                fill or trimester meaning here. */}
+            <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+              <BulleOrb fill={0.06} trimesterProgress={0} size={28} label={t('common.appName')} />
+            </View>
             <Text variant="titleXL">Bulle</Text>
           </Pressable>
         </Link>

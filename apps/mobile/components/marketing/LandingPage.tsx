@@ -115,11 +115,11 @@ export function LandingPage({ lang }: { lang: MarketingLang }) {
             pregnancy, so a near-term baby in a mid-pregnancy orb would be the one detail that
             quietly contradicts itself.
 
-            `fill` is LOW on purpose, and it is not a readiness claim: the liquid is drawn
-            over the baby (which sits low, as a fetus does), so a marketing-pretty 0.62
-            submerged the hero of the shot entirely and left a faint ring of noise where a
-            baby should be. A shallow pool keeps the glass reading as glass and the baby
-            visible, which is the whole point of putting it there.
+            `fill` is LOW on purpose, and it is not a readiness claim — it is a glass-reads-
+            as-glass call. The baby now draws IN FRONT of the liquid (BulleOrb.tsx), so a
+            higher fill would no longer hide it the way it once did; kept shallow anyway
+            because a near-full pool at the hero size reads as the product's status display
+            rather than a calm identity mark.
           */}
           <View style={{ alignItems: 'center' }}>
             <BulleOrb

@@ -12,9 +12,10 @@
  *  - It BREATHES at 6 cycles/min, a calming-breath tempo — why it reads as alive rather
  *    than as a spinner.
  *
- * Layer order is load-bearing: halo → glass → baby → liquid → sheen → rim. The baby sits
- * BEHIND the liquid so a full orb submerges it slightly, and behind the sheen so the glass
- * always reads as being in front of it.
+ * Layer order is load-bearing: halo → glass → liquid → baby → sheen → rim. The baby sits IN
+ * FRONT of the liquid — a near-full orb used to submerge and hide it, which fought the whole
+ * point of the metaphor (§1.1: the bubble protects the thing inside it, it does not bury it).
+ * Still behind the sheen and rim, so the glass reads as being in front of the whole scene.
  *
  * No number appears on it. The percentage lives one tap deeper (§6).
  */

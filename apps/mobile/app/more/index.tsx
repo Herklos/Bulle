@@ -35,6 +35,7 @@ import { Alert, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Host, Switch } from '@expo/ui';
+import { DEFAULT_COUNTRY } from '@bulle/sdk';
 import { Row, SectionHeader, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
@@ -45,6 +46,20 @@ import { usePremiumStore } from '@/store/usePremiumStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useBulleRegistryStore } from '@/store/useBulleRegistryStore';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
+
+/**
+ * The countries whose administrative templates `templateAppliesInCountry` knows about — see
+ * the SDK's templates.ts. Everything else (the hospital bag, the readiness score) applies
+ * regardless of country; this only decides whether the French system's tasks (CAF, CPAM, the
+ * 5-day mairie deadline) show up. Not an exhaustive country list on purpose — these are the
+ * francophone markets the SDK already reasons about by name.
+ */
+const SUPPORTED_COUNTRIES: { code: string; labelKey: string }[] = [
+  { code: 'FR', labelKey: 'settings.countryFr' },
+  { code: 'BE', labelKey: 'settings.countryBe' },
+  { code: 'CH', labelKey: 'settings.countryCh' },
+  { code: 'CA', labelKey: 'settings.countryCa' },
+];
 
 export default function MoreScreen() {
   const { t, i18n } = useTranslation();
@@ -59,6 +74,7 @@ export default function MoreScreen() {
   const bulle = useBulleStore((s) => s.bulle);
 
   const bulles = registry?.bulles ?? [];
+  const country = bulle?.profile.country ?? DEFAULT_COUNTRY;
 
   // Says something either way. A restore that silently does nothing reads as a broken
   // button, and the user has no way to tell "nothing to restore" from "it failed".
@@ -153,6 +169,25 @@ export default function MoreScreen() {
           divider={false}
         />
       </View>
+
+      {/* Owner-only, same reasoning as the due date above: this re-aims which administrative
+          templates show up for everyone in the bulle, not just a device-local preference like
+          language. Stays visible after birth too — post-birth admin tasks are country-gated
+          the same way. */}
+      {isOwner && (
+        <View>
+          <SectionHeader title={t('settings.sections.country')} />
+          {SUPPORTED_COUNTRIES.map((c, index) => (
+            <Row
+              key={c.code}
+              title={t(c.labelKey)}
+              onPress={() => useBulleStore.getState().updateProfile({ country: c.code })}
+              trailing={country === c.code ? <Glyph name="check" size={20} color="sage" /> : undefined}
+              divider={index < SUPPORTED_COUNTRIES.length - 1}
+            />
+          ))}
+        </View>
+      )}
 
       {/* Switching bulles had no entry point at all before this: the transition route
           existed and was unreachable. Only with more than one, so a single-bulle user never
