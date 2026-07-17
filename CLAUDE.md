@@ -126,6 +126,31 @@ browser before believing a contrast bug found this way. This wasted a cycle.
 
 ---
 
+## Learnings — RevenueCat / store monetization
+
+Bulle Complète is a **one-time non-consumable purchase**, entitlement `complete`, offering
+`default`, product id `bulle_complete` on every store (RC project `proja1d0134f`). No
+subscription, by product decision (spec §10).
+
+**Play Console's one-time products have a 2-level hierarchy now: Product → Purchase
+option(s).** A Product ID (`bulle_complete`) alone is not enough; Play also requires at least
+one **Purchase option** with its own ID ("ID de l'option d'achat"), type **Buy** (not Rent —
+Rent is time-limited access). That option-level ID is purely internal to Play Console and
+does not need to match anything in RevenueCat or the codebase.
+
+**The *first* Buy-type purchase option is auto-marked "backwards compatible."** That is what
+makes RevenueCat (and any Billing Library ≤7 integration) see the purchase under the plain
+Product ID alone, with no `productId:purchaseOptionId` concatenation — unlike subscription
+base plans, which *do* need `<subscription_id>:<base_plan_id>`. Keep exactly one Buy option
+per one-time product; a second one does not get the backwards-compatible flag automatically.
+
+**RevenueCat's `create-product-prices` (MCP) only works on Test Store products, and won't
+overwrite an existing currency's price** — it 409s with "resource-already-exists" instead.
+There's no archive-price call exposed; a wrong Test Store price has to be fixed by hand in
+the RC dashboard.
+
+---
+
 ## Learnings — sync (Starfish / dk-spaces)
 
 **The default starfish scopes mint wildcard caps** (`collections: ["*"]`), and the server

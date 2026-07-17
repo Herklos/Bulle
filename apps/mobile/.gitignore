@@ -9,3 +9,5 @@ expo-env.d.ts
 
 *.apk
 *.ipa
+*.aab
+*.aar
