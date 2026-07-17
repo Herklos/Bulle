@@ -31,12 +31,18 @@ export function OnboardingChoice({ label, onPress, index = 0, last }: Onboarding
   const reduced = useReducedMotion();
   const [pressed, setPressed] = React.useState(false);
 
+  // Physics-only spring (no .duration()): mixing a fixed duration with springify().damping()
+  // left `dampingRatio` at Reanimated's default of 1 while `damping` was explicitly 18 — a
+  // contradictory config the spring engine has to reconcile, and reconciling it landed at a
+  // visibly bouncier result on Android than iOS for the same numbers. damping/stiffness/mass
+  // fully specified sidesteps that resolution path entirely.
   const entering = reduced
     ? undefined
     : FadeInDown.delay(Math.min(index, MAX_STAGGERED) * STAGGER_MS)
-        .duration(350)
         .springify()
-        .damping(18);
+        .damping(24)
+        .stiffness(220)
+        .mass(1);
 
   return (
     <Animated.View entering={entering}>

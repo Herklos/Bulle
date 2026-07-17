@@ -23,7 +23,7 @@ import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { currentWeekSA } from '@bulle/sdk';
-import { Button, Text } from '@bulle/ui/components';
+import { Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
@@ -67,7 +67,10 @@ export default function EditDueDateScreen() {
 
   return (
     // scroll={false}: the picker sizes itself and swallows vertical drags, so nothing here
-    // may rely on scrolling (see components/DueDatePicker.tsx).
+    // may rely on scrolling (see components/DueDatePicker.tsx). Confirm therefore lives ONLY
+    // in the header, not a bottom button too — a second button competes with the picker for
+    // the same fixed height and is what used to get squeezed off-screen at larger Dynamic
+    // Type or on a small device (see event/new.tsx, which never had this problem).
     <Screen scroll={false}>
       <Stack.Screen
         options={{
@@ -92,9 +95,6 @@ export default function EditDueDateScreen() {
           {t('dueDate.editPreview', { from: currentWeek, to: weekPreview })}
         </Text>
       )}
-
-      <View style={{ flex: 1 }} />
-      <Button label={t('common.save')} onPress={save} disabled={!changed} block />
     </Screen>
   );
 }

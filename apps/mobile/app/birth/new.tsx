@@ -15,7 +15,7 @@ import { View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { DateTimePicker } from '@expo/ui/community/datetime-picker';
-import { Button, Text } from '@bulle/ui/components';
+import { Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
@@ -45,7 +45,10 @@ export default function NewBirthScreen() {
 
   return (
     // scroll={false}: the picker sizes itself and swallows vertical drags, so nothing here
-    // may rely on scrolling (see app/event/new.tsx).
+    // may rely on scrolling (see app/event/new.tsx). Confirm therefore lives ONLY in the
+    // header, not a bottom button too — a second button competes with the picker for the
+    // same fixed height and is what used to get squeezed off-screen at larger Dynamic Type
+    // or on a small device.
     <Screen scroll={false}>
       <Stack.Screen options={{ headerRight: () => <HeaderAction label={t('common.save')} onPress={save} /> }} />
 
@@ -66,9 +69,6 @@ export default function NewBirthScreen() {
         maximumDate={new Date()}
         onValueChange={(_event, date) => setAt(date)}
       />
-
-      <View style={{ flex: 1 }} />
-      <Button label={t('birth.confirm')} onPress={save} block />
     </Screen>
   );
 }
