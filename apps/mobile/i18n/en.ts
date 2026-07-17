@@ -373,7 +373,7 @@ export const en = {
     price: '€4.99 · once, for the whole pregnancy',
     priceOnce: '{{price}} · once, for the whole pregnancy',
     cta: 'Unlock Bulle Complète',
-    later: 'Later',
+    promoCode: 'Redeem a promo code',
     restore: 'Restore a purchase',
     restoreEmpty: 'No purchase found on this account.',
     reassurance: 'One purchase, for both of you. No subscription.',

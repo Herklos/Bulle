@@ -377,7 +377,7 @@ export const fr = {
     price: '4,99 € · une fois, pour toute la grossesse',
     priceOnce: '{{price}} · une fois, pour toute la grossesse',
     cta: 'Débloquer Bulle Complète',
-    later: 'Plus tard',
+    promoCode: 'Activer un code promo',
     restore: 'Restaurer un achat',
     restoreEmpty: 'Aucun achat trouvé sur ce compte.',
     reassurance: 'Un seul achat, pour vous deux. Pas d’abonnement.',

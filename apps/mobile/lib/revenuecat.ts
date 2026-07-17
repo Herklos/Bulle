@@ -7,7 +7,7 @@
  *
  * The public SDK key is safe in client code. The SECRET key must never appear here.
  */
-import { Platform } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import type { CustomerInfo, PurchasesOffering } from 'react-native-purchases';
 import { PREMIUM_ENTITLEMENT, PREMIUM_OFFERING } from './premium';
 
@@ -122,6 +122,30 @@ export async function purchasePremium(): Promise<PurchaseResult> {
     const cancelled = (error as { userCancelled?: boolean })?.userCancelled === true;
     if (!cancelled) console.warn('[revenuecat] purchase failed', error);
     return { info: null, cancelled };
+  }
+}
+
+/**
+ * Redeem a promo/offer code.
+ *
+ * iOS only has a real in-app path: `presentCodeRedemptionSheet()` opens StoreKit's native
+ * sheet. Android's Play Billing Library has no equivalent call — Play redeems codes through
+ * its own Store UI, not the purchasing app — so this opens Play's redeem page instead. Not
+ * app-specific, but it is the only in-app-triggerable entry point that exists.
+ */
+export async function redeemPromoCode(): Promise<void> {
+  if (Platform.OS === 'ios') {
+    if (!available()) return;
+    try {
+      const Purchases = (await import('react-native-purchases')).default;
+      await Purchases.presentCodeRedemptionSheet();
+    } catch (error) {
+      console.warn('[revenuecat] code redemption sheet failed', error);
+    }
+    return;
+  }
+  if (Platform.OS === 'android') {
+    await Linking.openURL('https://play.google.com/redeem');
   }
 }
 

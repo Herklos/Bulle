@@ -7,7 +7,8 @@
  *    one is the tell of a product that is pleased with itself for charging you.
  *  - Three contextual benefits, tied to what the user just tried to do. Never a generic
  *    feature list — they know what they wanted, and a wall of bullets reads as a pitch.
- *  - "Plus tard" is always there, immediately, in plain text.
+ *  - A way out is always there, immediately: a header back button (not buried in content,
+ *    works even with no navigation history — see lib/go-back.ts).
  *  - NO dark patterns, and the component cannot express them: no delayed close, no
  *    countdown, no "offer expires", no pre-ticked anything.
  *
@@ -16,7 +17,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import Animated, { FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
@@ -24,8 +25,9 @@ import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack } from '@/lib/go-back';
+import { HeaderAction } from '@/components/HeaderAction';
 import { usePremiumStore } from '@/store/usePremiumStore';
-import { getOffering } from '@/lib/revenuecat';
+import { getOffering, redeemPromoCode } from '@/lib/revenuecat';
 import type { GateReason } from '@/lib/premium';
 
 /** Which three benefits to show. Contextual to the gate the user actually hit (§10). */
@@ -100,6 +102,18 @@ export default function PaywallScreen() {
     // cosmetic bug — with no account it is the only route back to a purchase, and both
     // stores require it.
     <Screen>
+      {/* The way out. In the header rather than inline text so it is reachable immediately
+          and identically regardless of scroll position — and goBack() always lands
+          somewhere real even with no navigation history (a paywall can be the first thing
+          on the stack: a notification, a deep link). */}
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: '',
+          headerLeft: () => <HeaderAction label={t('common.back')} onPress={() => goBack()} />,
+        }}
+      />
+
       <View style={{ gap: space[6], paddingVertical: space[4] }}>
         <Animated.View
           entering={reduced ? undefined : FadeIn.duration(500)}
@@ -147,11 +161,11 @@ export default function PaywallScreen() {
           <Button label={t('paywall.cta')} onPress={buy} loading={purchasing} block />
 
           <Pressable
-            onPress={() => goBack()}
+            onPress={() => void redeemPromoCode()}
             accessibilityRole="button"
             style={{ alignSelf: 'center', minHeight: touch.min, justifyContent: 'center' }}
           >
-            <Text variant="caption">{t('paywall.later')}</Text>
+            <Text variant="caption">{t('paywall.promoCode')}</Text>
           </Pressable>
 
           {/* Restore is not optional: with no account, reinstalling is the ONLY route back

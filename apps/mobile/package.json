@@ -1,6 +1,6 @@
 {
   "name": "bulle",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Votre bulle à deux avant l'arrivée de bébé. Application privée, locale et hors ligne pour préparer l'arrivée d'un bébé à deux.",
   "main": "index.js",
