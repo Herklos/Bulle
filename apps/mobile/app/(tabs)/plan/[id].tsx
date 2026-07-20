@@ -16,6 +16,8 @@ import {
   isCounted,
   isLingering,
   isResolved,
+  setTaskCount,
+  setTaskTarget,
   stepTaskCount,
   taskCount,
   type Task,
@@ -61,13 +63,17 @@ export default function ProjectScreen() {
    * leaves `todo`. Writing only `count` would complete the task for readiness but leave
    * Ensemble unable to see who did it.
    */
-  const step = (task: Task, delta: number) => {
-    const next = stepTaskCount(task, delta);
+  const applyCount = (
+    task: Task,
+    next: { count: number; status: typeof task.status; target?: number },
+  ) => {
     updateTask(task.id, next);
     if (next.status === 'done' && task.status !== 'done' && task.essential) {
       useReadinessStore.getState().pulse();
     }
   };
+
+  const step = (task: Task, delta: number) => applyCount(task, stepTaskCount(task, delta));
 
   return (
     <Screen>
@@ -151,15 +157,26 @@ export default function ProjectScreen() {
                     count={taskCount(task)}
                     target={task.target!}
                     disabled={!canEdit}
+                    ignored={task.status === 'dismissed'}
                     onStep={(delta) => step(task, delta)}
+                    onSetCount={(next) => applyCount(task, setTaskCount(task, next))}
+                    onSetTarget={(next) => applyCount(task, setTaskTarget(task, next))}
                     accessibilityLabel={task.title}
                   />
                 )}
                 {canEdit && (
                   <TaskMenu
-                    dismissLabel={t('plan.dismiss')}
+                    // Ignoring is a toggle, not a one-way door. A row dismissed by mistake
+                    // was previously unrecoverable from the list.
+                    dismissLabel={
+                      task.status === 'dismissed' ? t('plan.undismiss') : t('plan.dismiss')
+                    }
                     deleteLabel={t('common.delete')}
-                    onDismiss={() => updateTask(task.id, { status: 'dismissed' })}
+                    onDismiss={() =>
+                      updateTask(task.id, {
+                        status: task.status === 'dismissed' ? 'todo' : 'dismissed',
+                      })
+                    }
                     onDelete={() => usePlanStore.getState().removeTask(task.id)}
                   />
                 )}

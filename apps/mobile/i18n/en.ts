@@ -105,6 +105,7 @@ export const en = {
       L: 'A proper session',
     },
     dismiss: 'Not for us',
+    undismiss: 'Put back on the list',
     lingering: 'Still on your list',
     suggestTemplate: 'Bulle suggests: {{title}}',
     premiumTemplate: 'With Complète',
@@ -118,6 +119,7 @@ export const en = {
     targetLabel: 'How many?',
     targetPlaceholder: '6',
     targetHint: 'Leave empty for a plain checkbox. With a number, the task counts up and finishes when you get there.',
+    countHint: 'Tap a number to type it in. The guide figure can change too.',
     effortQuestion: 'How much of a job?',
     whenQuestion: 'When?',
     when: {
@@ -157,7 +159,6 @@ export const en = {
     openSource: 'Read the official page',
     markTodo: 'Not done after all',
     afterBirthPending: 'Once the baby is here',
-    targetHint: 'A rough guide: {{total}}. Adjust it to suit you, none of it is compulsory.',
   },
 
   memories: {
@@ -622,6 +623,25 @@ export const en = {
           'For bottle feeding, count on about six: three small ones of 125 to 180 millilitres for the early weeks, three larger ones of 240 to 260 millilitres after that.',
           'If you plan to breastfeed, one or two bottles cover the occasional handover. There is no need to equip a whole kitchen before you know how things settle.',
           'Add slow-flow teats, one per bottle plus two or three spares, and a bottle brush. A breast pump is usually rented rather than bought, so it is not a purchase to plan for here.',
+        ],
+        tetines: 'Spare teats',
+        tetinesNote: 'Slow flow to start. One per bottle, plus a few in reserve.',
+        tetinesDetails: [
+          'Three spare slow-flow teats on top of the ones that come with the bottles. They wear out, they get lost, and they are replaced roughly every three months.',
+          'Slow flow is what the first weeks need. Too fast a flow makes the baby drink quicker than they can comfortably swallow.',
+          'Add a bottle brush too, one large and one small: that is what lets you scrub the inside of the bottle and the teat properly, and it is the hygiene step that actually matters.',
+        ],
+        coussinets: 'Breast pads',
+        coussinetsNote: 'If you are breastfeeding. Six washable pairs, or disposables if you prefer.',
+        coussinetsDetails: [
+          'Six washable pairs cover a rotation comfortably on a wash every three or four days. With disposables, count on four to ten a day in the early weeks.',
+          'The need peaks when your milk comes in, then drops noticeably once feeding is established.',
+          'If you are not breastfeeding, or do not yet know, skip this line without a second thought. Nothing here is compulsory.',
+        ],
+        moufles: 'Scratch mittens',
+        mouflesDetails: [
+          'Two pairs is enough. A newborn’s nails grow fast and they scratch their own face without meaning to in the first weeks.',
+          'Plenty of families simply use thin socks instead, or sleepsuits with fold-over cuffs. If you already have those, this line is already filled.',
         ],
         drapsHousse: 'Fitted sheets',
         drapsHousseNote: 'Cut to the exact mattress size, with no slack and no rucking.',

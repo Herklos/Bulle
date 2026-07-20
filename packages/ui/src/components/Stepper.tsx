@@ -14,8 +14,8 @@
  * gives, in the one colour the product uses to mean "good". It never turns red on the way
  * there: an unfinished stock is not a failure (§5.1).
  */
-import React, { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
@@ -36,12 +36,112 @@ export interface StepperProps {
   target: number;
   /** Called with -1 or +1. The caller derives the new count and status. */
   onStep: (delta: number) => void;
+  /**
+   * Set the count outright. Omit to make the number read-only.
+   *
+   * Tapping ten times to record a bag of hand-me-downs is the kind of small indignity that
+   * makes a tool feel like it was never used by its author.
+   */
+  onSetCount?: (next: number) => void;
+  /** Set the target outright. Omit to make the target read-only. */
+  onSetTarget?: (next: number) => void;
   /** Describes WHAT is being counted — "3 sur 6" alone says nothing. */
   accessibilityLabel: string;
+  /** Dimmed and inert. Used for "pas pour nous", which stays legible rather than vanishing. */
+  ignored?: boolean;
   disabled?: boolean;
 }
 
-export function Stepper({ count, target, onStep, accessibilityLabel, disabled }: StepperProps) {
+/**
+ * The inline number editor.
+ *
+ * Deliberately NOT a modal, a sheet, or a "modifier" button: the digit is already on screen,
+ * so tapping it and typing over it adds exactly zero new elements to the row. Anything else
+ * would be a second control competing with the one that is already there.
+ */
+function EditableNumber({
+  value,
+  onCommit,
+  color,
+  align,
+  label,
+}: {
+  value: number;
+  onCommit?: (next: number) => void;
+  color: 'ink' | 'inkSoft' | 'sage';
+  align: 'right' | 'left';
+  label: string;
+}) {
+  const { colors } = useBulleTheme();
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState('');
+
+  if (!onCommit) {
+    return (
+      <Text variant="bodyMed" color={color} style={{ minWidth: 20, textAlign: align }}>
+        {value}
+      </Text>
+    );
+  }
+
+  const commit = () => {
+    setEditing(false);
+    const parsed = Number.parseInt(draft, 10);
+    // An empty or junk field means "I changed my mind", not "set it to zero". Silently
+    // keeping the old value is the only behaviour that cannot lose data the user had.
+    if (Number.isFinite(parsed) && parsed !== value) onCommit(parsed);
+  };
+
+  if (editing) {
+    return (
+      <TextInput
+        value={draft}
+        onChangeText={(text) => setDraft(text.replace(/[^0-9]/g, '').slice(0, 3))}
+        onBlur={commit}
+        onSubmitEditing={commit}
+        keyboardType="number-pad"
+        returnKeyType="done"
+        autoFocus
+        selectTextOnFocus
+        accessibilityLabel={label}
+        style={{
+          minWidth: 28,
+          textAlign: align,
+          fontSize: 16,
+          padding: 0,
+          color: colors.ink,
+        }}
+      />
+    );
+  }
+
+  return (
+    <Pressable
+      onPress={() => {
+        setDraft(String(value));
+        setEditing(true);
+      }}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      hitSlop={10}
+    >
+      <Text variant="bodyMed" color={color} style={{ minWidth: 20, textAlign: align }}>
+        {value}
+      </Text>
+    </Pressable>
+  );
+}
+
+export function Stepper({
+  count,
+  target,
+  onStep,
+  onSetCount,
+  onSetTarget,
+  accessibilityLabel,
+  ignored,
+  disabled,
+}: StepperProps) {
   const { colors, touch, space } = useBulleTheme();
   const reduced = useReducedMotion();
   const complete = count >= target;
@@ -81,19 +181,44 @@ export function Stepper({ count, target, onStep, accessibilityLabel, disabled }:
 
   return (
     <View
-      style={{ flexDirection: 'row', alignItems: 'center', gap: space[3] }}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: space[3],
+        // Ignored stays readable rather than disappearing: "pas pour nous" is a decision the
+        // user made and must remain visibly reversible, not a row that silently vanished.
+        opacity: ignored ? 0.4 : 1,
+      }}
       accessibilityLabel={`${accessibilityLabel}, ${count}/${target}`}
     >
       {button(-1, 'minus', count === 0)}
       <Animated.View style={numberStyle}>
-        {/* Tabular-ish: a fixed min-width stops the row jittering as 9 becomes 10. */}
-        <Text
-          variant="bodyMed"
-          color={complete ? 'sage' : 'ink'}
-          style={{ minWidth: 44, textAlign: 'center' }}
+        {/*
+          Two numbers, each its own tap target, with a slash between them. The whole manual
+          entry affordance is exactly this: the digits already on screen are the fields.
+          A fixed min-width on the pair stops the row jittering as 9 becomes 10.
+        */}
+        <View
+          style={{ flexDirection: 'row', alignItems: 'center', minWidth: 52, justifyContent: 'center' }}
         >
-          {count}/{target}
-        </Text>
+          <EditableNumber
+            value={count}
+            onCommit={disabled || ignored ? undefined : onSetCount}
+            color={complete ? 'sage' : 'ink'}
+            align="right"
+            label={`${accessibilityLabel} — ${count}`}
+          />
+          <Text variant="bodyMed" color="inkSoft">
+            /
+          </Text>
+          <EditableNumber
+            value={target}
+            onCommit={disabled || ignored ? undefined : onSetTarget}
+            color="inkSoft"
+            align="left"
+            label={`${accessibilityLabel} — ${target}`}
+          />
+        </View>
       </Animated.View>
       {button(1, 'plus', complete)}
     </View>

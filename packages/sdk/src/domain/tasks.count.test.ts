@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { completeTaskUpdates, isCounted, stepTaskCount, taskCount } from './tasks.js';
+import {
+  completeTaskUpdates,
+  isCounted,
+  setTaskCount,
+  setTaskTarget,
+  stepTaskCount,
+  taskCount,
+} from './tasks.js';
 import type { Task } from './types.js';
 
 function task(over: Partial<Task> = {}): Task {
@@ -90,5 +97,57 @@ describe('completeTaskUpdates', () => {
 
   it('leaves an ordinary task alone', () => {
     expect(completeTaskUpdates(task())).toEqual({ status: 'done' });
+  });
+});
+
+describe('setTaskCount', () => {
+  it('jumps straight to a value and completes when it reaches the target', () => {
+    expect(setTaskCount(task({ target: 6, count: 0 }), 6)).toEqual({ count: 6, status: 'done' });
+  });
+
+  it('clamps above the target rather than storing an impossible count', () => {
+    expect(setTaskCount(task({ target: 6, count: 0 }), 99)).toEqual({ count: 6, status: 'done' });
+  });
+
+  it('reopens a done task when set back below the target', () => {
+    expect(setTaskCount(task({ target: 6, count: 6, status: 'done' }), 2)).toEqual({
+      count: 2,
+      status: 'todo',
+    });
+  });
+
+  it('still refuses to overturn a dismissal', () => {
+    expect(setTaskCount(task({ target: 6, status: 'dismissed' }), 6).status).toBe('dismissed');
+  });
+});
+
+describe('setTaskTarget', () => {
+  it('raising the target above the count reopens the task', () => {
+    expect(setTaskTarget(task({ target: 6, count: 6, status: 'done' }), 12)).toEqual({
+      target: 12,
+      count: 6,
+      status: 'todo',
+    });
+  });
+
+  it('lowering the target to at or below the count completes it', () => {
+    expect(setTaskTarget(task({ target: 12, count: 6 }), 6)).toEqual({
+      target: 6,
+      count: 6,
+      status: 'done',
+    });
+  });
+
+  it('clamps the count down when the target shrinks past it', () => {
+    expect(setTaskTarget(task({ target: 12, count: 10 }), 4)).toEqual({
+      target: 4,
+      count: 4,
+      status: 'done',
+    });
+  });
+
+  // A target of 0 makes isCounted false, which would strand the task with no stepper at all.
+  it('never lets the target reach zero', () => {
+    expect(setTaskTarget(task({ target: 6, count: 3 }), 0).target).toBe(1);
   });
 });

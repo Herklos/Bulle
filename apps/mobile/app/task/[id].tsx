@@ -21,6 +21,8 @@ import {
   isCounted,
   isLingering,
   isResolved,
+  setTaskCount,
+  setTaskTarget,
   stepTaskCount,
   taskCount,
 } from '@bulle/sdk';
@@ -78,12 +80,20 @@ export default function TaskScreen() {
    * taps-in-a-row action, and popping back to the list after each one would make the screen
    * fight the user.
    */
-  const step = (delta: number) => {
-    const next = stepTaskCount(task, delta);
+  const applyCount = (next: { count: number; status: typeof task.status; target?: number }) => {
     usePlanStore.getState().updateTask(task.id, next);
     if (next.status === 'done' && task.status !== 'done' && task.essential) {
       useReadinessStore.getState().pulse();
     }
+  };
+
+  const step = (delta: number) => applyCount(stepTaskCount(task, delta));
+
+  /** "Pas pour nous", and back again. Never a one-way door. */
+  const toggleIgnored = () => {
+    usePlanStore
+      .getState()
+      .updateTask(task.id, { status: task.status === 'dismissed' ? 'todo' : 'dismissed' });
   };
 
   return (
@@ -132,13 +142,15 @@ export default function TaskScreen() {
           contradict itself. */}
       {canEdit && isCounted(task) && (
         <View style={{ gap: space[2] }}>
-          {/* `total`, not `count`: i18next treats a `count` variable as a plural selector
-              and would silently miss the key without _one/_other siblings. */}
-          <Text variant="caption">{t('task.targetHint', { total: task.target! })}</Text>
+          {/* One line, and it doubles as the discovery hint for the tappable digits. */}
+          <Text variant="caption">{t('task.countHint')}</Text>
           <Stepper
             count={taskCount(task)}
             target={task.target!}
+            ignored={task.status === 'dismissed'}
             onStep={step}
+            onSetCount={(next) => applyCount(setTaskCount(task, next))}
+            onSetTarget={(next) => applyCount(setTaskTarget(task, next))}
             accessibilityLabel={task.title}
           />
         </View>
@@ -148,6 +160,17 @@ export default function TaskScreen() {
         <Button
           label={done ? t('task.markTodo') : t('today.done')}
           onPress={complete}
+          block
+        />
+      )}
+
+      {/* The only way to say "pas pour nous" from this screen. It existed in the list's
+          overflow menu and nowhere here, so opening a task to dismiss it was a dead end. */}
+      {canEdit && (
+        <Button
+          label={task.status === 'dismissed' ? t('plan.undismiss') : t('plan.dismiss')}
+          tone="ghost"
+          onPress={toggleIgnored}
           block
         />
       )}

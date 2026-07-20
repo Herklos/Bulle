@@ -143,6 +143,39 @@ export function stepTaskCount(task: Task, delta: number): { count: number; statu
 }
 
 /**
+ * Set a counted task's stock outright, rather than one tap at a time.
+ *
+ * Same derivation as `stepTaskCount` and deliberately routed through it, so there is exactly
+ * one place where "count reached target" turns into "done". Two code paths computing that
+ * independently is how a manual entry ends up completing a task the stepper would not.
+ */
+export function setTaskCount(task: Task, next: number): { count: number; status: TaskStatus } {
+  return stepTaskCount(task, Math.round(next) - taskCount(task));
+}
+
+/**
+ * Change what a counted task is aiming AT.
+ *
+ * The recommended figures assume a wash every three or four days; a household washing daily
+ * needs half of them, and a family given a bag of hand-me-downs needs a different number
+ * again. A target the user cannot move is a number arguing with the person who owns the
+ * cupboard, so this exists for the same reason the counts are editable at all.
+ *
+ * Raising the target above the current count reopens the task, which is correct: needing
+ * twelve when you own six is not a finished job.
+ */
+export function setTaskTarget(
+  task: Task,
+  next: number,
+): { target: number; count: number; status: TaskStatus } {
+  // Never below 1. A target of 0 would make isCounted false, stranding the task with a
+  // stepper that has vanished and a count nothing can clear.
+  const target = Math.max(1, Math.round(next));
+  const retargeted: Task = { ...task, target };
+  return { target, ...stepTaskCount(retargeted, 0) };
+}
+
+/**
  * The updates a plain "Fait" affordance should write — the Focus card, the Today list, the
  * task screen's button.
  *

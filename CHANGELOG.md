@@ -6,6 +6,25 @@ Notable changes to Bulle. Newest first.
 
 ### Added
 
+- **Manual count entry, with no new controls.** The two digits in the stepper are each their
+  own tap target: tap one, type over it, done. Tapping ten times to record a bag of
+  hand-me-downs was a small indignity, and a "modifier" button next to a stepper would have
+  been a second control competing with the one already there. The target is editable the
+  same way, because the shipped figures assume a wash every three or four days and a target
+  the user cannot move is a number arguing with the person who owns the cupboard.
+  - `setTaskCount` / `setTaskTarget` (`domain/tasks.ts`), both routed through
+    `stepTaskCount` so there is exactly one place where "count reached target" becomes
+    "done". An empty or junk field keeps the old value rather than writing 0.
+- **Ignoring an item is now a toggle and reachable from the task screen.** "Pas pour nous"
+  existed only in the list's overflow menu and was one-way, so a row dismissed by mistake
+  could not be recovered and opening a task to dismiss it was a dead end. An ignored counted
+  row dims rather than disappearing, so the decision stays visibly reversible.
+- **Three more counted items on the layette** from a gap check against Aubert, Little
+  Crevette and Consobaby's full checklists: spare teats (3), breast pads (6, breastfeeding
+  only), scratch mittens (2). The room, cot, changing point, car seat, pram and toilet bag
+  were already covered by the Nid and Achats templates, and the equipment those lists call
+  optional (transat, babyphone, baignoire, stériliser) stays out on purpose.
+
 - **Counted tasks.** A task can now be a quantity rather than a yes/no: "bodies naissance
   3/6", with a stepper in place of the checkbox. It completes when the count reaches its
   target, and reopens if the count drops back below it. Half a layette is a stock question,

@@ -106,6 +106,7 @@ export const fr = {
       L: 'Une vraie session',
     },
     dismiss: 'Pas pour nous',
+    undismiss: 'Remettre sur la liste',
     // Never "en retard". A closed window is not a failure (§5.1).
     lingering: 'Toujours sur votre liste',
     suggestTemplate: 'Bulle propose : {{title}}',
@@ -120,6 +121,7 @@ export const fr = {
     targetLabel: 'Combien ?',
     targetPlaceholder: '6',
     targetHint: 'Laissez vide pour une simple case à cocher. Avec un nombre, la tâche se compte et se termine quand vous y êtes.',
+    countHint: 'Touchez un chiffre pour le saisir directement. Le repère se change aussi.',
     effortQuestion: 'Ça demande quoi ?',
     whenQuestion: 'Quand ?',
     when: {
@@ -159,7 +161,6 @@ export const fr = {
     openSource: 'Lire la page officielle',
     markTodo: 'Finalement pas fait',
     afterBirthPending: 'Quand le bébé sera là',
-    targetHint: 'Repère indicatif : {{total}}. Ajustez-le à votre rythme, rien n’est obligatoire.',
   },
 
   memories: {
@@ -1003,6 +1004,25 @@ export const fr = {
           'Pour une alimentation au biberon, comptez environ six flacons : trois petits de 125 à 180 millilitres pour les premières semaines, trois grands de 240 à 260 millilitres pour la suite.',
           'Si vous prévoyez d’allaiter, un ou deux biberons suffisent pour les relais. Inutile d’équiper toute une cuisine avant de savoir comment les choses se mettront en place.',
           'Prévoyez des tétines à débit lent, une par biberon plus deux ou trois de rechange, et un goupillon. Le tire-lait, lui, se loue en pharmacie sur prescription et se trouve remboursé : ce n’est pas un achat à prévoir ici.',
+        ],
+        tetines: 'Tétines de rechange',
+        tetinesNote: 'Débit lent pour commencer. Une par biberon, plus quelques-unes d’avance.',
+        tetinesDetails: [
+          'Trois tétines de rechange en débit lent, en plus de celles fournies avec les biberons. Elles s’abîment, se perdent, et se remplacent environ tous les trois mois.',
+          'Le débit lent est celui des premières semaines. Un débit trop rapide fait boire le bébé plus vite qu’il ne peut avaler confortablement.',
+          'Prévoyez aussi un goupillon, un grand et un petit : c’est ce qui permet de frotter correctement l’intérieur du biberon et de la tétine, et c’est le vrai geste d’hygiène.',
+        ],
+        coussinets: 'Coussinets d’allaitement',
+        coussinetsNote: 'Si vous allaitez. Six paires lavables, ou des jetables selon vos préférences.',
+        coussinetsDetails: [
+          'Six paires lavables couvrent confortablement une rotation avec une lessive tous les trois ou quatre jours. En jetables, comptez plutôt quatre à dix par jour les premières semaines.',
+          'Le besoin est le plus fort au moment de la montée de lait, puis diminue nettement une fois l’allaitement installé.',
+          'Si vous n’allaitez pas, ou si vous ne savez pas encore, laissez cette ligne de côté sans hésiter. Rien ici n’est un passage obligé.',
+        ],
+        moufles: 'Moufles anti-griffures',
+        mouflesDetails: [
+          'Deux paires suffisent. Les ongles d’un nouveau-né poussent vite et il se griffe le visage sans le vouloir dans les premières semaines.',
+          'Beaucoup de familles utilisent simplement des chaussettes fines à la place, ou des pyjamas dont les manches se replient sur les mains. Si vous en avez déjà, cette ligne est déjà remplie.',
         ],
         drapsHousse: 'Draps housse',
         drapsHousseNote: 'Aux dimensions exactes du matelas, sans jeu ni pli.',
