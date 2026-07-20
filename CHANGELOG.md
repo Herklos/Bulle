@@ -32,3 +32,13 @@ Notable changes to Bulle. Newest first.
     official position rather than the shop one.
   - No breast pump line: it is rented on prescription and reimbursed in France, so "buy one"
     would be close to an error. It is a note under the bottles instead.
+
+- **Seven blog articles on quantities** (`blog-posts-layette.ts`), FR and EN, from the same
+  research: the reference piece, nappies per day, newborn vs 1 month sizing, how many of
+  each to put on a baby list, what to give as a gift, hospital bag quantities, and what the
+  season actually changes. They fill a real gap: French layette guides list what to buy and
+  almost never how many, which is the only part a first-time parent cannot work out alone.
+  - Scheduled 26 Aug to 16 Sep 2026, inserted after the launch sequence rather than
+    appended. Inserting normally costs ranking history; it cost nothing here because the
+    calendar is on day 0 and only the first article had published. That window closes as
+    the calendar advances.

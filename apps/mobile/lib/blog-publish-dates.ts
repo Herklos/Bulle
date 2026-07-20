@@ -57,6 +57,26 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   // ── Tier 5 — vie privée ──
   'applications-grossesse-donnees',
 
+  // ── Tier 3 — les quantités ──
+  // Inserted here rather than appended, and the difference is six months of calendar.
+  //
+  // Moving a slug reschedules everything after it, which normally costs ranking history.
+  // It costs nothing today: this block was added on 2026-07-20, which is day 0, so only
+  // `declaration-grossesse-demarches` has actually published. Everything below is still in
+  // the future and has no history to reset. That window closes as the calendar advances —
+  // once these have gone out, treat the array as append-only again.
+  //
+  // They earn a run of their own because they answer the question every French layette
+  // guide leaves open. "Des bodies", yes, but how many. Ordered by intent within the run:
+  // the reference piece first, then the highest-volume single questions.
+  'combien-de-bodies-pyjamas-couches',
+  'couches-combien-par-jour-premier-mois',
+  'taille-naissance-ou-1-mois-combien-acheter',
+  'liste-naissance-combien-de-chaque',
+  'cadeau-naissance-ce-qui-sert-vraiment',
+  'valise-maternite-combien-de-chaque',
+  'layette-hiver-ete-ce-qui-change',
+
   // ── Tier 1 continued — the administrative long tail ──
   // Highest intent, so they sit as early as the calendar allows: these are what someone
   // types at 11pm, and they are the queries the FR market serves worst.
