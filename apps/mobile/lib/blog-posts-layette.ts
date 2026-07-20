@@ -887,6 +887,564 @@ const pairs = [
       },
     ],
   }),
+  postPair({
+    slug: 'combien-de-vetements-3-mois-6-mois',
+    categoryKey: 'achats',
+    categoryFr: 'Achats',
+    categoryEn: 'Shopping',
+    titleFr: 'Combien de vêtements par taille : de la naissance à un an',
+    titleEn: 'How many clothes per size: from birth to one year',
+    excerptFr:
+      'Chaque taille dure un temps différent, et les quantités ne suivent pas l’âge. Le 3 mois est la taille piège.',
+    excerptEn:
+      'Each size lasts a different length of time, and the quantities do not follow age. 3 month is the trap.',
+    readingMinutes: 6,
+    heroAltFr: 'Les quantités de vêtements par taille, de la naissance à un an',
+    heroAltEn: 'Clothing quantities by size, from birth to one year',
+    disclaimer: false,
+    sectionsFr: [
+      {
+        type: 'text',
+        paragraphs: [
+          'Une erreur revient dans presque toutes les garde-robes de première année : on achète comme si chaque taille durait aussi longtemps que la précédente. Ce n’est pas le cas, et l’écart est considérable.',
+          'La taille naissance dure une quinzaine de jours. La taille 6 mois dure deux à trois mois. Entre les deux, la taille 3 mois est celle qui surprend le plus de monde.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Le 3 mois est la taille piège',
+        paragraphs: [
+          'Tout le monde s’attend à ce que le bébé la traverse aussi vite que les précédentes. En réalité il y reste six à huit semaines, soit trois à quatre fois plus longtemps qu’en taille naissance.',
+          'C’est donc la taille où il faut le plus de pièces, et c’est aussi celle qu’on achète le moins parce qu’elle n’a pas l’air urgente pendant la grossesse. Le résultat classique : douze bodies en taille naissance portés deux semaines, et une pénurie six semaines plus tard.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Combien par taille',
+        items: [
+          'Naissance, environ 15 jours : 5 à 7 bodies, 5 à 7 pyjamas, 2 gilets, 2 bonnets, 3 paires de chaussettes',
+          '1 mois, environ 3 semaines : 7 à 8 bodies, 7 à 8 pyjamas, 2 gilets, 3 à 4 paires de chaussettes',
+          '3 mois, 6 à 8 semaines : 8 à 10 bodies, 6 à 7 pyjamas, 4 à 5 tenues, 5 à 7 bavoirs',
+          '6 mois, 2 à 3 mois : 7 à 8 bodies, 5 à 6 pyjamas, 5 à 7 tenues, 7 à 10 bavoirs',
+          '9 à 12 mois, 3 à 4 mois : 5 à 7 bodies, 5 à 6 pyjamas, 7 à 8 tenues, une paire de chaussures',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Pourquoi les bodies diminuent et les tenues augmentent',
+        paragraphs: [
+          'La tendance est nette et elle a une explication simple. Un nouveau-né vit en body et en pyjama, jour et nuit, et change plusieurs fois par jour. Un bébé de neuf mois sort, mange autre chose que du lait, et porte de vraies tenues.',
+          'Les bavoirs suivent le mouvement inverse et augmentent fortement : au début ils servent contre les régurgitations, plus tard contre la bave des poussées dentaires puis contre les premiers repas.',
+          'Les chaussures n’arrivent qu’à la fin, et seulement quand le bébé marche. Avant, elles ne servent à rien et gênent le développement du pied.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'L’hypothèse derrière tous ces chiffres',
+        paragraphs: [
+          'Une lessive tous les trois ou quatre jours. C’est la variable qui pilote tout : si vous lancez une machine par jour, divisez à peu près par deux, et les listes ci-dessus deviennent presque confortables.',
+          'Un cas particulier vaut d’être noté : si le bébé est gardé, en crèche ou chez une assistante maternelle, comptez deux à trois bodies et un à deux pyjamas de plus, à laisser sur place. Le change de rechange qui reste chez la nounou ne revient pas dans la rotation de la maison.',
+        ],
+      },
+      {
+        type: 'quote',
+        quote:
+          'On habille un nouveau-né douze fois par semaine et un bébé de neuf mois sept fois. Ce n’est pas la même garde-robe, et ce n’est pas le même nombre.',
+      },
+    ],
+    sectionsEn: [
+      {
+        type: 'text',
+        paragraphs: [
+          'One mistake shows up in nearly every first-year wardrobe: buying as though every size lasted as long as the one before. It does not, and the gap is considerable.',
+          'Newborn size lasts about a fortnight. The 6 month size lasts two to three months. In between, the 3 month size catches most people out.',
+        ],
+      },
+      {
+        type: 'text',
+        title: '3 month is the trap size',
+        paragraphs: [
+          'Everyone expects a baby to pass through it as fast as the earlier ones. In practice they stay in it six to eight weeks, three to four times longer than in newborn.',
+          'So it is the size that needs the most pieces, and also the one people buy least, because it does not look urgent during pregnancy. The classic result: twelve newborn bodysuits worn for a fortnight, and a shortage six weeks later.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'How many per size',
+        items: [
+          'Newborn, about 15 days: 5 to 7 bodysuits, 5 to 7 sleepsuits, 2 cardigans, 2 hats, 3 pairs of socks',
+          '1 month, about 3 weeks: 7 to 8 bodysuits, 7 to 8 sleepsuits, 2 cardigans, 3 to 4 pairs of socks',
+          '3 month, 6 to 8 weeks: 8 to 10 bodysuits, 6 to 7 sleepsuits, 4 to 5 outfits, 5 to 7 bibs',
+          '6 month, 2 to 3 months: 7 to 8 bodysuits, 5 to 6 sleepsuits, 5 to 7 outfits, 7 to 10 bibs',
+          '9 to 12 month, 3 to 4 months: 5 to 7 bodysuits, 5 to 6 sleepsuits, 7 to 8 outfits, one pair of shoes',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Why bodysuits go down and outfits go up',
+        paragraphs: [
+          'The trend is clear and the reason is simple. A newborn lives in a bodysuit and a sleepsuit, day and night, changed several times a day. A nine-month-old goes out, eats something other than milk, and wears actual outfits.',
+          'Bibs move the other way and rise sharply: at first they are for possets, later for teething dribble and then for first meals.',
+          'Shoes only arrive at the end, and only once the baby walks. Before that they serve no purpose and get in the way of how the foot develops.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'The assumption behind all these numbers',
+        paragraphs: [
+          'A wash every three or four days. That is the variable driving everything: run a load a day and you can roughly halve the lists above, which makes them almost comfortable.',
+          'One special case is worth noting: if the baby is in childcare, at a nursery or with a childminder, add two or three bodysuits and one or two sleepsuits to leave there. The spare change of clothes that lives at the childminder never comes back into the home rotation.',
+        ],
+      },
+      {
+        type: 'quote',
+        quote:
+          'You dress a newborn twelve times a week and a nine-month-old seven times. That is not the same wardrobe, and it is not the same number.',
+      },
+    ],
+  }),
+
+  postPair({
+    slug: 'naissance-en-hiver-la-layette',
+    categoryKey: 'achats',
+    categoryFr: 'Achats',
+    categoryEn: 'Shopping',
+    titleFr: 'Naissance en hiver : la layette, poste par poste',
+    titleEn: 'A winter baby: the layette, item by item',
+    excerptFr:
+      'Le froid change moins de choses que le séchage. Voici ce qui bouge vraiment pour un bébé de décembre à février.',
+    excerptEn:
+      'Cold changes less than drying time does. Here is what genuinely shifts for a December to February baby.',
+    readingMinutes: 5,
+    heroAltFr: 'La layette pour une naissance en hiver',
+    heroAltEn: 'The layette for a winter birth',
+    disclaimer: false,
+    sectionsFr: [
+      {
+        type: 'text',
+        paragraphs: [
+          'Pour une naissance entre décembre et février, la première chose à savoir est que le froid n’est pas la contrainte principale. La contrainte principale est le séchage.',
+          'Sans sèche-linge, un pyjama met beaucoup plus longtemps à revenir dans l’armoire en janvier qu’en juillet, et un pyjama encore humide ne compte pas dans votre stock. C’est ce qui pousse une layette d’hiver vers le haut des fourchettes habituelles, bien plus que la température elle-même.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Ce qui change concrètement',
+        items: [
+          'Bodies : le même total, une douzaine, mais environ 8 manches longues pour 4 manches courtes',
+          'Pyjamas : visez le haut de la fourchette, 11 ou 12 plutôt que 9, à cause du séchage',
+          'Gigoteuse : TOG 3 si la chambre est en dessous de 18 degrés, TOG 2 entre 18 et 20',
+          'Gilets : 4 ou 5 plutôt que 3, ils servent en couche intermédiaire pour chaque sortie',
+          'Nid d’ange ou combinaison : 1, c’est le seul objet réellement saisonnier de la liste',
+          'Bonnets : 2, comme en toute saison, mais en maille plutôt qu’en coton fin',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Le chauffage compte plus que la météo',
+        paragraphs: [
+          'La bonne référence est la température de la chambre, idéalement entre 18 et 20 degrés, et non le mois au calendrier. Un appartement bien isolé et chauffé à 21 degrés en février demande une gigoteuse TOG 2, pas TOG 3.',
+          'Une gigoteuse trop épaisse dans une pièce chaude fait plus de mal que de bien. En cas de doute, touchez la nuque du bébé plutôt que ses pieds : les pieds d’un nouveau-né sont naturellement frais, ce n’est pas un signe qu’il a froid.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'La sortie de maternité',
+        paragraphs: [
+          'C’est le moment où l’on surhabille le plus. Un point de sécurité mérite d’être connu : dans le siège-auto, les vêtements très épais et les combinaisons matelassées empêchent le harnais d’être correctement serré contre le corps.',
+          'La pratique habituelle est d’installer le bébé en tenue normale, harnais ajusté, puis de poser une couverture ou le nid d’ange par-dessus le harnais. Le trajet de la maternité à la maison se fait souvent dans une voiture froide, et c’est la solution qui combine chaleur et harnais correct.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Ce qui ne change pas',
+        paragraphs: [
+          'Les langes, les bavoirs, les draps housse, les couches, les capes de bain : les quantités sont exactement les mêmes qu’en été. Ce sont les lessives et les régurgitations qui les dictent, et elles ne connaissent pas les saisons.',
+          'Et le lit ne change pas non plus. Même en plein hiver, ni couverture, ni couette, ni oreiller, ni tour de lit avant deux ans, selon [ameli.fr](https://www.ameli.fr/assure/sante/bons-gestes/bebe/coucher-bebe). C’est le TOG de la gigoteuse qui gère le froid, jamais une couverture ajoutée.',
+        ],
+      },
+    ],
+    sectionsEn: [
+      {
+        type: 'text',
+        paragraphs: [
+          'For a baby arriving between December and February, the first thing to know is that cold is not the main constraint. Drying time is.',
+          'Without a tumble dryer, a sleepsuit takes far longer to get back into the drawer in January than in July, and a damp sleepsuit does not count towards your stock. That is what pushes a winter layette towards the top of the usual ranges, far more than the temperature itself.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'What actually changes',
+        items: [
+          'Bodysuits: the same total, a dozen, but about 8 long-sleeved to 4 short-sleeved',
+          'Sleepsuits: aim high, 11 or 12 rather than 9, because of drying',
+          'Sleep sack: TOG 3 if the room is below 18 degrees, TOG 2 between 18 and 20',
+          'Cardigans: 4 or 5 rather than 3, they act as a middle layer for every outing',
+          'Pramsuit: 1, the only genuinely seasonal item on the list',
+          'Hats: 2, as in any season, but knitted rather than fine cotton',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Heating matters more than the weather',
+        paragraphs: [
+          'The right reference is the room temperature, ideally between 18 and 20 degrees, not the month on the calendar. A well-insulated flat heated to 21 degrees in February needs a TOG 2 sleep sack, not TOG 3.',
+          'A sleep sack that is too thick in a warm room does more harm than good. When in doubt, feel the back of the baby’s neck rather than their feet: a newborn’s feet are naturally cool, and it is not a sign they are cold.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'The trip home',
+        paragraphs: [
+          'This is where people overdress most. One safety point is worth knowing: in a car seat, very thick clothing and padded snowsuits stop the harness from being tightened properly against the body.',
+          'The usual practice is to put the baby in normal clothes, tighten the harness, then lay a blanket or the pramsuit over the top of the harness. The drive home is often in a cold car, and this is the approach that gives you warmth and a correct harness at once.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'What does not change',
+        paragraphs: [
+          'Muslins, bibs, fitted sheets, nappies, hooded towels: the quantities are exactly the same as in summer. Laundry and possets dictate those, and they do not know about seasons.',
+          'The cot does not change either. Even in midwinter, no blanket, duvet, pillow or bumper before age two, per [ameli.fr](https://www.ameli.fr/assure/sante/bons-gestes/bebe/coucher-bebe). The sleep sack TOG handles the cold, never an added blanket.',
+        ],
+      },
+    ],
+  }),
+
+  postPair({
+    slug: 'naissance-en-ete-la-layette',
+    categoryKey: 'achats',
+    categoryFr: 'Achats',
+    categoryEn: 'Shopping',
+    titleFr: 'Naissance en été : la layette, et les deux erreurs fréquentes',
+    titleEn: 'A summer baby: the layette, and the two common mistakes',
+    excerptFr:
+      'Moins de couches de vêtements qu’on ne le croit, un bonnet quand même, et une gigoteuse plus fine plutôt qu’aucune.',
+    excerptEn:
+      'Fewer layers than people think, a hat all the same, and a thinner sleep sack rather than none.',
+    readingMinutes: 5,
+    heroAltFr: 'La layette pour une naissance en été',
+    heroAltEn: 'The layette for a summer birth',
+    disclaimer: false,
+    sectionsFr: [
+      {
+        type: 'text',
+        paragraphs: [
+          'Une naissance entre juin et août simplifie beaucoup de choses : pas de combinaison, pas de nid d’ange, un séchage rapide qui fait tourner la layette plus vite. Les quantités totales, elles, ne bougent pas.',
+          'Deux erreurs reviennent pourtant systématiquement, et elles vont dans des directions opposées.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Première erreur : trop habiller',
+        paragraphs: [
+          'Un nouveau-né en été a besoin de moins de couches qu’on ne l’imagine. À l’intérieur, un body seul suffit très souvent, et le réflexe d’ajouter un pyjama par-dessus « au cas où » est le plus fréquent des premiers jours.',
+          'Le repère utile est la nuque, pas les pieds. Des pieds frais chez un nouveau-né sont normaux et ne veulent rien dire. Une nuque moite veut dire qu’il a trop chaud.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Deuxième erreur : supprimer le bonnet et la gigoteuse',
+        paragraphs: [
+          'Le bonnet reste utile même en juillet, pour les tout premiers jours et pour la sortie de maternité. Deux suffisent, quelle que soit la saison. Il se retire pour dormir, comme tout ce qui pourrait glisser sur le visage.',
+          'La gigoteuse ne se supprime pas non plus en été : elle se choisit simplement plus fine. Les modèles vendus comme « été » se situent généralement entre TOG 0,5 et TOG 1, et au-dessus de 24 degrés un TOG 0,5 suffit. Une gigoteuse fine reste la bonne réponse, parce que l’alternative n’est pas un drap : c’est rien du tout dans le lit, et une gigoteuse est ce qui remplace le drap.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Ce qui change pour un bébé d’été',
+        items: [
+          'Bodies : même total, mais environ 8 manches courtes pour 4 manches longues',
+          'Pyjamas : bas de la fourchette possible, le séchage est rapide',
+          'Gigoteuse : TOG 0,5 au-dessus de 24 degrés, TOG 1 entre 21 et 24',
+          'Nid d’ange ou combinaison : aucun',
+          'Gilets : 2 ou 3 suffisent, pour les soirées et la climatisation',
+          'Bonnets : 2, en coton léger',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Anticipez la saison suivante, pas la saison actuelle',
+        paragraphs: [
+          'Un bébé né en juillet aura six mois en janvier. Les tenues d’été en taille six mois ne serviront jamais, et c’est l’erreur la plus fréquente des cadeaux de naissance estivaux.',
+          'Si vous achetez ou demandez des tailles au-delà du 3 mois, raisonnez en mois calendaires plutôt qu’en tailles. Six mois après une naissance de juillet, c’est le plein hiver.',
+        ],
+      },
+    ],
+    sectionsEn: [
+      {
+        type: 'text',
+        paragraphs: [
+          'A baby arriving between June and August simplifies a lot: no snowsuit, no pramsuit, and fast drying that turns the layette over more quickly. The total quantities do not move.',
+          'Two mistakes come up consistently all the same, and they pull in opposite directions.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'First mistake: overdressing',
+        paragraphs: [
+          'A newborn in summer needs fewer layers than people imagine. Indoors a bodysuit alone is very often enough, and adding a sleepsuit over the top "just in case" is the most common reflex of the first days.',
+          'The useful check is the back of the neck, not the feet. Cool feet on a newborn are normal and mean nothing. A damp neck means they are too warm.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Second mistake: dropping the hat and the sleep sack',
+        paragraphs: [
+          'A hat is still useful in July, for the very first days and for the trip home. Two is enough whatever the season. It comes off for sleep, like anything else that could slide over the face.',
+          'The sleep sack does not disappear in summer either, it simply gets thinner. Sacks sold as "summer" generally sit between TOG 0.5 and TOG 1, and above 24 degrees a TOG 0.5 is enough. A thin sleep sack is still the right answer, because the alternative is not a sheet: it is nothing in the cot at all, and a sleep sack is what replaces the sheet.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'What changes for a summer baby',
+        items: [
+          'Bodysuits: same total, but about 8 short-sleeved to 4 long-sleeved',
+          'Sleepsuits: the low end of the range is fine, drying is fast',
+          'Sleep sack: TOG 0.5 above 24 degrees, TOG 1 between 21 and 24',
+          'Pramsuit or snowsuit: none',
+          'Cardigans: 2 or 3, for evenings and air conditioning',
+          'Hats: 2, in light cotton',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Plan for the next season, not this one',
+        paragraphs: [
+          'A baby born in July will be six months old in January. Summer outfits in six-month size will never be worn, and that is the most common mistake with summer newborn gifts.',
+          'If you are buying or asking for sizes beyond 3 month, think in calendar months rather than sizes. Six months after a July birth is the middle of winter.',
+        ],
+      },
+    ],
+  }),
+
+  postPair({
+    slug: 'naissance-mi-saison-printemps-automne',
+    categoryKey: 'achats',
+    categoryFr: 'Achats',
+    categoryEn: 'Shopping',
+    titleFr: 'Naissance au printemps ou à l’automne : la layette la plus simple à faire',
+    titleEn: 'A spring or autumn baby: the easiest layette to get right',
+    excerptFr:
+      'La mi-saison est la plus facile à équiper et la plus facile à mal anticiper, parce que le bébé change de saison en cours de route.',
+    excerptEn:
+      'Mid-season is the easiest to equip and the easiest to misjudge, because the baby changes season along the way.',
+    readingMinutes: 5,
+    heroAltFr: 'La layette pour une naissance de printemps ou d’automne',
+    heroAltEn: 'The layette for a spring or autumn birth',
+    disclaimer: false,
+    sectionsFr: [
+      {
+        type: 'text',
+        paragraphs: [
+          'Mars à mai, septembre à novembre : c’est la période la plus confortable pour constituer une layette. Les températures sont modérées, la garde-robe s’équilibre naturellement entre manches courtes et manches longues, et le séchage ne pose pas de problème.',
+          'C’est aussi la période où l’on anticipe le plus mal, pour une raison précise : le bébé ne restera pas dans la saison où il est né.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Le vrai sujet, c’est la trajectoire',
+        paragraphs: [
+          'Un bébé né en avril passera l’été en taille 3 mois puis l’automne en taille 6 mois. Un bébé né en octobre fera exactement l’inverse : il traversera l’hiver en 3 mois et arrivera au printemps en 6 mois.',
+          'Les deux cas demandent la même layette de départ et des achats suivants complètement opposés. C’est pour cette raison qu’il vaut mieux raisonner en mois calendaires qu’en tailles dès qu’on dépasse le 3 mois.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'La layette de mi-saison',
+        items: [
+          'Bodies : une douzaine, à peu près moitié manches courtes, moitié manches longues',
+          'Pyjamas : 11, en milieu de fourchette',
+          'Gigoteuse : TOG 2, qui couvre 18 à 20 degrés, soit la plage la plus courante',
+          'Gilets : 3, l’objet le plus utile de la mi-saison parce que les journées varient beaucoup',
+          'Nid d’ange : facultatif, utile surtout pour un automne tardif',
+          'Bonnets : 2',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Le TOG 2 est la gigoteuse par défaut',
+        paragraphs: [
+          'Une gigoteuse TOG 2 convient à une chambre entre 18 et 20 degrés, ce qui correspond à la majorité des logements bien isolés. De mars à juin et de septembre à novembre, c’est celle qui sert le plus.',
+          'Si vous n’en achetez qu’une pour commencer, c’est celle-là. La deuxième s’achètera quand la température de la chambre aura réellement changé, et vous saurez alors dans quel sens.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Achetez peu au-delà du 3 mois',
+        paragraphs: [
+          'C’est le conseil le plus utile pour une naissance de mi-saison. Les tailles 6 mois et au-delà rencontreront une saison que vous ne pouvez pas encore situer avec certitude, parce que la date de naissance elle-même peut bouger de deux semaines.',
+          'Les vêtements achetés d’avance pour une saison qui ne tombe pas au bon moment sont la première source de vêtements jamais portés. Attendre coûte moins cher que se tromper, et vous saurez dans quelques semaines.',
+        ],
+      },
+    ],
+    sectionsEn: [
+      {
+        type: 'text',
+        paragraphs: [
+          'March to May, September to November: this is the most comfortable window for putting a layette together. Temperatures are moderate, the wardrobe balances naturally between short and long sleeves, and drying is not a problem.',
+          'It is also the window people misjudge most, for one specific reason: the baby will not stay in the season they were born into.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'The real question is the trajectory',
+        paragraphs: [
+          'A baby born in April will spend the summer in 3 month and the autumn in 6 month. A baby born in October does exactly the opposite: through winter in 3 month, reaching spring in 6 month.',
+          'Both need the same starting layette and completely opposite purchases afterwards. That is why it pays to think in calendar months rather than sizes as soon as you go past 3 month.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'The mid-season layette',
+        items: [
+          'Bodysuits: a dozen, roughly half short-sleeved and half long-sleeved',
+          'Sleepsuits: 11, mid-range',
+          'Sleep sack: TOG 2, covering 18 to 20 degrees, the most common range',
+          'Cardigans: 3, the most useful mid-season item because days vary so much',
+          'Pramsuit: optional, mainly useful for a late autumn',
+          'Hats: 2',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'TOG 2 is the default sleep sack',
+        paragraphs: [
+          'A TOG 2 sleep sack suits a room between 18 and 20 degrees, which covers most well-insulated homes. From March to June and September to November, it is the one that gets used most.',
+          'If you only buy one to start with, buy that one. The second comes when the room temperature has actually changed, and by then you will know which way.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Buy little beyond 3 month',
+        paragraphs: [
+          'This is the most useful advice for a mid-season birth. Sizes from 6 month up will meet a season you cannot yet place with confidence, because the birth date itself can move by a fortnight.',
+          'Clothes bought ahead for a season that lands at the wrong moment are the first source of never-worn garments. Waiting costs less than guessing wrong, and you will know within a few weeks.',
+        ],
+      },
+    ],
+  }),
+
+  postPair({
+    slug: 'gigoteuse-tog-quelle-saison',
+    categoryKey: 'achats',
+    categoryFr: 'Achats',
+    categoryEn: 'Shopping',
+    titleFr: 'Gigoteuse : quel TOG choisir, et pourquoi le mois ne compte pas',
+    titleEn: 'Sleep sacks: which TOG to choose, and why the month does not matter',
+    excerptFr:
+      'Le TOG se choisit sur la température de la chambre, pas sur la saison. Le tableau, et ce qu’il ne faut jamais ajouter par-dessus.',
+    excerptEn:
+      'TOG is chosen for the room temperature, not the season. The table, and what must never be added on top.',
+    readingMinutes: 5,
+    heroAltFr: 'Choisir le TOG d’une gigoteuse selon la température',
+    heroAltEn: 'Choosing a sleep sack TOG by temperature',
+    disclaimer: false,
+    sectionsFr: [
+      {
+        type: 'text',
+        paragraphs: [
+          'La gigoteuse est l’objet le plus important de la layette, parce qu’elle remplace à elle seule le drap, la couverture et la couette, qui n’ont pas leur place dans le lit d’un bébé avant deux ans.',
+          'Et c’est aussi l’objet le plus souvent mal choisi, pour une raison simple : on l’achète en fonction du mois de naissance, alors que le seul repère utile est la température de la chambre.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Le tableau, en une ligne par plage',
+        items: [
+          'Au-dessus de 24 degrés : TOG 0,5',
+          'De 21 à 24 degrés : TOG 1',
+          'De 18 à 20 degrés : TOG 2, la plage la plus courante et la gigoteuse par défaut',
+          'En dessous de 18 degrés : TOG 3, avec un body et un pyjama plus épais',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Pourquoi la chambre plutôt que la saison',
+        paragraphs: [
+          'Un appartement bien isolé et chauffé à 21 degrés en février n’a rien à voir avec une maison ancienne à 17 degrés au même moment. Le mois est identique, la gigoteuse nécessaire ne l’est pas.',
+          'Un thermomètre de chambre coûte peu et règle la question une fois pour toutes. La plage de confort recommandée se situe autour de 18 à 20 degrés, ce qui place le TOG 2 en gigoteuse par défaut pour la majorité des logements.',
+          'Une gigoteuse trop épaisse dans une pièce chauffée fait plus de mal que de bien : le risque de surchauffe est réel, et il augmente précisément quand on cumule un TOG élevé et un chauffage poussé.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Comment vérifier que c’est le bon choix',
+        paragraphs: [
+          'Touchez la nuque du bébé, pas ses mains ni ses pieds. Une nuque moite signifie qu’il a trop chaud, une nuque fraîche qu’il faut ajouter une épaisseur, côté vêtement et non côté literie.',
+          'Les extrémités d’un nouveau-né sont naturellement plus fraîches que le reste de son corps. Des pieds froids ne sont pas un signe fiable, et c’est pourtant le premier réflexe de tout le monde.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Ce qu’on n’ajoute jamais par-dessus',
+        paragraphs: [
+          'Une couverture, une couette, un oreiller ou un tour de lit, quelle que soit la température. Selon [ameli.fr](https://www.ameli.fr/assure/sante/bons-gestes/bebe/coucher-bebe) et les repères de l’Association française de pédiatrie ambulatoire relayés par [sante.fr](https://www.sante.fr/comment-coucher-votre-bebe-pour-lui-assurer-confort-et-securite), rien de tout cela ne doit se trouver dans le lit avant deux ans.',
+          'S’il fait froid, la réponse est un TOG plus élevé ou un pyjama plus épais sous la gigoteuse, jamais une couverture ajoutée dessus. C’est exactement le problème que la gigoteuse existe pour résoudre.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'La taille compte autant que le TOG',
+        paragraphs: [
+          'L’encolure doit être assez étroite pour que le bébé ne puisse pas glisser à l’intérieur de la gigoteuse. C’est le seul point où une gigoteuse trop grande pose un vrai problème, et non un simple inconfort.',
+          'Prévoyez deux gigoteuses pour pouvoir en laver une, trois si vous voulez ne jamais courir après la lessive. Et comptez qu’il faudra en racheter au changement de saison suivant, à la fois pour le TOG et pour la taille.',
+        ],
+      },
+    ],
+    sectionsEn: [
+      {
+        type: 'text',
+        paragraphs: [
+          'The sleep sack is the most important item in the layette, because on its own it replaces the sheet, the blanket and the duvet, none of which belong in a baby’s cot before age two.',
+          'It is also the most commonly mis-chosen, for a simple reason: people buy it for the month of birth, when the only useful reference is the temperature of the room.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'The table, one line per range',
+        items: [
+          'Above 24 degrees: TOG 0.5',
+          '21 to 24 degrees: TOG 1',
+          '18 to 20 degrees: TOG 2, the most common range and the default sack',
+          'Below 18 degrees: TOG 3, with a bodysuit and a thicker sleepsuit',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Why the room rather than the season',
+        paragraphs: [
+          'A well-insulated flat heated to 21 degrees in February has nothing in common with an old house at 17 degrees on the same day. The month is identical, the sleep sack needed is not.',
+          'A room thermometer costs little and settles the question for good. The recommended comfort range sits around 18 to 20 degrees, which makes TOG 2 the default for most homes.',
+          'A sleep sack that is too thick in a heated room does more harm than good: the overheating risk is real, and it rises precisely when a high TOG and strong heating are combined.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'How to check you got it right',
+        paragraphs: [
+          'Feel the back of the baby’s neck, not their hands or feet. A damp neck means too warm, a cool neck means add a layer of clothing, not of bedding.',
+          'A newborn’s extremities are naturally cooler than the rest of them. Cold feet are not a reliable signal, and yet they are everybody’s first instinct.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'What never goes on top',
+        paragraphs: [
+          'A blanket, a duvet, a pillow or a cot bumper, whatever the temperature. According to [ameli.fr](https://www.ameli.fr/assure/sante/bons-gestes/bebe/coucher-bebe) and the guidance from the French association of ambulatory paediatrics republished by [sante.fr](https://www.sante.fr/comment-coucher-votre-bebe-pour-lui-assurer-confort-et-securite), none of it belongs in the cot before age two.',
+          'If it is cold, the answer is a higher TOG or a thicker sleepsuit under the sack, never a blanket added over it. That is exactly the problem the sleep sack exists to solve.',
+        ],
+      },
+      {
+        type: 'text',
+        title: 'Size matters as much as TOG',
+        paragraphs: [
+          'The neck opening must be narrow enough that the baby cannot slip down inside the sack. That is the one place where an oversized sleep sack is a genuine problem rather than a comfort issue.',
+          'Plan for two so you can wash one, three if you would rather never chase the laundry. And expect to buy again at the next change of season, both for the TOG and for the size.',
+        ],
+      },
+    ],
+  }),
 ];
 
 const { fr, en } = pairsToArrays(pairs);

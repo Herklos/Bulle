@@ -923,6 +923,50 @@ const LAYETTE: ProjectTemplate = {
       essential: false,
       target: 2,
     },
+    /*
+      The 3-month band. Three tasks, late window, and NEVER essential.
+
+      A pregnancy app has no business sending anyone shopping for clothes the baby will
+      wear in October. The reason these exist at all is the opposite one: the sizes people
+      are given are 1 mois and 3 mois, gifts arrive across the whole third trimester, and
+      "how many 3-month bodies do we already have" is a real question with no place to live.
+      The details say plainly not to buy them. This counts what arrives.
+
+      The window opens at 36 rather than earlier for the same reason — early enough that a
+      baby shower is already behind you, late enough that it never reads as a to-buy list.
+    */
+    {
+      titleKey: 'templates.layette.tasks.bodies3mois',
+      notesKey: 'templates.layette.tasks.bodies3moisNote',
+      detailsKey: 'templates.layette.tasks.bodies3moisDetails',
+      weekStart: 36,
+      weekEnd: 41,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 9,
+    },
+    {
+      titleKey: 'templates.layette.tasks.pyjamas3mois',
+      detailsKey: 'templates.layette.tasks.pyjamas3moisDetails',
+      weekStart: 36,
+      weekEnd: 41,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 7,
+    },
+    {
+      titleKey: 'templates.layette.tasks.gigoteuseSaison',
+      notesKey: 'templates.layette.tasks.gigoteuseSaisonNote',
+      detailsKey: 'templates.layette.tasks.gigoteuseSaisonDetails',
+      weekStart: 36,
+      weekEnd: 41,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 2,
+    },
     {
       // The one boolean in the project, on purpose: this is a rule to know, not a stock to
       // build, and giving it a target would invite someone to "buy 2" of it.

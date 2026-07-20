@@ -77,6 +77,20 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'valise-maternite-combien-de-chaque',
   'layette-hiver-ete-ce-qui-change',
 
+  // ── Tier 3 — saisons et tailles ──
+  // The spokes to the two hubs above. `layette-hiver-ete-ce-qui-change` says WHAT the season
+  // changes; these three say what to actually own for one specific season, which is a
+  // different query typed by someone who already knows their due date. Same relationship
+  // between `combien-de-vetements-3-mois-6-mois` and the per-item reference piece.
+  //
+  // Ordered so the season articles land ahead of the season they describe where the calendar
+  // allows: an autumn birth is being prepared for in September.
+  'gigoteuse-tog-quelle-saison',
+  'combien-de-vetements-3-mois-6-mois',
+  'naissance-mi-saison-printemps-automne',
+  'naissance-en-hiver-la-layette',
+  'naissance-en-ete-la-layette',
+
   // ── Tier 1 continued — the administrative long tail ──
   // Highest intent, so they sit as early as the calendar allows: these are what someone
   // types at 11pm, and they are the queries the FR market serves worst.

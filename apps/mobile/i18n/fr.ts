@@ -1017,6 +1017,25 @@ export const fr = {
           'Choisissez un modèle qui se tend bien sur le matelas plutôt qu’une alèse posée librement : rien ne doit pouvoir se soulever ou se froisser sous le bébé.',
           'Si le matelas a déjà une housse déhoussable et lavable, une seule alèse suffit, voire aucune.',
         ],
+        bodies3mois: 'Bodies taille 3 mois',
+        bodies3moisNote: 'À compter, pas à acheter. C’est la taille que l’on reçoit le plus en cadeau.',
+        bodies3moisDetails: [
+          'La taille 3 mois est celle que le bébé porte le plus longtemps avant six mois, six à huit semaines pour beaucoup d’enfants, et c’est aussi celle qu’on vous offrira le plus.',
+          'Neuf bodies est un repère confortable pour cette taille. Comptez ici ce qui arrive : cadeaux, seconde main, vêtements prêtés. Il n’y a rien à acheter maintenant.',
+          'Si vous approchez de la naissance et que cette ligne est encore à zéro, ce n’est pas un problème : vous aurez tout le temps de compléter une fois que vous saurez à quel rythme votre bébé grandit.',
+        ],
+        pyjamas3mois: 'Pyjamas taille 3 mois',
+        pyjamas3moisDetails: [
+          'Sept pyjamas couvrent confortablement la taille 3 mois, sur la même hypothèse de lessive tous les trois ou quatre jours que le reste de ce projet.',
+          'Comme pour les bodies, cette ligne sert à compter ce que vous recevez, pas à déclencher un achat. Le besoin réel n’arrivera que dans plusieurs semaines.',
+        ],
+        gigoteuseSaison: 'Gigoteuses pour la saison suivante',
+        gigoteuseSaisonNote: 'Le TOG se choisit sur la température de la chambre, pas sur le mois.',
+        gigoteuseSaisonDetails: [
+          'Le bébé changera de saison avant de changer de lit. Une gigoteuse achetée pour janvier ne conviendra plus en avril, et deux tailles au-dessus finiront par se croiser avec un changement de température.',
+          'Le repère est la température de la chambre, idéalement entre 18 et 20 degrés : TOG 2 dans cette plage, TOG 1 au-dessus de 21 degrés, TOG 3 en dessous de 18. En cas de doute, touchez la nuque du bébé plutôt que ses pieds.',
+          'Deux suffisent pour couvrir la transition. Là encore, rien ne presse : c’est une ligne à compléter le moment venu.',
+        ],
         couchage: 'Préparer le lit pour un sommeil sûr',
         couchageNote: 'Un matelas ferme, une gigoteuse, et rien d’autre dans le lit.',
         couchageDetails: [

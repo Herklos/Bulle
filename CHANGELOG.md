@@ -42,3 +42,15 @@ Notable changes to Bulle. Newest first.
     appended. Inserting normally costs ranking history; it cost nothing here because the
     calendar is on day 0 and only the first article had published. That window closes as
     the calendar advances.
+
+- **Five more articles on seasons and sizes**, taking the run to twelve (26 Aug to 5 Oct
+  2026): the TOG guide, quantities per size from birth to one year, and one article each
+  for a winter, summer and mid-season birth. Hub and spoke: the existing season article
+  says what changes, these say what to actually own.
+
+- **A 3-month band on the layette template**: bodies 9, pyjamas 7, gigoteuses 2. Optional,
+  window 36 to 41, and the copy says plainly not to buy them. They exist because gifts
+  arrive in 1 and 3 month sizes across the whole third trimester and "how many do we
+  already have" had nowhere to live. Nothing beyond 3 months was added: a pregnancy app
+  sending someone shopping for clothes the baby wears in October is the overbuying this
+  corpus argues against, and that belongs in the articles instead.

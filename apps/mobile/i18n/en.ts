@@ -636,6 +636,25 @@ export const en = {
           'Choose one that stretches taut over the mattress rather than a loose pad: nothing should be able to lift or ruck up under the baby.',
           'If the mattress already has a removable washable cover, one protector is enough, or none at all.',
         ],
+        bodies3mois: 'Bodysuits, 3 month size',
+        bodies3moisNote: 'To count, not to buy. It is the size you receive most as gifts.',
+        bodies3moisDetails: [
+          'The 3 month size is the one a baby wears longest before six months, six to eight weeks for many, and it is also the one you will be given most of.',
+          'Nine bodysuits is a comfortable figure for this size. Count what arrives here: gifts, second-hand, borrowed clothes. There is nothing to buy now.',
+          'If you are close to the birth and this line is still at zero, that is not a problem. You will have plenty of time to fill it once you know how fast your baby is growing.',
+        ],
+        pyjamas3mois: 'Sleepsuits, 3 month size',
+        pyjamas3moisDetails: [
+          'Seven sleepsuits covers the 3 month size comfortably, on the same wash-every-three-or-four-days assumption as the rest of this project.',
+          'As with the bodysuits, this line is for counting what you receive, not for triggering a purchase. The real need is still several weeks away.',
+        ],
+        gigoteuseSaison: 'Sleep sacks for the next season',
+        gigoteuseSaisonNote: 'TOG is chosen for the room temperature, not for the month.',
+        gigoteuseSaisonDetails: [
+          'Your baby will change season before they change cot. A sleep sack bought for January will not suit April, and two sizes up will eventually cross a change in temperature.',
+          'The guide is room temperature, ideally between 18 and 20 degrees: TOG 2 in that range, TOG 1 above 21 degrees, TOG 3 below 18. When in doubt, feel the back of the baby’s neck rather than their feet.',
+          'Two covers the transition. Again, there is no rush: this is a line to fill when the time comes.',
+        ],
         couchage: 'Set the cot up for safe sleep',
         couchageNote: 'A firm mattress, a sleep sack, and nothing else in the cot.',
         couchageDetails: [
