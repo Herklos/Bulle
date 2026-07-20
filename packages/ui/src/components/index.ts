@@ -4,6 +4,8 @@ export { Button } from './Button.js';
 export type { ButtonProps, ButtonTone } from './Button.js';
 export { Checkbox } from './Checkbox.js';
 export type { CheckboxProps } from './Checkbox.js';
+export { Stepper } from './Stepper.js';
+export type { StepperProps } from './Stepper.js';
 export { ProgressRing } from './ProgressRing.js';
 export type { ProgressRingProps } from './ProgressRing.js';
 export { FocusCard } from './FocusCard.js';

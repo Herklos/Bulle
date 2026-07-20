@@ -15,8 +15,16 @@ import React from 'react';
 import { Linking, View } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { currentWeekSA, daysLeftAfterBirth, isLingering, isResolved } from '@bulle/sdk';
-import { Button, Text } from '@bulle/ui/components';
+import {
+  currentWeekSA,
+  daysLeftAfterBirth,
+  isCounted,
+  isLingering,
+  isResolved,
+  stepTaskCount,
+  taskCount,
+} from '@bulle/sdk';
+import { Button, Stepper, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
@@ -65,6 +73,19 @@ export default function TaskScreen() {
     goBack('/plan');
   };
 
+  /**
+   * Counting stays on this screen rather than closing it. Stocking a layette is a several-
+   * taps-in-a-row action, and popping back to the list after each one would make the screen
+   * fight the user.
+   */
+  const step = (delta: number) => {
+    const next = stepTaskCount(task, delta);
+    usePlanStore.getState().updateTask(task.id, next);
+    if (next.status === 'done' && task.status !== 'done' && task.essential) {
+      useReadinessStore.getState().pulse();
+    }
+  };
+
   return (
     <Screen>
       <Stack.Screen options={{ title: '' }} />
@@ -106,7 +127,24 @@ export default function TaskScreen() {
         />
       )}
 
-      {canEdit && (
+      {/* A counted task has no "Terminé" button: reaching the target IS the completion, and
+          a button that could tick it while the count still read 2/6 would let the screen
+          contradict itself. */}
+      {canEdit && isCounted(task) && (
+        <View style={{ gap: space[2] }}>
+          {/* `total`, not `count`: i18next treats a `count` variable as a plural selector
+              and would silently miss the key without _one/_other siblings. */}
+          <Text variant="caption">{t('task.targetHint', { total: task.target! })}</Text>
+          <Stepper
+            count={taskCount(task)}
+            target={task.target!}
+            onStep={step}
+            accessibilityLabel={task.title}
+          />
+        </View>
+      )}
+
+      {canEdit && !isCounted(task) && (
         <Button
           label={done ? t('task.markTodo') : t('today.done')}
           onPress={complete}

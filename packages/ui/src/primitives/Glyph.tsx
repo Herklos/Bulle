@@ -22,6 +22,7 @@ export const GLYPHS = {
   plan: 'M5 6h14M5 12h14M5 18h9M3.5 6h0M3.5 12h0M3.5 18h0',
   souvenirs: 'M12 4l1.8 4.6L18 10l-4.2 1.4L12 16l-1.8-4.6L6 10l4.2-1.4Z',
   plus: 'M5 12h14M12 5v14',
+  minus: 'M5 12h14',
   close: 'M6 6l12 12M18 6L6 18',
   more: 'M6 12h0M12 12h0M18 12h0',
 

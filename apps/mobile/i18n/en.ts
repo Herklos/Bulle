@@ -115,6 +115,9 @@ export const en = {
     taskLabel: 'What is it?',
     taskPlaceholder: 'Buy a breast pump',
     taskHint: 'Your own tasks stay optional. They never count against you.',
+    targetLabel: 'How many?',
+    targetPlaceholder: '6',
+    targetHint: 'Leave empty for a plain checkbox. With a number, the task counts up and finishes when you get there.',
     effortQuestion: 'How much of a job?',
     whenQuestion: 'When?',
     when: {
@@ -154,6 +157,7 @@ export const en = {
     openSource: 'Read the official page',
     markTodo: 'Not done after all',
     afterBirthPending: 'Once the baby is here',
+    targetHint: 'A rough guide: {{total}}. Adjust it to suit you, none of it is compulsory.',
   },
 
   memories: {
@@ -537,6 +541,111 @@ export const en = {
   },
 
   templates: {
+    layette: {
+      title: 'The layette',
+      description: 'How many of each. Guides, not rules.',
+      tasks: {
+        bodies: 'Bodysuits, newborn and 1 month',
+        bodiesNote: 'Roughly 5 in newborn and 7 in 1 month. Babies leave newborn size fast.',
+        bodiesDetails: [
+          'A dozen in total, split between short and long sleeves depending on the season. That number assumes a wash every three or four days: if you run a load daily, six is plenty.',
+          'Buy few in newborn size and more in 1 month. A full-term baby often outgrows newborn in two or three weeks, and unworn newborn clothes are the most common regret on any baby list.',
+          'Envelope necks and front-crossing styles go on without passing over the head, which makes a real difference in the first days.',
+        ],
+        pyjamas: 'Sleepsuits',
+        pyjamasNote: 'The main garment of the first weeks, day and night.',
+        pyjamasDetails: [
+          'About ten, again split between newborn and 1 month. Posseting and nappy leaks mean changes two or three times a day for many babies.',
+          'In winter, aim for the top of the range: drying takes longer, and a damp sleepsuit is no use to anyone.',
+          'Full-length zips or poppers can be changed one-handed at night without fully waking the baby. Buttons down the back are worth avoiding.',
+        ],
+        gigoteuses: 'Sleep sacks',
+        gigoteusesNote: 'They replace sheets, blankets and duvets, none of which belong in the cot.',
+        gigoteusesDetails: [
+          'Two at minimum, three if you would rather never chase the laundry: one on the baby, one in the wash, one clean in the cupboard.',
+          'Pick the TOG for the room temperature, ideally between 18 and 20 °C. A high TOG in a heated room does more harm than good.',
+          'Size matters as much as warmth: the neck opening must be narrow enough that the baby cannot slip down inside.',
+        ],
+        gilets: 'Cardigans',
+        giletsDetails: [
+          'Three is enough for a spring or summer birth, a little more for a baby arriving in midwinter.',
+          'They mostly serve as a middle layer for going out and for cooler rooms. Indoors, a bodysuit and a sleepsuit are usually plenty.',
+          'Styles that button at the front are far easier to manage than anything that goes over the head.',
+        ],
+        chaussettes: 'Socks and booties',
+        chaussettesDetails: [
+          'About five pairs. They disappear with remarkable consistency, usually into the pram or the car seat.',
+          'A baby’s feet are naturally cooler than the rest of them, which on its own is not a sign of being cold. The back of the neck tells you far more.',
+          'Many sleepsuits already cover the feet, which cuts the need considerably.',
+        ],
+        bonnets: 'Hats',
+        bonnetsDetails: [
+          'Two is enough whatever the season. A newborn loses a lot of heat through the head in the very first days, including in summer on the way home.',
+          'At home the hat is not needed once those first days have passed: it is for outdoors, not for a heated room.',
+          'It comes off for sleep, like anything else that could slide over the face.',
+        ],
+        bavoirs: 'Bibs',
+        bavoirsDetails: [
+          'Eight is a comfortable number. They save a full change of clothes at every posset, which for many babies happens several times a day.',
+          'Small, soft towelling bibs suit the early weeks far better than the stiff wide ones meant for starting solids.',
+          'If your baby brings up a lot of milk, go to ten without hesitating. This is the item you run out of first.',
+        ],
+        couches: 'Size 1 nappies',
+        couchesNote: 'Two or three packs before the birth. No more: the size changes quickly.',
+        couchesDetails: [
+          'A newborn goes through eight to twelve nappies a day, around 280 across the first month. The pace eases noticeably after a few weeks.',
+          'Resist stockpiling a single size. Many babies move up to size 2 before finishing the size 1 packs, and a nappy that is too small leaks.',
+          'If you are undecided on a brand, buy one pack of several rather than a case of one: sizes and cuts vary a lot between makers.',
+        ],
+        langes: 'Muslin squares',
+        langesNote: 'The most useful thing in the whole layette.',
+        langesDetails: [
+          'Six at minimum. They work as a shoulder cloth for winding, a spare sheet, shade over the pram, an improvised changing mat.',
+          'Mix the sizes: small ones, around 60 by 60 centimetres, for everyday use, plus a few large ones for swaddling or the pram.',
+          'Plain cotton gets softer and more absorbent after a few washes. This is not a category where paying more changes anything.',
+        ],
+        toilette: 'Washcloths',
+        toiletteDetails: [
+          'Four or five kept for the baby, separate from the household ones. They serve for the bath and for a quick wash between baths.',
+          'A full bath every two or three days is plenty at the start. The rest of the time, a cloth and warm water do the job.',
+          'Have enough that you never reuse a damp one. That is the only real reason to own several.',
+        ],
+        capes: 'Hooded towels',
+        capesDetails: [
+          'Two is enough, around 75 by 75 centimetres. While one dries, the other is ready.',
+          'The hood matters more than the fabric: it covers the head straight out of the water, which is when a baby cools fastest.',
+          'A large ordinary bath towel does the job perfectly if you already have one. This is not a required purchase.',
+        ],
+        biberons: 'Bottles and teats',
+        biberonsNote: 'Six if the baby is bottle-fed, one or two alongside breastfeeding.',
+        biberonsDetails: [
+          'For bottle feeding, count on about six: three small ones of 125 to 180 millilitres for the early weeks, three larger ones of 240 to 260 millilitres after that.',
+          'If you plan to breastfeed, one or two bottles cover the occasional handover. There is no need to equip a whole kitchen before you know how things settle.',
+          'Add slow-flow teats, one per bottle plus two or three spares, and a bottle brush. A breast pump is usually rented rather than bought, so it is not a purchase to plan for here.',
+        ],
+        drapsHousse: 'Fitted sheets',
+        drapsHousseNote: 'Cut to the exact mattress size, with no slack and no rucking.',
+        drapsHousseDetails: [
+          'Four for a 60 by 120 centimetre cot. Possets and night-time leaks mean changing them far more often than an adult sheet.',
+          'The sheet must fit the mattress exactly. One that comes loose in the night is a risk, not a comfort detail.',
+          'If you use a crib or Moses basket for the first months, add three sheets in its size on top of the cot ones.',
+        ],
+        aleses: 'Mattress protectors',
+        alesesDetails: [
+          'Two lets you remake the bed in the middle of the night without waiting on a wash.',
+          'Choose one that stretches taut over the mattress rather than a loose pad: nothing should be able to lift or ruck up under the baby.',
+          'If the mattress already has a removable washable cover, one protector is enough, or none at all.',
+        ],
+        couchage: 'Set the cot up for safe sleep',
+        couchageNote: 'A firm mattress, a sleep sack, and nothing else in the cot.',
+        couchageDetails: [
+          'The baby sleeps on their back, on a firm flat mattress cut to the exact size of the cot. No gap should remain between the mattress and the bars.',
+          'No blanket, duvet, pillow, cot bumper or soft toy until age two. The sleep sack replaces all of it, which is precisely what it is for.',
+          'Plenty of shop baby lists still offer cot bumpers and full bedding sets. This is not a matter of taste, and it is the one line in this project that is not up for negotiation.',
+        ],
+      },
+    },
+
     achats: {
       title: 'The essentials',
       description: 'What actually gets used. The rest can wait.',

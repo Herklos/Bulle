@@ -10,8 +10,17 @@ import React, { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { currentWeekSA, groupByWindow, isLingering, isResolved } from '@bulle/sdk';
-import { Checkbox, EmptyState, SectionHeader, Text } from '@bulle/ui/components';
+import {
+  currentWeekSA,
+  groupByWindow,
+  isCounted,
+  isLingering,
+  isResolved,
+  stepTaskCount,
+  taskCount,
+  type Task,
+} from '@bulle/sdk';
+import { Checkbox, EmptyState, SectionHeader, Stepper, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { usePlanStore } from '@/store/usePlanStore';
@@ -46,6 +55,20 @@ export default function ProjectScreen() {
     if (!done && essential) useReadinessStore.getState().pulse();
   };
 
+  /**
+   * Nudging a count writes `status` alongside it, which is what makes a counted task resolve
+   * through the ordinary path — including the `completedBy` stamp the store adds when a task
+   * leaves `todo`. Writing only `count` would complete the task for readiness but leave
+   * Ensemble unable to see who did it.
+   */
+  const step = (task: Task, delta: number) => {
+    const next = stepTaskCount(task, delta);
+    updateTask(task.id, next);
+    if (next.status === 'done' && task.status !== 'done' && task.essential) {
+      useReadinessStore.getState().pulse();
+    }
+  };
+
   return (
     <Screen>
       <View style={{ gap: space[2] }}>
@@ -77,6 +100,7 @@ export default function ProjectScreen() {
           {group.tasks.map((task, index) => {
             const done = isResolved(task);
             const lingering = isLingering(task, weekSA);
+            const counted = isCounted(task);
             return (
               <View
                 key={task.id}
@@ -89,16 +113,22 @@ export default function ProjectScreen() {
                   borderBottomColor: colors.line,
                 }}
               >
-                <Checkbox
-                  checked={done}
-                  disabled={!canEdit}
-                  onChange={() => toggle(task.id, task.essential, done)}
-                  accessibilityLabel={task.title}
-                />
+                {/* A counted task carries its stepper on the trailing edge instead: a
+                    control three times the width of a checkbox cannot lead the row without
+                    crushing the title it is meant to describe. The leading pad keeps both
+                    kinds of row starting their text on the same vertical line. */}
+                {!counted && (
+                  <Checkbox
+                    checked={done}
+                    disabled={!canEdit}
+                    onChange={() => toggle(task.id, task.essential, done)}
+                    accessibilityLabel={task.title}
+                  />
+                )}
                 {/* The title opens the task. The checkbox stays a checkbox: ticking is the
                     common action and must not cost a round trip through a detail screen. */}
                 <Pressable
-                  style={{ flex: 1, gap: 2 }}
+                  style={{ flex: 1, gap: 2, paddingLeft: counted ? 24 + space[4] : 0 }}
                   onPress={() => router.push(`/task/${task.id}` as never)}
                   accessibilityRole="button"
                 >
@@ -116,6 +146,15 @@ export default function ProjectScreen() {
                   </Text>
                   {task.notes && <Text variant="caption">{task.notes}</Text>}
                 </Pressable>
+                {counted && (
+                  <Stepper
+                    count={taskCount(task)}
+                    target={task.target!}
+                    disabled={!canEdit}
+                    onStep={(delta) => step(task, delta)}
+                    accessibilityLabel={task.title}
+                  />
+                )}
                 {canEdit && (
                   <TaskMenu
                     dismissLabel={t('plan.dismiss')}

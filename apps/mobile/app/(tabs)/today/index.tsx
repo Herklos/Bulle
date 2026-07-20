@@ -11,6 +11,7 @@ import { Pressable, View } from 'react-native';
 import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
+  completeTaskUpdates,
   currentWeekSA,
   daysLeftAfterBirth,
   daysSinceBirth,
@@ -165,8 +166,11 @@ export default function TodayScreen() {
         ? t('readiness.label', { phrase, remaining })
         : t('readiness.labelDone', { phrase });
 
-  const complete = (taskId: string, essential: boolean) => {
-    updateTask(taskId, { status: 'done' });
+  const complete = (task: Task) => {
+    const { essential } = task;
+    // A counted task ticked from here is filled to its target — see completeTaskUpdates.
+    // Today offers one gesture per task and it must not leave count and status disagreeing.
+    updateTask(task.id, completeTaskUpdates(task));
     // The orb acknowledges an essential with a single pulse (§15.6). Optional tasks don't
     // move the readiness, so they don't get the pulse — the feedback stays truthful.
     if (essential) useReadinessStore.getState().pulse();
@@ -288,7 +292,7 @@ export default function TodayScreen() {
           effortLabel={t(`plan.effort.${focus.effort}`)}
           doneLabel={t('today.done')}
           laterLabel={t('today.later')}
-          onDone={() => complete(focus.id, focus.essential)}
+          onDone={() => complete(focus)}
           onLater={() => useReadinessStore.getState().defer(focus.id)}
           onOpen={() => router.push(`/task/${focus.id}` as never)}
         />
@@ -368,7 +372,7 @@ export default function TodayScreen() {
             >
               <Checkbox
                 checked={false}
-                onChange={() => complete(task.id, task.essential)}
+                onChange={() => complete(task)}
                 accessibilityLabel={task.title}
               />
               <Pressable

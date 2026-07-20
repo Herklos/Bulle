@@ -74,6 +74,8 @@ export const taskSchema = z.object({
   checklist: z
     .array(z.object({ id: z.string(), label: z.string(), done: z.boolean() }))
     .optional(),
+  target: z.number().optional(),
+  count: z.number().optional(),
   createdAt: iso,
   updatedAt: iso,
 });

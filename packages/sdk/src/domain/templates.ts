@@ -744,6 +744,204 @@ const ACHATS: ProjectTemplate = {
 };
 
 /**
+ * La layette — the counted template (see `Task.target`).
+ *
+ * Everything here is a QUANTITY, which is why it is its own project rather than more tasks
+ * in Achats: "acheter des bodies" is not a thing you can finish, and a checkbox next to it
+ * is a lie in both directions. Six is.
+ *
+ * Every number is a middle taken from consumer editorial (allobébé, Laurence Pernoud, La
+ * Boîte Rose, Trois Kilos Sept, C&A) cross-checked against the NHS newborn list, and every
+ * number is EDITABLE the moment it lands on a task. That matters more than the number: the
+ * counts assume a wash every three or four days, and a household that runs one daily needs
+ * roughly half of them. The app states a starting point, it does not audit a cupboard.
+ *
+ * Universal, no `countries`: a body is a body. The one task that cites an institution
+ * (safe sleep) carries `hrefByCountry` instead of a bare `href`, so outside France it simply
+ * has no link rather than the wrong one.
+ *
+ * Deliberately NOT here, and each absence is a decision:
+ *  - Couverture, couette, oreiller, tour de lit. Not a taste question and not a count: AFPA
+ *    (via sante.fr) and ameli both say nothing but a gigoteuse in the bed before 2 years,
+ *    while retail layette lists still print "2 tours de lit". Shipping the retail number
+ *    would put a baby product on the wrong side of official guidance to save a line of copy.
+ *  - Tire-lait. Rented from a pharmacy on prescription and reimbursed; "buy one" is close to
+ *    an error, so it stays a note under the bottles rather than a target of its own.
+ *  - Any count that depends on how the baby is fed is stated as a range in the details and
+ *    defaults to the bottle-fed figure, because that is the one you cannot improvise at 3am.
+ */
+const LAYETTE: ProjectTemplate = {
+  id: 'tpl-layette',
+  titleKey: 'templates.layette.title',
+  descriptionKey: 'templates.layette.description',
+  glyph: 'nest',
+  tasks: [
+    {
+      titleKey: 'templates.layette.tasks.bodies',
+      notesKey: 'templates.layette.tasks.bodiesNote',
+      detailsKey: 'templates.layette.tasks.bodiesDetails',
+      weekStart: 28,
+      weekEnd: 36,
+      effort: 'M',
+      domain: 'achats',
+      essential: true,
+      target: 12,
+    },
+    {
+      titleKey: 'templates.layette.tasks.pyjamas',
+      notesKey: 'templates.layette.tasks.pyjamasNote',
+      detailsKey: 'templates.layette.tasks.pyjamasDetails',
+      weekStart: 28,
+      weekEnd: 36,
+      effort: 'M',
+      domain: 'achats',
+      essential: true,
+      target: 11,
+    },
+    {
+      titleKey: 'templates.layette.tasks.gigoteuses',
+      notesKey: 'templates.layette.tasks.gigoteusesNote',
+      detailsKey: 'templates.layette.tasks.gigoteusesDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: true,
+      target: 3,
+    },
+    {
+      titleKey: 'templates.layette.tasks.gilets',
+      detailsKey: 'templates.layette.tasks.giletsDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 3,
+    },
+    {
+      titleKey: 'templates.layette.tasks.chaussettes',
+      detailsKey: 'templates.layette.tasks.chaussettesDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 5,
+    },
+    {
+      titleKey: 'templates.layette.tasks.bonnets',
+      detailsKey: 'templates.layette.tasks.bonnetsDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 2,
+    },
+    {
+      titleKey: 'templates.layette.tasks.bavoirs',
+      detailsKey: 'templates.layette.tasks.bavoirsDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 8,
+    },
+    {
+      titleKey: 'templates.layette.tasks.couches',
+      notesKey: 'templates.layette.tasks.couchesNote',
+      detailsKey: 'templates.layette.tasks.couchesDetails',
+      weekStart: 32,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: true,
+      target: 60,
+    },
+    {
+      titleKey: 'templates.layette.tasks.langes',
+      notesKey: 'templates.layette.tasks.langesNote',
+      detailsKey: 'templates.layette.tasks.langesDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 6,
+    },
+    {
+      titleKey: 'templates.layette.tasks.toilette',
+      detailsKey: 'templates.layette.tasks.toiletteDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 5,
+    },
+    {
+      titleKey: 'templates.layette.tasks.capes',
+      detailsKey: 'templates.layette.tasks.capesDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'achats',
+      essential: false,
+      target: 2,
+    },
+    {
+      titleKey: 'templates.layette.tasks.biberons',
+      notesKey: 'templates.layette.tasks.biberonsNote',
+      detailsKey: 'templates.layette.tasks.biberonsDetails',
+      weekStart: 30,
+      weekEnd: 38,
+      effort: 'M',
+      domain: 'achats',
+      essential: false,
+      target: 6,
+    },
+    {
+      titleKey: 'templates.layette.tasks.drapsHousse',
+      notesKey: 'templates.layette.tasks.drapsHousseNote',
+      detailsKey: 'templates.layette.tasks.drapsHousseDetails',
+      weekStart: 28,
+      weekEnd: 36,
+      effort: 'S',
+      domain: 'maison',
+      essential: true,
+      target: 4,
+    },
+    {
+      titleKey: 'templates.layette.tasks.aleses',
+      detailsKey: 'templates.layette.tasks.alesesDetails',
+      weekStart: 28,
+      weekEnd: 36,
+      effort: 'S',
+      domain: 'maison',
+      essential: false,
+      target: 2,
+    },
+    {
+      // The one boolean in the project, on purpose: this is a rule to know, not a stock to
+      // build, and giving it a target would invite someone to "buy 2" of it.
+      titleKey: 'templates.layette.tasks.couchage',
+      notesKey: 'templates.layette.tasks.couchageNote',
+      detailsKey: 'templates.layette.tasks.couchageDetails',
+      weekStart: 26,
+      weekEnd: 36,
+      effort: 'S',
+      domain: 'maison',
+      essential: true,
+      hrefByCountry: {
+        FR: 'https://www.ameli.fr/assure/sante/bons-gestes/bebe/coucher-bebe',
+      },
+    },
+  ],
+};
+
+/**
  * Sécurité.
  *
  * Only two items here are actually the law (smoke detector, boiler service). The CO
@@ -1277,6 +1475,7 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
   VALISE,
   NID,
   ACHATS,
+  LAYETTE,
   SECURITE,
   BUDGET,
   POSTNATAL,

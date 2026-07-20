@@ -174,6 +174,23 @@ export interface Task {
   href?: string;
   /** Max depth 1 by design — a checklist inside a task, never a task tree. */
   checklist?: { id: string; label: string; done: boolean }[];
+  /**
+   * How many of the thing are needed. Present ⇒ this is a COUNTED task: "6 bodies", not
+   * "acheter des bodies". Absent ⇒ an ordinary boolean task.
+   *
+   * Half the layette is a stock question, and a checkbox answers it badly: someone who owns
+   * two pyjamas out of six has done real work, and ticking the box would claim they were
+   * finished while leaving it unticked claims they had not started. A count says the true
+   * thing, and it is the shape the second-hand / gifted / hand-me-down reality of a layette
+   * actually takes.
+   *
+   * `status` stays the single source of truth for done-ness — see `stepTaskCount`. Nothing in
+   * readiness, suggestion or Ensemble reads `count`, so a counted task resolves through
+   * exactly the same path as every other one.
+   */
+  target?: number;
+  /** How many are already owned. Only meaningful with `target`. Clamped to 0..target. */
+  count?: number;
   createdAt: Iso;
   updatedAt: Iso;
 }
@@ -261,6 +278,14 @@ export interface TaskTemplate {
    * end up linking a parent in Brussels to ameli.fr.
    */
   hrefByCountry?: Record<string, string>;
+  /**
+   * See `Task.target`. Present ⇒ the instantiated task is counted, starting at 0.
+   *
+   * The number is a RECOMMENDATION, not a rule, which is why it lands on an editable task
+   * rather than staying template-side: a family with a washing machine running daily needs
+   * fewer bodies than one without, and the app must not argue with them about it.
+   */
+  target?: number;
 }
 
 export interface ProjectTemplate {

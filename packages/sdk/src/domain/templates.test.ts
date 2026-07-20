@@ -13,6 +13,7 @@ import {
   templatesFor,
   templatesForLocale,
 } from './templates.js';
+import { instantiateTemplate } from './projects.js';
 import type { BulleProfile } from './types.js';
 
 const couple: BulleProfile = {
@@ -331,5 +332,55 @@ describe('details coverage', () => {
         expect(candidates, task.titleKey).toContain(task.detailsKey);
       }
     }
+  });
+});
+
+describe('counted tasks in the corpus', () => {
+  it('gives every declared target a positive whole number', () => {
+    // A target of 0 or a fraction produces a task that is either born complete or can never
+    // be completed, and both fail silently — the row just renders a stepper that does nothing.
+    for (const template of PROJECT_TEMPLATES) {
+      for (const task of template.tasks) {
+        if (task.target === undefined) continue;
+        expect(Number.isInteger(task.target), task.titleKey).toBe(true);
+        expect(task.target, task.titleKey).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('keeps the layette universal and its one institutional link country-scoped', () => {
+    const layette = templateById('tpl-layette')!;
+    // A body is a body. Nothing here describes a national system...
+    expect(layette.countries).toBeUndefined();
+    expect(layette.locales).toBeUndefined();
+    // ...except the safe-sleep source, which must never be handed to a reader outside FR.
+    for (const task of layette.tasks) {
+      expect(task.href, task.titleKey).toBeUndefined();
+    }
+  });
+
+  it('instantiates a counted template task with a zero count, not an absent one', () => {
+    const layette = templateById('tpl-layette')!;
+    expect(layette.tasks.filter((t) => t.target !== undefined).length).toBeGreaterThan(0);
+
+    const { tasks } = instantiateTemplate(
+      layette,
+      {
+        dueDate: '2026-09-01T00:00:00.000Z',
+        firstBaby: true,
+        companionship: 'couple',
+      },
+      { now: 0, t: (k) => k, makeId: () => 'id', country: 'FR' },
+    );
+
+    const bodies = tasks.find((task) => task.title === 'templates.layette.tasks.bodies')!;
+    expect(bodies.target).toBe(12);
+    // Zero rather than absent, so the stepper renders a number on the first paint.
+    expect(bodies.count).toBe(0);
+
+    // An uncounted task must not pick up a phantom zero, which would make isCounted lie.
+    const couchage = tasks.find((task) => task.title === 'templates.layette.tasks.couchage')!;
+    expect(couchage.target).toBeUndefined();
+    expect(couchage.count).toBeUndefined();
   });
 });

@@ -95,6 +95,10 @@ export function instantiateTemplate(
       effort: tt.effort,
       domain: tt.domain,
       essential: tt.essential,
+      // A counted task starts at zero rather than with `count` absent, so the stepper has a
+      // number to render on the very first paint instead of a flash of nothing.
+      target: tt.target,
+      count: tt.target === undefined ? undefined : 0,
       status: 'todo',
       createdAt: iso,
       updatedAt: iso,

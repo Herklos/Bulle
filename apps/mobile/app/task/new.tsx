@@ -65,11 +65,22 @@ export default function NewTaskScreen() {
   const [title, setTitle] = useState('');
   const [effort, setEffort] = useState<Effort>('S');
   const [when, setWhen] = useState<CustomTaskWhen>('soon');
+  /**
+   * Empty ⇒ an ordinary boolean task. A digit string ⇒ a counted one.
+   *
+   * Kept as text rather than a number so the field can be empty while being typed; parsing
+   * happens once, at save.
+   */
+  const [target, setTarget] = useState('');
 
   if (!project || !bulle) return null;
 
   const trimmed = title.trim();
   const weekSA = currentWeekSA(bulle.profile.dueDate, now);
+
+  // A target of 0 or a stray non-digit means "not a counted task" rather than a broken one.
+  const parsedTarget = Number.parseInt(target, 10);
+  const countedTarget = Number.isFinite(parsedTarget) && parsedTarget > 0 ? parsedTarget : undefined;
 
   const save = () => {
     if (!trimmed) return;
@@ -85,6 +96,8 @@ export default function NewTaskScreen() {
       domain: dominantDomain(siblings),
       // Never essential — see the header.
       essential: false,
+      target: countedTarget,
+      count: countedTarget === undefined ? undefined : 0,
       status: 'todo',
       createdAt: nowIso,
       updatedAt: nowIso,
@@ -125,6 +138,19 @@ export default function NewTaskScreen() {
           returnKeyType="done"
           onSubmitEditing={save}
           maxLength={120}
+        />
+
+        {/* Left empty by default, so the ordinary case costs nothing. Someone adding "acheter
+            un tire-lait" never sees a quantity question they have to dismiss; someone adding
+            "bodies naissance" types 6 and gets a stepper. */}
+        <TextField
+          label={t('plan.targetLabel')}
+          hint={t('plan.targetHint')}
+          placeholder={t('plan.targetPlaceholder')}
+          value={target}
+          onChangeText={(text) => setTarget(text.replace(/[^0-9]/g, '').slice(0, 3))}
+          keyboardType="number-pad"
+          returnKeyType="done"
         />
 
         <View>

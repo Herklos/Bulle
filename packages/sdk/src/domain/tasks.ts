@@ -101,6 +101,60 @@ export function dominantDomain(tasks: Task[], fallback: ReadinessDomain = 'maiso
   return best;
 }
 
+// ─── Counted tasks (§5.3) ────────────────────────────────────────────────────
+
+/**
+ * Is this a stock question rather than a yes/no one? See `Task.target`.
+ *
+ * A target of 0 is not a counted task: it would be born already complete and the stepper
+ * would have nothing to count toward.
+ */
+export function isCounted(task: Task): boolean {
+  return typeof task.target === 'number' && task.target > 0;
+}
+
+/** How many are owned, clamped into 0..target. Peers on older builds can send anything. */
+export function taskCount(task: Task): number {
+  if (!isCounted(task)) return 0;
+  return Math.min(Math.max(Math.round(task.count ?? 0), 0), task.target!);
+}
+
+/**
+ * Nudge a counted task's stock, and derive its status from the result.
+ *
+ * `status` remains the ONE thing that means "done": readiness, the suggestion engine,
+ * Ensemble and the postnatal list all read it and none of them know counts exist. Deriving
+ * it here rather than teaching each of those about `target` is what keeps a counted task an
+ * ordinary task everywhere except the one row that renders it.
+ *
+ * Reaching the target completes the task; going back below it reopens it. That symmetry
+ * matters — a count that could only ever complete would mean using the minus button locks
+ * you into a lie about your own cupboard.
+ *
+ * `dismissed` survives untouched. "Pas pour nous" is a decision about the item, not a tally,
+ * and a stray tap on a stepper must not silently overturn it.
+ */
+export function stepTaskCount(task: Task, delta: number): { count: number; status: TaskStatus } {
+  const target = task.target ?? 0;
+  const count = Math.min(Math.max(taskCount(task) + delta, 0), target);
+  const status: TaskStatus =
+    task.status === 'dismissed' ? 'dismissed' : count >= target ? 'done' : 'todo';
+  return { count, status };
+}
+
+/**
+ * The updates a plain "Fait" affordance should write — the Focus card, the Today list, the
+ * task screen's button.
+ *
+ * A counted task reached this way has its stock filled to the target, because `count` and
+ * `status` disagreeing is a state the UI cannot render honestly: a row reading "0/6" with a
+ * struck-through title claims both that nothing was bought and that the job is finished, and
+ * the next tap on `+` would silently reopen a task the user had just closed.
+ */
+export function completeTaskUpdates(task: Task): { status: TaskStatus; count?: number } {
+  return isCounted(task) ? { status: 'done', count: task.target } : { status: 'done' };
+}
+
 // ─── Pure reducers (the store delegates to these) ─────────────────────────────
 
 export function addTask(tasks: Task[], task: Task): Task[] {
