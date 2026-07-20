@@ -31,6 +31,12 @@ interface PlanState {
   addTasks: (tasks: Task[]) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
   removeTask: (id: string) => void;
+  /**
+   * Replace the whole list in one write. For edits that are not local to a single task —
+   * answering a choice dismisses its unchosen branches (see `applyTaskChoice`), and doing
+   * that as N separate updates would push N times and let a peer observe a half-pruned list.
+   */
+  replaceTasksAndSync: (tasks: Task[]) => void;
 
   /** Instantiating a template writes a project and its tasks in one go. */
   addProjectWithTasks: (project: Project, tasks: Task[]) => void;
@@ -81,6 +87,7 @@ export const usePlanStore = create<PlanState>((set, get) => {
     },
 
     removeTask: tasks.remove,
+    replaceTasksAndSync: tasks.replaceAndSync,
 
     addProjectWithTasks: (project, newTasks) => {
       projects.add(project);

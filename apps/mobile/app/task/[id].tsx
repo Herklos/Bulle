@@ -16,9 +16,15 @@ import { Linking, View } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
+  applyTaskChoice,
+  checklistProgress,
+  chosenOption,
   currentWeekSA,
   daysLeftAfterBirth,
+  hasChecklist,
+  isChoice,
   isCounted,
+  toggleChecklistItem,
   isLingering,
   isResolved,
   setTaskCount,
@@ -26,7 +32,7 @@ import {
   stepTaskCount,
   taskCount,
 } from '@bulle/sdk';
-import { Button, Stepper, Text } from '@bulle/ui/components';
+import { Button, Checkbox, Row, SectionHeader, Stepper, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
@@ -89,6 +95,27 @@ export default function TaskScreen() {
 
   const step = (delta: number) => applyCount(stepTaskCount(task, delta));
 
+  const toggleItem = (itemId: string) => {
+    const next = toggleChecklistItem(task, itemId);
+    usePlanStore.getState().updateTask(task.id, next);
+    if (next.status === 'done' && task.status !== 'done' && task.essential) {
+      useReadinessStore.getState().pulse();
+    }
+  };
+
+  /**
+   * Answering a choice rewrites the whole list, not just this task: the branches you did not
+   * take are dismissed and the one you did is restored. Hence `setTasks` on the result rather
+   * than a per-task update — see applyTaskChoice.
+   */
+  const choose = (optionId: string) => {
+    const store = usePlanStore.getState();
+    store.replaceTasksAndSync(
+      applyTaskChoice(store.tasks, task.id, optionId, new Date().toISOString()),
+    );
+    if (task.essential && task.status !== 'done') useReadinessStore.getState().pulse();
+  };
+
   /** "Pas pour nous", and back again. Never a one-way door. */
   const toggleIgnored = () => {
     usePlanStore
@@ -137,9 +164,60 @@ export default function TaskScreen() {
         />
       )}
 
-      {/* A counted task has no "Terminé" button: reaching the target IS the completion, and
-          a button that could tick it while the count still read 2/6 would let the screen
-          contradict itself. */}
+      {/* The checklist. Rows of the same Checkbox the list uses, so a sub-step looks like
+          what it is: a smaller version of the thing above it, not a new concept. */}
+      {hasChecklist(task) && (
+        <View style={{ gap: space[2] }}>
+          <Text variant="caption">
+            {t('task.checklistProgress', checklistProgress(task))}
+          </Text>
+          {task.checklist!.map((item) => (
+            <View
+              key={item.id}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: space[4] }}
+            >
+              <Checkbox
+                checked={item.done}
+                disabled={!canEdit}
+                onChange={() => toggleItem(item.id)}
+                accessibilityLabel={item.label}
+              />
+              <Text
+                variant="body"
+                color={item.done ? 'inkSoft' : 'ink'}
+                style={[{ flex: 1 }, item.done ? { textDecorationLine: 'line-through' } : null]}
+              >
+                {item.label}
+              </Text>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {/* A choice. Rows with a tick on the one taken — the same picker idiom as the new-task
+          form, so nothing here is a new control either. */}
+      {isChoice(task) && (
+        <View>
+          <SectionHeader title={t('task.choiceQuestion')} />
+          {task.options!.map((option, index) => (
+            <Row
+              key={option.id}
+              title={option.label}
+              onPress={canEdit ? () => choose(option.id) : undefined}
+              trailing={
+                task.chosenOptionId === option.id ? (
+                  <Glyph name="check" size={18} color="sage" />
+                ) : undefined
+              }
+              divider={index < task.options!.length - 1}
+            />
+          ))}
+          {/* Says what answering actually DID, because it changed rows the user cannot see
+              from here. A silent prune would look like tasks going missing. */}
+          {chosenOption(task) && <Text variant="caption">{t('task.choiceMade')}</Text>}
+        </View>
+      )}
+
       {canEdit && isCounted(task) && (
         <View style={{ gap: space[2] }}>
           {/* One line, and it doubles as the discovery hint for the tappable digits. */}
@@ -156,7 +234,10 @@ export default function TaskScreen() {
         </View>
       )}
 
-      {canEdit && !isCounted(task) && (
+      {/* None of the three richer shapes gets a "Terminé" button: for each of them, the
+          control above IS the completion, and a button that could tick a task while it still
+          read "1 sur 4" would let the screen contradict itself. */}
+      {canEdit && !isCounted(task) && !hasChecklist(task) && !isChoice(task) && (
         <Button
           label={done ? t('task.markTodo') : t('today.done')}
           onPress={complete}

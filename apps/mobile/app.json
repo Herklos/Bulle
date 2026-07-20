@@ -14,7 +14,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "software.drakkar.bulle.app",
-      "buildNumber": '6',
+      "buildNumber": "6",
       "associatedDomains": [
         "applinks:bulle.drakkar.software"
       ],

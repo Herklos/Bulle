@@ -147,8 +147,26 @@ export function computeReadiness(
 export function isFullyPrepared(readiness: Readiness, gestationalWeek: number): boolean {
   if (gestationalWeek < 36) return false;
   const gates: ReadinessDomain[] = ['sante', 'administratif', 'maison'];
-  return gates.every((d) => {
-    const b = readiness.byDomain[d];
-    return b.total > 0 && b.fill >= 1;
-  });
+
+  /*
+    Every gated domain the bulle ACTUALLY HAS must be complete, and at least two of the
+    three must be present.
+
+    The old rule demanded `total > 0` on all three, which made the moment structurally
+    unreachable outside France rather than merely hard to earn. `sante` tasks exist only in
+    tpl-admin-fr and tpl-decisions, both `countries: ['FR']`, so no universal template
+    produces a single one. A bulle in Brussels or an EN bulle could therefore resolve every
+    task it had ever been offered and still be told, forever, that it was not ready — judged
+    against templates it was never shown.
+
+    Two-of-three rather than one-of-three is what keeps the moment scarce. A bulle holding a
+    lone done `sante` task has not prepared for anything, and celebrating that would cheapen
+    the second of only two confetti-grade moments in the product. Outside France the pair
+    that carries it is `maison` and `administratif`, both of which the universal valise and
+    nid templates do produce.
+  */
+  const MIN_GATED_DOMAINS = 2;
+  const present = gates.filter((d) => readiness.byDomain[d].total > 0);
+  if (present.length < MIN_GATED_DOMAINS) return false;
+  return present.every((d) => readiness.byDomain[d].fill >= 1);
 }

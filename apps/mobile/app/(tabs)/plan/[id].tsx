@@ -11,8 +11,12 @@ import { Pressable, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
+  checklistProgress,
+  chosenOption,
   currentWeekSA,
   groupByWindow,
+  hasChecklist,
+  isChoice,
   isCounted,
   isLingering,
   isResolved,
@@ -123,7 +127,7 @@ export default function ProjectScreen() {
                     control three times the width of a checkbox cannot lead the row without
                     crushing the title it is meant to describe. The leading pad keeps both
                     kinds of row starting their text on the same vertical line. */}
-                {!counted && (
+                {!counted && !hasChecklist(task) && !isChoice(task) && (
                   <Checkbox
                     checked={done}
                     disabled={!canEdit}
@@ -134,7 +138,11 @@ export default function ProjectScreen() {
                 {/* The title opens the task. The checkbox stays a checkbox: ticking is the
                     common action and must not cost a round trip through a detail screen. */}
                 <Pressable
-                  style={{ flex: 1, gap: 2, paddingLeft: counted ? 24 + space[4] : 0 }}
+                  style={{
+                    flex: 1,
+                    gap: 2,
+                    paddingLeft: counted || hasChecklist(task) || isChoice(task) ? 24 + space[4] : 0,
+                  }}
                   onPress={() => router.push(`/task/${task.id}` as never)}
                   accessibilityRole="button"
                 >
@@ -147,6 +155,15 @@ export default function ProjectScreen() {
                   </Text>
                   <Text variant="caption">
                     {t(`plan.effort.${task.effort}`)}
+                    {/* A checklist or an answered choice says so here rather than earning a
+                        control of its own in the row: the detail screen is where they are
+                        acted on, and a second widget per row would crowd out the title. */}
+                    {hasChecklist(task)
+                      ? ` · ${t('task.checklistProgress', checklistProgress(task))}`
+                      : ''}
+                    {isChoice(task) && chosenOption(task)
+                      ? ` · ${chosenOption(task)!.label}`
+                      : ''}
                     {/* Never "en retard". A closed window is not a failure. */}
                     {lingering ? ` · ${t('plan.lingering')}` : ''}
                   </Text>

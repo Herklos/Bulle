@@ -99,16 +99,22 @@ const ADMIN_FR: ProjectTemplate = {
       effort: 'S',
       domain: 'sante',
       essential: true,
+      // Seven appointments across a thirty-week window, previously resolved by one tick.
+      // The title said "les 7 consultations" and the model could only say done or not.
+      target: 7,
       href: 'https://www.ameli.fr',
     },
     {
       titleKey: 'templates.adminFr.tasks.echographies',
       detailsKey: 'templates.adminFr.tasks.echographiesDetails',
       weekStart: 10,
-      weekEnd: 32,
+      // 34, not 32: the details place the third scan between 32 and 34 SA, so the task used
+      // to close before the last appointment it describes could be attended.
+      weekEnd: 34,
       effort: 'S',
       domain: 'sante',
       essential: true,
+      target: 3,
     },
     {
       titleKey: 'templates.adminFr.tasks.mutuelle',
@@ -275,6 +281,7 @@ const VALISE: ProjectTemplate = {
   tasks: [
     {
       titleKey: 'templates.valise.tasks.maman',
+      checklistKey: 'templates.valise.tasks.mamanChecklist',
       detailsKey: 'templates.valise.tasks.mamanDetails',
       weekStart: 34,
       weekEnd: 37,
@@ -284,6 +291,7 @@ const VALISE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.valise.tasks.bebe',
+      checklistKey: 'templates.valise.tasks.bebeChecklist',
       detailsKey: 'templates.valise.tasks.bebeDetails',
       weekStart: 34,
       weekEnd: 37,
@@ -303,6 +311,7 @@ const VALISE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.valise.tasks.documents',
+      checklistKey: 'templates.valise.tasks.documentsChecklist',
       notesKey: 'templates.valise.tasks.documentsNote',
       detailsKey: 'templates.valise.tasks.documentsDetails',
       weekStart: 32,
@@ -428,6 +437,15 @@ const GARDE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.garde.tasks.recenser',
+      // The choice that decides the rest of this project. Until now the copy at
+      // `assistantsNote` told the user to pursue crèche and assistante maternelle in
+      // parallel, because the model had no way to say they were alternatives — and every
+      // task below instantiated regardless of the route actually taken.
+      choiceKey: 'garde-mode',
+      optionsKey: 'templates.garde.tasks.recenserOptions',
+      // No "undecided" option: leaving the choice unanswered already means that, and an
+      // explicit one would match no branch and so prune every route at once.
+      optionIds: ['creche', 'assmat', 'domicile'],
       detailsKey: 'templates.garde.tasks.recenserDetails',
       weekStart: 12,
       weekEnd: 22,
@@ -445,6 +463,8 @@ const GARDE: ProjectTemplate = {
       // failure and then let the user read it as their own. `garde.tasks.guichet` (12-20 SA)
       // already does the honest upstream job: find out YOUR commune's calendar.
       titleKey: 'templates.garde.tasks.preinscription',
+      // Crèche only: there is nothing to pre-register for with an assistante maternelle.
+      branchOf: { choiceKey: 'garde-mode', optionIds: ['creche'] },
       notesKey: 'templates.garde.tasks.preinscriptionNote',
       detailsKey: 'templates.garde.tasks.preinscriptionDetails',
       weekStart: 24,
@@ -457,6 +477,8 @@ const GARDE: ProjectTemplate = {
     {
       // Never mentioned spontaneously, and it runs on a calendar of its own.
       titleKey: 'templates.garde.tasks.crecheEntreprise',
+      // Crèche only.
+      branchOf: { choiceKey: 'garde-mode', optionIds: ['creche'] },
       notesKey: 'templates.garde.tasks.crecheEntrepriseNote',
       detailsKey: 'templates.garde.tasks.crecheEntrepriseDetails',
       weekStart: 20,
@@ -467,6 +489,8 @@ const GARDE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.garde.tasks.relais',
+      // The relais petite enfance exists to put families in touch with assistantes maternelles.
+      branchOf: { choiceKey: 'garde-mode', optionIds: ['assmat'] },
       notesKey: 'templates.garde.tasks.relaisNote',
       detailsKey: 'templates.garde.tasks.relaisDetails',
       weekStart: 16,
@@ -478,6 +502,8 @@ const GARDE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.garde.tasks.assistants',
+      // Assistante maternelle only.
+      branchOf: { choiceKey: 'garde-mode', optionIds: ['assmat'] },
       notesKey: 'templates.garde.tasks.assistantsNote',
       detailsKey: 'templates.garde.tasks.assistantsDetails',
       weekStart: 20,
@@ -515,6 +541,8 @@ const GARDE: ProjectTemplate = {
     },
     {
       titleKey: 'templates.garde.tasks.cmg',
+      // The CMG emploi direct applies to the employer routes, not to a crèche place.
+      branchOf: { choiceKey: 'garde-mode', optionIds: ['assmat', 'domicile'] },
       notesKey: 'templates.garde.tasks.cmgNote',
       detailsKey: 'templates.garde.tasks.cmgDetails',
       weekStart: 45,
@@ -732,6 +760,7 @@ const ACHATS: ProjectTemplate = {
     },
     {
       titleKey: 'templates.achats.tasks.trousse',
+      checklistKey: 'templates.achats.tasks.trousseChecklist',
       notesKey: 'templates.achats.tasks.trousseNote',
       detailsKey: 'templates.achats.tasks.trousseDetails',
       weekStart: 34,
@@ -1013,6 +1042,168 @@ const LAYETTE: ProjectTemplate = {
       hrefByCountry: {
         FR: 'https://www.ameli.fr/assure/sante/bons-gestes/bebe/coucher-bebe',
       },
+    },
+  ],
+};
+
+/**
+ * Préparation à la naissance et à la parentalité.
+ *
+ * The largest hole in the corpus until now, and a structural one rather than a topical one:
+ * `sante` was the least-used domain in the whole product (6 tasks), it appeared in only two
+ * templates, and the entretien prénatal précoce — mandatory since 2020 and reimbursed at
+ * 100% — was mentioned nowhere at all.
+ *
+ * Everything here SCHEDULES care, it never gives it (§7.3). "Prendre rendez-vous pour
+ * l'entretien prénatal précoce" is an appointment; what happens in that appointment is the
+ * sage-femme's business and not this app's. The vaccination task is written the same way: it
+ * states the HAS recommendation and whose conversation it is, and stops there.
+ */
+const PNP: ProjectTemplate = {
+  id: 'tpl-pnp',
+  titleKey: 'templates.pnp.title',
+  descriptionKey: 'templates.pnp.description',
+  glyph: 'leaf',
+  locales: ['fr'],
+  countries: ['FR'],
+  tasks: [
+    {
+      titleKey: 'templates.pnp.tasks.epp',
+      notesKey: 'templates.pnp.tasks.eppNote',
+      detailsKey: 'templates.pnp.tasks.eppDetails',
+      // "de préférence au cours du premier trimestre", and it is where the 7 following
+      // sessions get planned — so it opens as early as the déclaration de grossesse.
+      weekStart: 8,
+      weekEnd: 20,
+      effort: 'S',
+      domain: 'sante',
+      essential: true,
+      href: 'https://www.sante.fr/les-seances-de-preparation-la-naissance-et-la-parentalite',
+    },
+    {
+      titleKey: 'templates.pnp.tasks.seances',
+      notesKey: 'templates.pnp.tasks.seancesNote',
+      detailsKey: 'templates.pnp.tasks.seancesDetails',
+      // Covered from the 6th month; 24 SA is the 6th month in SA.
+      weekStart: 24,
+      weekEnd: 40,
+      effort: 'M',
+      domain: 'sante',
+      essential: true,
+      // Eight, counted. This is exactly the shape the corpus kept writing as a numeral in a
+      // title because a boolean could not hold it.
+      target: 8,
+      href: 'https://www.ameli.fr',
+    },
+    {
+      titleKey: 'templates.pnp.tasks.choisir',
+      notesKey: 'templates.pnp.tasks.choisirNote',
+      detailsKey: 'templates.pnp.tasks.choisirDetails',
+      weekStart: 12,
+      weekEnd: 24,
+      effort: 'M',
+      domain: 'sante',
+      essential: false,
+    },
+    {
+      titleKey: 'templates.pnp.tasks.coqueluche',
+      notesKey: 'templates.pnp.tasks.coquelucheNote',
+      detailsKey: 'templates.pnp.tasks.coquelucheDetails',
+      // HAS: from the second trimester, ideally 20–36 SA.
+      weekStart: 20,
+      weekEnd: 36,
+      effort: 'S',
+      domain: 'sante',
+      essential: true,
+      href: 'https://www.has-sante.fr/jcms/p_3084228/fr/recommandation-vaccinale-contre-la-coqueluche-chez-la-femme-enceinte',
+    },
+    {
+      titleKey: 'templates.pnp.tasks.entourage',
+      notesKey: 'templates.pnp.tasks.entourageNote',
+      detailsKey: 'templates.pnp.tasks.entourageDetails',
+      weekStart: 24,
+      weekEnd: 38,
+      effort: 'S',
+      domain: 'entourage',
+      essential: false,
+      href: 'https://vaccination-info-service.fr/Les-maladies-et-leurs-vaccins/Coqueluche',
+    },
+  ],
+};
+
+/**
+ * La fratrie.
+ *
+ * Gated on `firstBaby === false` — the first template in the corpus to use that axis, which
+ * had been declared and never exercised. A second pregnancy is a different job from a first
+ * one, and almost none of it is on the shelves: the paperwork is familiar, the layette is in
+ * the loft, and the actual work is a three-year-old.
+ *
+ * Nothing here is developmental advice. It schedules conversations and arrangements, which
+ * is the same line every other template holds.
+ */
+const FRATRIE: ProjectTemplate = {
+  id: 'tpl-fratrie',
+  titleKey: 'templates.fratrie.title',
+  descriptionKey: 'templates.fratrie.description',
+  glyph: 'members',
+  // No `locales` and no `countries`: a sibling is a sibling. Nothing here describes an
+  // institution, so tagging it FR to satisfy a lint would have been the exact
+  // language-versus-country conflation the rest of this file exists to avoid.
+  appliesTo: (profile) => profile.firstBaby === false,
+  tasks: [
+    {
+      titleKey: 'templates.fratrie.tasks.annonce',
+      notesKey: 'templates.fratrie.tasks.annonceNote',
+      detailsKey: 'templates.fratrie.tasks.annonceDetails',
+      weekStart: 12,
+      weekEnd: 20,
+      effort: 'S',
+      domain: 'entourage',
+      essential: true,
+    },
+    {
+      titleKey: 'templates.fratrie.tasks.gardeAine',
+      notesKey: 'templates.fratrie.tasks.gardeAineNote',
+      detailsKey: 'templates.fratrie.tasks.gardeAineDetails',
+      // The one genuinely urgent task in this project: it needs a fallback plan for a date
+      // nobody knows, so it has to be settled well before the DPA.
+      weekStart: 28,
+      weekEnd: 36,
+      effort: 'M',
+      domain: 'entourage',
+      essential: true,
+    },
+    {
+      titleKey: 'templates.fratrie.tasks.changements',
+      notesKey: 'templates.fratrie.tasks.changementsNote',
+      detailsKey: 'templates.fratrie.tasks.changementsDetails',
+      weekStart: 20,
+      weekEnd: 32,
+      effort: 'M',
+      domain: 'maison',
+      essential: false,
+    },
+    {
+      titleKey: 'templates.fratrie.tasks.boite',
+      notesKey: 'templates.fratrie.tasks.boiteNote',
+      detailsKey: 'templates.fratrie.tasks.boiteDetails',
+      checklistKey: 'templates.fratrie.tasks.boiteChecklist',
+      weekStart: 34,
+      weekEnd: 40,
+      effort: 'S',
+      domain: 'entourage',
+      essential: false,
+    },
+    {
+      titleKey: 'templates.fratrie.tasks.visites',
+      notesKey: 'templates.fratrie.tasks.visitesNote',
+      detailsKey: 'templates.fratrie.tasks.visitesDetails',
+      weekStart: 34,
+      weekEnd: 41,
+      effort: 'S',
+      domain: 'entourage',
+      essential: false,
     },
   ],
 };
@@ -1427,6 +1618,8 @@ const POSTNATAL: ProjectTemplate = {
       effort: 'S',
       domain: 'postpartum',
       essential: false,
+      // "Jusqu'à dix séances" — a ceiling, not a quota, which is why it stays optional.
+      target: 10,
       href: 'https://www.ameli.fr',
     },
     {
@@ -1449,6 +1642,9 @@ const POSTNATAL: ProjectTemplate = {
       effort: 'S',
       domain: 'postpartum',
       essential: true,
+      // THREE, not twenty. The copy names twenty examinations but only three open rights
+      // (8e jour, 9e mois, 24e mois), and those three are what this task is actually for.
+      target: 3,
       href: 'https://www.service-public.gouv.fr/particuliers/vosdroits/F967',
     },
     {
@@ -1546,6 +1742,7 @@ const POSTNATAL: ProjectTemplate = {
 
 export const PROJECT_TEMPLATES: ProjectTemplate[] = [
   ADMIN_FR,
+  PNP,
   DECISIONS,
   GARDE,
   VALISE,
@@ -1556,6 +1753,7 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
   BUDGET,
   POSTNATAL,
   JUMEAUX,
+  FRATRIE,
   SOLO,
 ];
 

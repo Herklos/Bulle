@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+  applyTaskChoice,
+  checklistProgress,
   completeTaskUpdates,
+  hasChecklist,
+  isChoice,
+  toggleChecklistItem,
   isCounted,
   setTaskCount,
   setTaskTarget,
@@ -149,5 +154,152 @@ describe('setTaskTarget', () => {
   // A target of 0 makes isCounted false, which would strand the task with no stepper at all.
   it('never lets the target reach zero', () => {
     expect(setTaskTarget(task({ target: 6, count: 3 }), 0).target).toBe(1);
+  });
+});
+
+describe('checklist tasks', () => {
+  const withList = (over: Partial<Task> = {}) =>
+    task({
+      checklist: [
+        { id: 'a', label: 'Carte Vitale', done: false },
+        { id: 'b', label: 'Mutuelle', done: false },
+      ],
+      ...over,
+    });
+
+  it('is not a checklist task without items', () => {
+    expect(hasChecklist(task())).toBe(false);
+    expect(hasChecklist(task({ checklist: [] }))).toBe(false);
+  });
+
+  it('reports progress', () => {
+    expect(checklistProgress(withList())).toEqual({ done: 0, total: 2 });
+  });
+
+  it('stays open while any item is unticked', () => {
+    expect(toggleChecklistItem(withList(), 'a').status).toBe('todo');
+  });
+
+  it('completes when the last item is ticked', () => {
+    const partly = withList({ checklist: [
+      { id: 'a', label: 'Carte Vitale', done: true },
+      { id: 'b', label: 'Mutuelle', done: false },
+    ] });
+    expect(toggleChecklistItem(partly, 'b').status).toBe('done');
+  });
+
+  it('reopens when an item is unticked again', () => {
+    const full = withList({
+      status: 'done',
+      checklist: [
+        { id: 'a', label: 'Carte Vitale', done: true },
+        { id: 'b', label: 'Mutuelle', done: true },
+      ],
+    });
+    expect(toggleChecklistItem(full, 'a').status).toBe('todo');
+  });
+
+  it('refuses to overturn a dismissal, like the stepper', () => {
+    const partly = withList({
+      status: 'dismissed',
+      checklist: [
+        { id: 'a', label: 'Carte Vitale', done: true },
+        { id: 'b', label: 'Mutuelle', done: false },
+      ],
+    });
+    expect(toggleChecklistItem(partly, 'b').status).toBe('dismissed');
+  });
+
+  it('fills every item when completed from a plain "Fait" affordance', () => {
+    const updates = completeTaskUpdates(withList());
+    expect(updates.status).toBe('done');
+    expect(updates.checklist!.every((i) => i.done)).toBe(true);
+  });
+});
+
+describe('applyTaskChoice', () => {
+  const choice = task({
+    id: 'choice',
+    title: 'Mode de garde',
+    options: [
+      { id: 'creche', label: 'La crèche' },
+      { id: 'assmat', label: 'Une assistante maternelle' },
+    ],
+  });
+  const branch = (id: string, optionIds: string[], over: Partial<Task> = {}) =>
+    task({ id, branchOfTaskId: 'choice', branchOptionIds: optionIds, ...over });
+
+  const NOW = '2026-07-20T00:00:00.000Z';
+
+  it('records the answer and resolves the choice task', () => {
+    const [answered] = applyTaskChoice([choice], 'choice', 'creche', NOW);
+    expect(answered!.chosenOptionId).toBe('creche');
+    expect(answered!.status).toBe('done');
+  });
+
+  it('dismisses the branches not taken and leaves the chosen one alone', () => {
+    const out = applyTaskChoice(
+      [choice, branch('a', ['creche']), branch('b', ['assmat'])],
+      'choice',
+      'creche',
+      NOW,
+    );
+    expect(out.find((t) => t.id === 'a')!.status).toBe('todo');
+    expect(out.find((t) => t.id === 'b')!.status).toBe('dismissed');
+  });
+
+  it('restores a branch when the choice changes — deciding again must not be a trap', () => {
+    const first = applyTaskChoice(
+      [choice, branch('a', ['creche']), branch('b', ['assmat'])],
+      'choice',
+      'creche',
+      NOW,
+    );
+    const second = applyTaskChoice(first, 'choice', 'assmat', NOW);
+    expect(second.find((t) => t.id === 'b')!.status).toBe('todo');
+    expect(second.find((t) => t.id === 'a')!.status).toBe('dismissed');
+  });
+
+  it('leaves a branch task the user already finished alone', () => {
+    const out = applyTaskChoice(
+      [choice, branch('a', ['assmat'], { status: 'done' })],
+      'choice',
+      'creche',
+      NOW,
+    );
+    expect(out.find((t) => t.id === 'a')!.status).toBe('done');
+  });
+
+  it('handles a task belonging to several branches (CMG applies to two routes)', () => {
+    const out = applyTaskChoice(
+      [choice, branch('cmg', ['assmat', 'domicile'])],
+      'choice',
+      'assmat',
+      NOW,
+    );
+    expect(out.find((t) => t.id === 'cmg')!.status).toBe('todo');
+  });
+
+  // Otherwise picking an answer nothing branches on would empty the user's whole list.
+  it('prunes nothing when no task claims the chosen option', () => {
+    const out = applyTaskChoice(
+      [choice, branch('a', ['creche']), branch('b', ['assmat'])],
+      'choice',
+      'domicile',
+      NOW,
+    );
+    expect(out.find((t) => t.id === 'a')!.status).toBe('todo');
+    expect(out.find((t) => t.id === 'b')!.status).toBe('todo');
+  });
+
+  it('touches no task belonging to a different choice', () => {
+    const other = task({ id: 'x', branchOfTaskId: 'other-choice', branchOptionIds: ['zzz'] });
+    const out = applyTaskChoice([choice, other], 'choice', 'creche', NOW);
+    expect(out.find((t) => t.id === 'x')!.status).toBe('todo');
+  });
+
+  it('isChoice only for tasks that actually offer options', () => {
+    expect(isChoice(choice)).toBe(true);
+    expect(isChoice(task())).toBe(false);
   });
 });

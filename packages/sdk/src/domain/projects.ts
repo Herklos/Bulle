@@ -73,12 +73,25 @@ export function instantiateTemplate(
     updatedAt: iso,
   };
 
-  const tasks: Task[] = template.tasks
+  const kept = template.tasks
     // Solo mode must never materialise a co-parent task — a ghost like "prepare your
     // partner's bag" is exactly the failure §3.2 exists to prevent.
-    .filter((tt) => !(profile.companionship === 'solo' && tt.titleKey.endsWith('.coparent')))
-    .map((tt) => ({
-      id: deps.makeId(),
+    .filter((tt) => !(profile.companionship === 'solo' && tt.titleKey.endsWith('.coparent')));
+
+  /*
+    Ids are minted BEFORE the map so a branch task can point at its choice task, which may
+    appear either side of it in the template. `choiceKey` is the authoring-time name; this
+    is where it becomes a real id.
+  */
+  const ids = kept.map(() => deps.makeId());
+  const choiceIds = new Map<string, string>();
+  kept.forEach((tt, index) => {
+    if (tt.choiceKey) choiceIds.set(tt.choiceKey, ids[index]!);
+  });
+
+  const tasks: Task[] = kept
+    .map((tt, index) => ({
+      id: ids[index]!,
       projectId,
       title: deps.t(tt.titleKey),
       notes: tt.notesKey ? deps.t(tt.notesKey) : undefined,
@@ -99,10 +112,28 @@ export function instantiateTemplate(
       // number to render on the very first paint instead of a flash of nothing.
       target: tt.target,
       count: tt.target === undefined ? undefined : 0,
-      status: 'todo',
+      // Ids are generated rather than derived from the label, so editing a line later
+      // cannot orphan its own done-state.
+      checklist: tt.checklistKey
+        ? deps.tList?.(tt.checklistKey)?.map((label) => ({ id: deps.makeId(), label, done: false }))
+        : undefined,
+      // A choice with no resolvable labels degrades to an ordinary boolean task rather than
+      // rendering an empty option list — same fail-safe direction as `details`.
+      options:
+        tt.optionsKey && tt.optionIds
+          ? deps
+              .tList?.(tt.optionsKey)
+              ?.map((label, i) => ({ id: tt.optionIds![i] ?? `opt-${i}`, label }))
+          : undefined,
+      branchOfTaskId: tt.branchOf ? choiceIds.get(tt.branchOf.choiceKey) : undefined,
+      branchOptionIds: tt.branchOf?.optionIds,
+      status: 'todo' as const,
       createdAt: iso,
       updatedAt: iso,
-    }));
+    }))
+    // A branch whose choice task was filtered out (solo mode) would be unreachable: nothing
+    // could ever answer it, so it would sit in the list forever.
+    .filter((task) => !(task.branchOptionIds && !task.branchOfTaskId));
 
   return { project, tasks };
 }

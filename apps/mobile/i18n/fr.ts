@@ -161,6 +161,9 @@ export const fr = {
     openSource: 'Lire la page officielle',
     markTodo: 'Finalement pas fait',
     afterBirthPending: 'Quand le bébé sera là',
+    checklistProgress: '{{done}} sur {{total}}',
+    choiceQuestion: 'Votre choix',
+    choiceMade: 'Les autres pistes sont passées en « pas pour nous ». Changez d’avis quand vous voulez, elles reviendront.',
   },
 
   memories: {
@@ -923,6 +926,96 @@ export const fr = {
         ],
       },
     },
+    pnp: {
+      title: 'Préparation à la naissance',
+      description: 'L’entretien prénatal, les séances, et ce qui se prépare avec une sage-femme.',
+      tasks: {
+        epp: 'Prendre rendez-vous pour l’entretien prénatal précoce',
+        eppNote: 'Obligatoire depuis 2020, remboursé à 100 %. De préférence au premier trimestre.',
+        eppDetails: [
+          'Cet entretien individuel ou en couple dure environ trois quarts d’heure à une heure. Il se fait avec une sage-femme ou un médecin, et il est pris en charge intégralement par l’Assurance Maladie.',
+          'C’est aussi lors de cet entretien que se programment les séances de préparation à la naissance qui suivront. Le prendre tôt évite d’avoir à courir après des créneaux au troisième trimestre.',
+          'Il n’y a rien à préparer pour y aller. C’est un temps d’échange sur votre situation, vos questions et ce dont vous auriez besoin, pas un examen de plus.',
+        ],
+        seances: 'Suivre les séances de préparation à la naissance',
+        seancesNote: 'Huit séances prises en charge à 100 % à partir du 6e mois.',
+        seancesDetails: [
+          'L’Assurance Maladie prend en charge huit séances, remboursées intégralement à partir du sixième mois de grossesse. Elles peuvent être menées par une sage-femme libérale, une sage-femme de la maternité ou de PMI, ou un médecin.',
+          'Les séances abordent le déroulement de l’accouchement avec ou sans péridurale, la place du co-parent, les soins au nouveau-né, le choix du mode d’alimentation, le séjour à la maternité et le retour à la maison.',
+          'Comptez-les ici au fur et à mesure. Rien n’oblige à les faire toutes : huit est un plafond pris en charge, pas un quota à remplir.',
+        ],
+        choisir: 'Choisir le type de préparation qui vous convient',
+        choisirNote: 'Classique, piscine, sophrologie, yoga, haptonomie, chant prénatal.',
+        choisirDetails: [
+          'Plusieurs formes de préparation coexistent. La préparation classique en groupe reste la plus répandue, mais la sophrologie, le yoga prénatal, l’haptonomie, la préparation en piscine ou le chant prénatal sont proposés selon les endroits.',
+          'Le remboursement porte sur les séances, pas sur une méthode en particulier. Vérifiez tout de même auprès du praticien que les séances sont bien conventionnées avant de vous engager.',
+          'Les places partent vite dans certaines villes, en particulier pour les préparations en piscine et l’haptonomie. Renseignez-vous dès le deuxième trimestre même si les séances ne commencent qu’au sixième mois.',
+        ],
+        coqueluche: 'Parler de la vaccination coqueluche avec votre sage-femme',
+        coquelucheNote: 'La HAS la recommande entre 20 et 36 SA, à chaque grossesse.',
+        coquelucheDetails: [
+          'La Haute Autorité de santé recommande la vaccination contre la coqueluche pendant la grossesse, à partir du deuxième trimestre et de préférence entre 20 et 36 semaines d’aménorrhée. Elle est recommandée à chaque grossesse.',
+          'C’est une décision qui se prend avec le professionnel qui vous suit, pas avec une application. Cette tâche est là pour que le sujet soit abordé lors d’une consultation, pas pour vous dire quoi faire.',
+          'Si la vaccination n’a pas eu lieu pendant la grossesse, elle est recommandée après l’accouchement, avant la sortie de la maternité, y compris en cas d’allaitement.',
+        ],
+        entourage: 'Faire le point sur les rappels de l’entourage',
+        entourageNote: 'La stratégie dite du cocooning, si la vaccination n’a pas eu lieu pendant la grossesse.',
+        entourageDetails: [
+          'En l’absence de vaccination pendant la grossesse, un rappel est recommandé pour les proches qui vivront avec le nouveau-né : co-parent, frères et sœurs, grands-parents, personnes qui le gardent.',
+          'Le repère est simple : une personne déjà vaccinée reçoit une dose de rappel si sa dernière injection date de plus de cinq ans.',
+          'C’est une conversation à avoir tôt, parce qu’elle concerne d’autres personnes que vous et que chacune doit prendre son propre rendez-vous.',
+        ],
+      },
+    },
+
+    fratrie: {
+      title: 'La fratrie',
+      description: 'Préparer l’aîné, et l’organisation que sa présence change.',
+      tasks: {
+        annonce: 'Annoncer la grossesse à votre aîné',
+        annonceNote: 'Plutôt après le premier trimestre, et avant qu’il ne l’apprenne ailleurs.',
+        annonceDetails: [
+          'Le repère souvent donné est d’attendre la fin du premier trimestre, sans trop tarder ensuite : un enfant qui l’apprend par quelqu’un d’autre le vit mal, et les conversations d’adultes se captent très tôt.',
+          'La notion de temps est floue avant cinq ou six ans. Un repère concret aide davantage qu’une date : « le bébé arrivera quand il fera chaud », « après ton anniversaire ».',
+          'Des sentiments contradictoires sont normaux et ne sont pas un problème à régler : joie, impatience, inquiétude, jalousie, parfois tout en même temps.',
+        ],
+        gardeAine: 'Organiser la garde de l’aîné pour le jour J',
+        gardeAineNote: 'Avec une solution de secours. La date est la seule chose qu’on ne choisit pas.',
+        gardeAineDetails: [
+          'C’est la tâche la plus concrète de ce projet, et la plus facile à repousser. L’accouchement peut commencer la nuit, un dimanche, ou pendant les vacances scolaires de la personne sur qui vous comptiez.',
+          'Prévoyez deux solutions plutôt qu’une, et prévenez les deux. Une seule personne disponible « en principe » n’est pas un plan.',
+          'Préparez aussi un petit sac prêt à partir avec ses affaires, pour que personne n’ait à le faire dans l’urgence à trois heures du matin.',
+        ],
+        changements: 'Anticiper les changements de chambre ou de lit',
+        changementsNote: 'Plusieurs mois avant, jamais à l’arrivée du bébé.',
+        changementsDetails: [
+          'Si l’aîné doit changer de lit, de chambre, ou quitter le lit à barreaux dont le bébé aura besoin, faites-le plusieurs mois à l’avance.',
+          'Enchaîné à la naissance, le même changement devient quelque chose que le bébé lui a pris. Fait longtemps avant, c’est simplement qu’il a grandi.',
+          'Même logique pour l’entrée à la crèche ou à l’école et pour l’apprentissage de la propreté : mieux vaut nettement avant ou nettement après.',
+        ],
+        boite: 'Préparer une boîte pour l’aîné pendant le séjour',
+        boiteNote: 'Pour les jours où vous serez à la maternité.',
+        boiteDetails: [
+          'Quelques jours de séparation sont souvent la partie la plus difficile pour un jeune enfant. Une petite boîte préparée à l’avance et remise le jour du départ aide à traverser ce moment.',
+          'Elle peut se garder chez la personne qui le gardera, et s’ouvrir chaque jour un peu.',
+        ],
+        boiteChecklist: [
+          'Une photo de famille',
+          'Un mot ou un dessin de votre part',
+          'Un foulard portant votre odeur',
+          'Un petit cadeau à ouvrir le jour de la naissance',
+          'Un objet à rapporter au bébé à la maternité',
+        ],
+        visites: 'Décider comment se passera la rencontre',
+        visitesNote: 'Le premier moment à trois, ou à quatre.',
+        visitesDetails: [
+          'Beaucoup de familles font en sorte que le bébé ne soit pas dans les bras d’un parent au moment où l’aîné entre dans la chambre, pour que les premiers bras qui l’accueillent soient les vôtres.',
+          'Prévenez aussi les proches qui viendront : l’aîné a besoin qu’on s’adresse à lui autant qu’au bébé, et une visite entière consacrée au nouveau-né se remarque à trois ans.',
+          'Ne donnez pas de responsabilités à l’aîné vis-à-vis du bébé. Il peut aider s’il le demande, jamais parce qu’on le lui a assigné.',
+        ],
+      },
+    },
+
     layette: {
       title: 'La layette',
       description: 'Combien de chaque. Des repères, pas des règles.',
@@ -1113,6 +1206,15 @@ export const fr = {
           'Gardez les étiquettes et les emballages d’origine sur ce que vous n’ouvrez pas tout de suite : cela permet un échange facile si la taille ne convient pas.',
         ],
         trousse: 'Constituer la trousse de soins',
+        trousseChecklist: [
+          'Sérum physiologique en unidoses',
+          'Thermomètre',
+          'Mouche-bébé',
+          'Compresses stériles',
+          'Liniment oléo-calcaire',
+          'Ciseaux ou coupe-ongles pour bébé',
+          'Brosse à cheveux douce',
+        ],
         trousseNote: 'Sérum physiologique, thermomètre, mouche-bébé, compresses. À faire avant, pas le soir du retour.',
         trousseDetails: [
           'Constituez une trousse simple avant la naissance : sérum physiologique pour le nez et les yeux, thermomètre, mouche-bébé et compresses stériles suffisent pour les premiers jours.',
@@ -1248,6 +1350,11 @@ export const fr = {
           'Demandez la liste des modes de garde disponibles sur votre secteur, crèches collectives, familiales, parentales, ainsi que les coordonnées du relais petite enfance. Ce premier contact oriente toutes les démarches suivantes.',
           'Notez la date limite de dépôt et les pièces demandées, justificatif de grossesse, avis d’imposition, justificatif de domicile. Un dossier incomplet retarde souvent le passage en commission d’attribution.',
         ],
+        recenserOptions: [
+          'La crèche',
+          'Une assistante maternelle',
+          'Une garde à domicile',
+        ],
         recenser: 'Repérer les modes de garde autour de chez vous',
         recenserDetails: [
           'Listez les options disponibles près de chez vous : crèche collective, crèche parentale, assistante maternelle agréée, garde à domicile. Chaque solution suit un rythme de démarches et un coût différents.',
@@ -1312,12 +1419,30 @@ export const fr = {
       description: 'Prête bien avant le jour J.',
       tasks: {
         maman: 'Préparer la valise de la maman',
+        mamanChecklist: [
+          'Chemises de nuit ou pyjamas ouverts devant',
+          'Soutiens-gorge d’allaitement',
+          'Culottes jetables',
+          'Robe de chambre et chaussons antidérapants',
+          'Trousse de toilette',
+          'Chargeur de téléphone à câble long',
+          'Tenue de sortie confortable',
+        ],
         mamanDetails: [
           'Prévoyez des vêtements amples et confortables pour l’arrivée à la maternité et pour les premiers jours après l’accouchement : une tenue ample facilite les premiers gestes, y compris l’allaitement si vous l’envisagez.',
           'Ajoutez une trousse de toilette, des sous-vêtements en quantité suffisante, un chargeur de téléphone avec un câble assez long, et vos lunettes si vous ne portez pas vos lentilles au quotidien.',
           'Terminez cette valise avant la 37e semaine : un bébé peut arriver avant la date prévue. Rangez-la près de la porte, prête à prendre à tout moment, y compris de nuit.',
         ],
         bebe: 'Préparer la valise de bébé',
+        bebeChecklist: [
+          'Bodies taille naissance et 1 mois',
+          'Pyjamas',
+          'Brassière ou gilet',
+          'Bonnet et chaussettes',
+          'Bavoirs et langes',
+          'Turbulette',
+          'Tenue de sortie adaptée à la saison',
+        ],
         bebeDetails: [
           'Prévoyez des bodies et pyjamas en taille naissance et en 1 mois, une couverture ou une turbulette, des bavoirs et une paire de chaussons. La maternité fournit en général les couches et les produits de toilette.',
           'Ajoutez une tenue de sortie adaptée à la saison, plus chaude ou plus légère selon la période de l’année, ainsi qu’un bonnet pour les tout premiers jours.',
@@ -1330,6 +1455,14 @@ export const fr = {
           'Préparez ce sac en même temps que les deux autres, pour ne pas improviser au dernier moment pendant que l’attention est ailleurs.',
         ],
         documents: 'Rassembler les documents pour la maternité',
+        documentsChecklist: [
+          'Carte Vitale et attestation de droits',
+          'Carte de mutuelle',
+          'Carte de groupe sanguin',
+          'Dossier de maternité et résultats d’examens',
+          'Pièce d’identité',
+          'Livret de famille ou acte de reconnaissance anticipée',
+        ],
         documentsNote: 'Carte vitale, mutuelle, groupe sanguin, dossier de maternité.',
         documentsDetails: [
           'Rassemblez une pièce d’identité, votre carte de couverture santé et le dossier de suivi remis par votre équipe médicale : ce dossier résume les rendez-vous et les informations utiles à la maternité.',

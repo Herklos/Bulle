@@ -159,6 +159,9 @@ export const en = {
     openSource: 'Read the official page',
     markTodo: 'Not done after all',
     afterBirthPending: 'Once the baby is here',
+    checklistProgress: '{{done}} of {{total}}',
+    choiceQuestion: 'Your choice',
+    choiceMade: 'The other routes moved to "not for us". Change your mind whenever you like and they come back.',
   },
 
   memories: {
@@ -542,6 +545,54 @@ export const en = {
   },
 
   templates: {
+    fratrie: {
+      title: 'The sibling',
+      description: 'Getting your older child ready, and the arrangements they change.',
+      tasks: {
+        annonce: 'Tell your older child about the pregnancy',
+        annonceNote: 'After the first trimester, and before they hear it somewhere else.',
+        annonceDetails: [
+          'The usual guidance is to wait until the end of the first trimester, then not to leave it too long: a child who hears it from someone else takes it badly, and adult conversations get picked up very early.',
+          'Time is a vague idea before five or six. A concrete marker helps more than a date: "the baby comes when it is warm outside", "after your birthday".',
+          'Mixed feelings are normal and not a problem to solve: excitement, impatience, worry, jealousy, sometimes all at once.',
+        ],
+        gardeAine: 'Arrange care for your older child on the day',
+        gardeAineNote: 'With a backup. The date is the one thing you do not choose.',
+        gardeAineDetails: [
+          'This is the most concrete task in the project and the easiest to put off. Labour can start at night, on a Sunday, or during the school holidays of the person you were counting on.',
+          'Line up two options rather than one, and tell both. One person who is available "in principle" is not a plan.',
+          'Pack a small bag of their things ready to go, so nobody has to do it in a hurry at three in the morning.',
+        ],
+        changements: 'Move any bedroom or bed changes well ahead',
+        changementsNote: 'Months before, never at the baby’s arrival.',
+        changementsDetails: [
+          'If your older child needs to change bed, change room, or move out of the cot the baby will need, do it months in advance.',
+          'Done right at the birth, the same change becomes something the baby took from them. Done long before, it is simply that they grew up.',
+          'The same goes for starting nursery or school and for potty training: well before or well after, not alongside.',
+        ],
+        boite: 'Put together a box for while you are away',
+        boiteNote: 'For the days you are at the hospital.',
+        boiteDetails: [
+          'A few days apart is often the hardest part for a young child. A small box prepared in advance and handed over on the day helps them through it.',
+          'It can stay with whoever is looking after them, and be opened a little each day.',
+        ],
+        boiteChecklist: [
+          'A family photo',
+          'A note or a drawing from you',
+          'A scarf that smells of you',
+          'A small present to open on the day the baby is born',
+          'Something to bring to the baby at the hospital',
+        ],
+        visites: 'Decide how the first meeting will go',
+        visitesNote: 'The first moment as three, or as four.',
+        visitesDetails: [
+          'Many families arrange for the baby not to be in a parent’s arms when the older child walks in, so the first arms that greet them are yours.',
+          'Brief the visitors too: an older child needs to be spoken to as much as the baby is, and a whole visit devoted to the newborn gets noticed at three years old.',
+          'Do not give your older child responsibilities for the baby. They can help if they ask, never because they were assigned it.',
+        ],
+      },
+    },
+
     layette: {
       title: 'The layette',
       description: 'How many of each. Guides, not rules.',
@@ -732,6 +783,15 @@ export const en = {
           'Keep the tags and original packaging on anything you do not open right away, so it is easy to exchange if the size turns out wrong.',
         ],
         trousse: 'Put together the care kit',
+        trousseChecklist: [
+          'Saline solution in single doses',
+          'Thermometer',
+          'Nasal aspirator',
+          'Sterile compresses',
+          'Cleansing liniment',
+          'Baby nail scissors or clippers',
+          'Soft hairbrush',
+        ],
         trousseNote: 'Saline, thermometer, nasal aspirator, compresses. Before, not on the evening you get home.',
         trousseDetails: [
           'Put together a simple kit before the birth: saline solution for the nose and eyes, a thermometer, a nasal aspirator, and sterile compresses cover the first days.',
@@ -745,12 +805,30 @@ export const en = {
       description: 'Ready well before the day.',
       tasks: {
         maman: 'Pack the birthing parent’s bag',
+        mamanChecklist: [
+          'Nightdresses or front-opening pyjamas',
+          'Nursing bras',
+          'Disposable briefs',
+          'Dressing gown and non-slip slippers',
+          'Toiletry bag',
+          'Phone charger with a long cable',
+          'Comfortable going-home outfit',
+        ],
         mamanDetails: [
           'Pack loose, comfortable clothing for arriving at the hospital and for the first days afterward. Something that opens at the front helps if you plan to breastfeed.',
           'Add a wash bag, enough underwear for a few days, a phone charger with a long cable, and glasses if you do not wear contact lenses every day.',
           'Have this bag finished by week 37: babies can arrive before the due date. Keep it by the door, ready to grab at any hour.',
         ],
         bebe: 'Pack the baby’s bag',
+        bebeChecklist: [
+          'Bodysuits in newborn and 1 month',
+          'Sleepsuits',
+          'Cardigan',
+          'Hat and socks',
+          'Bibs and muslins',
+          'Sleep sack',
+          'Going-home outfit for the season',
+        ],
         bebeDetails: [
           'Pack newborn and 1 month sized bodysuits and sleepsuits, a blanket or a sleeping bag, a couple of bibs, and a pair of socks. Hospitals usually provide nappies and basic toiletries.',
           'Add a going-home outfit suited to the season, warmer or lighter depending on the time of year, plus a hat for the first days.',
@@ -763,6 +841,14 @@ export const en = {
           'Pack this bag alongside the other two rather than leaving it for later, so nobody is improvising while attention is elsewhere.',
         ],
         documents: 'Gather the documents for the hospital',
+        documentsChecklist: [
+          'Health insurance card and entitlement certificate',
+          'Top-up insurance card',
+          'Blood group card',
+          'Pregnancy notes and test results',
+          'Photo ID',
+          'Family record book or pre-birth acknowledgement',
+        ],
         documentsNote: 'Insurance details, blood group, maternity notes.',
         documentsDetails: [
           'Gather identification, proof of health cover, and any notes your care team has given you: this file summarises appointments and useful information for the hospital.',

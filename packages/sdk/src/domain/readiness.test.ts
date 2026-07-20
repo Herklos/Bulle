@@ -185,6 +185,33 @@ describe('isFullyPrepared — the one celebration gate (§6)', () => {
     expect(isFullyPrepared(r, 38)).toBe(false);
   });
 
+  it('is reachable outside France, where no template produces a sante task', () => {
+    // The bug this replaced: the gate demanded total > 0 on all three domains, but `sante`
+    // comes only from tpl-admin-fr and tpl-decisions, both countries: ['FR']. A bulle in
+    // Belgium could resolve every task it had ever been offered and still never be told it
+    // was ready — judged against templates it was never shown.
+    const r = computeReadiness(
+      [
+        task({ essential: true, status: 'done', domain: 'administratif' }),
+        task({ essential: true, status: 'done', domain: 'maison' }),
+      ],
+      profile,
+    );
+    expect(r.byDomain.sante.total).toBe(0);
+    expect(isFullyPrepared(r, 38)).toBe(true);
+  });
+
+  it('still refuses when a present gate domain is incomplete outside France', () => {
+    const r = computeReadiness(
+      [
+        task({ essential: true, status: 'done', domain: 'administratif' }),
+        task({ essential: true, status: 'todo', domain: 'maison' }),
+      ],
+      profile,
+    );
+    expect(isFullyPrepared(r, 38)).toBe(false);
+  });
+
   it('does not fire on a vacuous gate (a domain with no essential tasks at all)', () => {
     // An empty domain has fill 0 but total 0 — it must not count as "complete", or a
     // brand-new bulle would celebrate at week 36 having done nothing.

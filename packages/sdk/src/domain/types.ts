@@ -112,6 +112,19 @@ export type Effort = 'S' | 'M' | 'L';
  */
 export type TaskStatus = 'todo' | 'done' | 'dismissed';
 
+/** One line of a task's checklist. See `Task.checklist`. */
+export interface ChecklistItem {
+  id: string;
+  label: string;
+  done: boolean;
+}
+
+/** One branch of a choice task. See `Task.options`. */
+export interface TaskOption {
+  id: string;
+  label: string;
+}
+
 /**
  * Tasks live on WEEK-WINDOWS, not calendar dates (spec §4.2). A window reschedules itself
  * when the due date is corrected at an ultrasound, and removes the daily-deadline anxiety
@@ -172,8 +185,19 @@ export interface Task {
    * whole promise is that the app did the reading.
    */
   href?: string;
-  /** Max depth 1 by design — a checklist inside a task, never a task tree. */
-  checklist?: { id: string; label: string; done: boolean }[];
+  /**
+   * Max depth 1 by design — a checklist inside a task, never a task tree.
+   *
+   * The third task shape, after the boolean and the count. It exists for the tasks whose
+   * answer is a SET rather than a yes/no or a number: "rassembler les documents" is four
+   * specific pieces of paper, and a single checkbox next to it cannot say which three you
+   * already have. The corpus had been writing these out as prose in `notes` and `details`
+   * for want of anywhere else to put them.
+   *
+   * Like `count`, this never becomes a second source of truth: `toggleChecklistItem`
+   * derives `status` from the items, so everything downstream still reads `status` alone.
+   */
+  checklist?: ChecklistItem[];
   /**
    * How many of the thing are needed. Present ⇒ this is a COUNTED task: "6 bodies", not
    * "acheter des bodies". Absent ⇒ an ordinary boolean task.
@@ -191,6 +215,29 @@ export interface Task {
   target?: number;
   /** How many are already owned. Only meaningful with `target`. Clamped to 0..target. */
   count?: number;
+  /**
+   * The fourth task shape: a decision between mutually exclusive branches.
+   *
+   * The corpus is full of these and the model could not hold them, so they were written as
+   * prose and the consequences leaked into the user's list. `tpl-garde` instantiates all
+   * nine of its tasks whatever childcare route you take, including `cmg`, which only exists
+   * for the employer route — and the copy at `garde.assistantsNote` tells you to pursue two
+   * alternatives in parallel because there was no way to say they were alternatives.
+   *
+   * Answering a choice resolves the task AND prunes the branches you did not take, via
+   * `applyTaskChoice`. That is the whole point: the decision has to change the list, or it
+   * is just a checkbox with extra words.
+   */
+  options?: TaskOption[];
+  /** Which option was taken. Present ⇒ the choice has been made. */
+  chosenOptionId?: string;
+  /**
+   * This task belongs to a branch of another task's choice. Resolved from the template's
+   * `choiceKey` at instantiation, when the choice task's real id finally exists.
+   */
+  branchOfTaskId?: string;
+  /** Which branches of `branchOfTaskId` this task belongs to. */
+  branchOptionIds?: string[];
   createdAt: Iso;
   updatedAt: Iso;
 }
@@ -278,6 +325,36 @@ export interface TaskTemplate {
    * end up linking a parent in Brussels to ameli.fr.
    */
   hrefByCountry?: Record<string, string>;
+  /**
+   * i18n key resolving to an ARRAY of checklist labels. Resolved at instantiation like
+   * `detailsKey`, so the items become literal, editable strings on the Task.
+   *
+   * Mutually exclusive with `target` in practice: a task is a set or a number, not both.
+   */
+  checklistKey?: string;
+  /**
+   * Marks this task as the CHOICE for a branch group, under a name its branches can refer
+   * to. A plain string because template authoring happens long before ids exist.
+   */
+  choiceKey?: string;
+  /** i18n key resolving to an ARRAY of option labels. Option ids are `optionIds[i]`. */
+  optionsKey?: string;
+  /**
+   * Stable ids for the options, positionally matched to `optionsKey`'s array.
+   *
+   * Separate from the labels so that a translation change, or a reworded option, cannot
+   * silently repoint every branch in the group at a different answer.
+   */
+  optionIds?: string[];
+  /**
+   * This task only applies if `choiceKey`'s answer was one of `optionIds`.
+   *
+   * A list, not a single option, because real branches overlap: the CMG emploi direct
+   * applies to an assistante maternelle AND to garde à domicile, but not to a crèche place.
+   * Forcing one option per task would have meant either duplicating the task or shipping it
+   * on the wrong branch.
+   */
+  branchOf?: { choiceKey: string; optionIds: string[] };
   /**
    * See `Task.target`. Present ⇒ the instantiated task is counted, starting at 0.
    *

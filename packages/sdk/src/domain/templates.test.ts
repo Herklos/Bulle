@@ -261,6 +261,9 @@ describe('links must match the countries the template claims', () => {
     'mesdroitssociaux.gouv.fr',
     'urssaf.fr',
     'has-sante.fr',
+    // Ministry public-health portal and Santé publique France's vaccination service.
+    'sante.fr',
+    'vaccination-info-service.fr',
     'cnil.fr',
     'securite-routiere.gouv.fr',
   ];

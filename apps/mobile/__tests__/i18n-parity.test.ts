@@ -29,6 +29,10 @@ const FR_ONLY_PREFIXES = [
   'templates.solo',
   'templates.budget',
   'templates.postnatal',
+  // The PNP sessions and the entretien prénatal précoce are Assurance Maladie constructs
+  // with a French reimbursement rule attached. An English rendering would describe a
+  // system the reader is not in, which §7.1 says is worse than shipping nothing.
+  'templates.pnp',
 ];
 
 /** Every leaf path in a nested translation object. */

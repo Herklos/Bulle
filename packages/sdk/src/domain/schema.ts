@@ -74,6 +74,10 @@ export const taskSchema = z.object({
   checklist: z
     .array(z.object({ id: z.string(), label: z.string(), done: z.boolean() }))
     .optional(),
+  options: z.array(z.object({ id: z.string(), label: z.string() })).optional(),
+  chosenOptionId: z.string().optional(),
+  branchOfTaskId: z.string().optional(),
+  branchOptionIds: z.array(z.string()).optional(),
   target: z.number().optional(),
   count: z.number().optional(),
   createdAt: iso,

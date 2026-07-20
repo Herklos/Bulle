@@ -8,7 +8,14 @@
  */
 
 import { DPA_WEEKS_SA } from './pregnancy.js';
-import type { Effort, ReadinessDomain, Task, TaskStatus } from './types.js';
+import type {
+  ChecklistItem,
+  Effort,
+  ReadinessDomain,
+  Task,
+  TaskOption,
+  TaskStatus,
+} from './types.js';
 
 /** Minutes an effort estimate implies — shown as "~20 min" on the focus card (§5.1). */
 export const EFFORT_MINUTES: Record<Effort, number> = { S: 20, M: 60, L: 180 };
@@ -175,6 +182,104 @@ export function setTaskTarget(
   return { target, ...stepTaskCount(retargeted, 0) };
 }
 
+// ─── Checklist tasks (the third shape) ───────────────────────────────────────
+
+export function hasChecklist(task: Task): boolean {
+  return (task.checklist?.length ?? 0) > 0;
+}
+
+/** Items ticked, out of the total. For the "2 sur 4" caption on the row. */
+export function checklistProgress(task: Task): { done: number; total: number } {
+  const items = task.checklist ?? [];
+  return { done: items.filter((i) => i.done).length, total: items.length };
+}
+
+/**
+ * Tick or untick one line, and derive the task's status from the result.
+ *
+ * Deliberately the same contract as `stepTaskCount`: the last item completes the task, and
+ * unticking any item reopens it. `status` stays the single source of truth so readiness,
+ * suggestion, Ensemble and the post-birth list need to know nothing about checklists — the
+ * same trick that let counted tasks ship without touching any of them.
+ *
+ * `dismissed` survives untouched, for the same reason it does under the stepper: "pas pour
+ * nous" is a decision about the task, not a tally of its parts.
+ */
+export function toggleChecklistItem(
+  task: Task,
+  itemId: string,
+): { checklist: ChecklistItem[]; status: TaskStatus } {
+  const checklist = (task.checklist ?? []).map((item) =>
+    item.id === itemId ? { ...item, done: !item.done } : item,
+  );
+  const complete = checklist.length > 0 && checklist.every((i) => i.done);
+  const status: TaskStatus =
+    task.status === 'dismissed' ? 'dismissed' : complete ? 'done' : 'todo';
+  return { checklist, status };
+}
+
+// ─── Choice tasks (the fourth shape) ─────────────────────────────────────────
+
+export function isChoice(task: Task): boolean {
+  return (task.options?.length ?? 0) > 0;
+}
+
+/**
+ * Answer a choice, and prune the branches it rules out.
+ *
+ * Returns the FULL task list because answering a choice is not a local edit: it resolves the
+ * choice task, dismisses every sibling belonging to a branch that was not taken, and
+ * restores any that belong to the branch that was. Changing your mind therefore un-prunes,
+ * which matters — a childcare decision made in month four is routinely revisited in month
+ * seven, and a model that could only ever narrow would punish that.
+ *
+ * Dismissal, not deletion. A pruned branch keeps everything the user did to it, stays
+ * visible in the list as "pas pour nous", and comes back intact if the choice changes.
+ * Deleting would be tidier and would silently destroy their work.
+ *
+ * A branch task the user has already RESOLVED is left alone: they did it, whatever the
+ * branch now says, and rewriting a done task's status would be the app arguing with a fact.
+ */
+export function applyTaskChoice(
+  tasks: Task[],
+  choiceTaskId: string,
+  optionId: string,
+  now: string,
+): Task[] {
+  /*
+    If nothing claims the chosen option as a branch, prune nothing.
+
+    Without this, an option that no task belongs to would dismiss every branch of the group
+    at once — the user picks an answer and their whole list empties. Recording the answer and
+    leaving the branches alone is the only safe reading of "an option we have no tasks for".
+  */
+  const claimed = tasks.some(
+    (t) => t.branchOfTaskId === choiceTaskId && t.branchOptionIds?.includes(optionId),
+  );
+
+  return tasks.map((task) => {
+    if (task.id === choiceTaskId) {
+      return { ...task, chosenOptionId: optionId, status: 'done' as TaskStatus, updatedAt: now };
+    }
+    if (task.branchOfTaskId !== choiceTaskId || !claimed) return task;
+
+    const onChosenBranch = task.branchOptionIds?.includes(optionId) ?? false;
+    if (task.status === 'done') return task;
+    if (onChosenBranch && task.status === 'dismissed') {
+      return { ...task, status: 'todo' as TaskStatus, updatedAt: now };
+    }
+    if (!onChosenBranch && task.status === 'todo') {
+      return { ...task, status: 'dismissed' as TaskStatus, updatedAt: now };
+    }
+    return task;
+  });
+}
+
+/** The option the user picked, if any. */
+export function chosenOption(task: Task): TaskOption | undefined {
+  return task.options?.find((o) => o.id === task.chosenOptionId);
+}
+
 /**
  * The updates a plain "Fait" affordance should write — the Focus card, the Today list, the
  * task screen's button.
@@ -184,8 +289,16 @@ export function setTaskTarget(
  * struck-through title claims both that nothing was bought and that the job is finished, and
  * the next tap on `+` would silently reopen a task the user had just closed.
  */
-export function completeTaskUpdates(task: Task): { status: TaskStatus; count?: number } {
-  return isCounted(task) ? { status: 'done', count: task.target } : { status: 'done' };
+export function completeTaskUpdates(
+  task: Task,
+): { status: TaskStatus; count?: number; checklist?: ChecklistItem[] } {
+  if (isCounted(task)) return { status: 'done', count: task.target };
+  // Same reasoning as the count: a struck-through task showing "1 sur 4" claims both that
+  // the job is finished and that three pieces of paper are still missing.
+  if (hasChecklist(task)) {
+    return { status: 'done', checklist: task.checklist!.map((i) => ({ ...i, done: true })) };
+  }
+  return { status: 'done' };
 }
 
 // ─── Pure reducers (the store delegates to these) ─────────────────────────────

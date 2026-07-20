@@ -4,7 +4,47 @@ Notable changes to Bulle. Newest first.
 
 ## Unreleased
 
+### Fixed
+
+- **"Vous êtes prêts" was structurally unreachable outside France.** `isFullyPrepared` gated
+  on `sante`, `administratif` and `maison` all having `total > 0`, but no universal template
+  produces a single `sante` task — they come only from `tpl-admin-fr` and `tpl-decisions`,
+  both `countries: ['FR']`. A bulle in Brussels could resolve every task it had ever been
+  offered and still never reach the second of the product's only two celebration moments,
+  judged against templates it was never shown. Now every gated domain the bulle *has* must
+  be complete, with at least two present — which keeps the moment scarce while making it
+  winnable in any market.
+- The third échographie's window (32-34 SA per its own copy) ended after its task's
+  `weekEnd` of 32, so the task closed before the last appointment it describes.
+
 ### Added
+
+- **Two more task shapes, taking the model to four.**
+  - **Checklist.** The field was declared in `types.ts` and the zod schema and had never
+    been written or rendered — meanwhile the corpus wrote its checklists as prose for want
+    of anywhere to put them. Now live on the maternity-bag documents, the toilet bag, both
+    hospital bags, and the sibling box. `toggleChecklistItem` derives `status` from the
+    items, exactly as `stepTaskCount` does, so nothing downstream had to learn about it.
+  - **Choice.** A decision between mutually exclusive branches, which fixes a real defect:
+    `tpl-garde` instantiated all nine of its tasks whatever childcare route you took,
+    including `cmg`, which only exists for the employer routes. The copy even told users to
+    pursue two alternatives in parallel because the model could not say they were
+    alternatives. Answering now prunes the branches not taken to "pas pour nous", and
+    changing your mind restores them — a childcare decision made in month four is routinely
+    revisited in month seven.
+- **Targets on the occurrence tasks**, which the new count shape already covered and nobody
+  had applied: 7 consultations prénatales, 3 échographies, 10 séances de rééducation, 3
+  rights-opening examens. Each was a numeral in a title resolved by a single checkbox.
+- **`tpl-pnp` — Préparation à la naissance.** The largest hole in the corpus: the entretien
+  prénatal précoce has been mandatory since 2020 and reimbursed at 100%, the 8 PNP sessions
+  are covered from the 6th month, and neither appeared anywhere. FR-only. Also carries the
+  HAS coqueluche recommendation and the cocooning boosters, both written as "raise it at a
+  consultation" rather than as advice (§7.3). This roughly doubles the `sante` domain, which
+  was the least-used in the product at 6 tasks.
+- **`tpl-fratrie` — La fratrie.** Gated on `firstBaby === false`, the first template to use
+  that axis at all. Universal, FR and EN: a sibling is not a French institution, so tagging
+  it `countries: ['FR']` to satisfy a lint would have been the language-versus-country
+  conflation the rest of the file exists to prevent.
 
 - **Manual count entry, with no new controls.** The two digits in the stepper are each their
   own tap target: tap one, type over it, done. Tapping ten times to record a bag of
