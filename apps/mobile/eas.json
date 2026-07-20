@@ -1,7 +1,7 @@
 {
   "cli": {
     "version": ">= 20.5.1",
-    "appVersionSource": "remote"
+    "appVersionSource": "local"
   },
   "build": {
     "development": {
@@ -11,21 +11,23 @@
         "EXPO_PUBLIC_REVENUECAT_KEY_IOS": "test_dUUNyHfuSwVAdxDUZvCjiphyaVb",
         "EXPO_PUBLIC_REVENUECAT_KEY_ANDROID": "test_dUUNyHfuSwVAdxDUZvCjiphyaVb",
         "EXPO_PUBLIC_REVENUECAT_KEY_WEB": "test_dUUNyHfuSwVAdxDUZvCjiphyaVb"
-      }
+      },
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_REVENUECAT_KEY_IOS": "appl_KiaSNqVdVXXVlBBEhEEZLZDWUkY",
         "EXPO_PUBLIC_REVENUECAT_KEY_ANDROID": "goog_oHcPyfjPbJBSpQmKfAfCCPYqIWi"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
-      "autoIncrement": true,
       "env": {
         "EXPO_PUBLIC_REVENUECAT_KEY_IOS": "appl_KiaSNqVdVXXVlBBEhEEZLZDWUkY",
         "EXPO_PUBLIC_REVENUECAT_KEY_ANDROID": "goog_oHcPyfjPbJBSpQmKfAfCCPYqIWi"
-      }
+      },
+      "channel": "production"
     }
   },
   "submit": {

@@ -14,8 +14,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "software.drakkar.bulle.app",
+      "buildNumber": "1",
       "associatedDomains": [
-        "applinks:bulle.drakkar.software",
         "applinks:bulle.drakkar.software"
       ],
       "infoPlist": {
@@ -24,6 +24,7 @@
     },
     "android": {
       "package": "software.drakkar.bulle.app",
+      "versionCode": 1,
       "intentFilters": [
         {
           "action": "VIEW",
@@ -91,6 +92,12 @@
       "eas": {
         "projectId": "8348bf46-775d-4cc5-aecf-39ff7fe55143"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/8348bf46-775d-4cc5-aecf-39ff7fe55143"
     }
   }
 }
