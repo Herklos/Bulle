@@ -10,7 +10,7 @@
  */
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
   currentWeekSA,
@@ -105,6 +105,9 @@ export default function PlanScreen() {
   const ordered = useMemo(() => sortProjects(projects), [projects]);
 
   if (!bulle) return null;
+  // Pause (§3.1). Préparer is a preparation surface — week-ranked templates for a birth that
+  // may not come. It must never render after a loss, exactly like Aujourd'hui and the Chemin.
+  if (bulle.pause.paused) return <Redirect href="/pause" />;
 
   const addTemplate = (templateId: string) => {
     const template = templateById(templateId);

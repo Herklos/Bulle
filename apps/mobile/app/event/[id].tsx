@@ -100,7 +100,10 @@ export default function EventScreen() {
 
   if (step === 'overview') {
     return (
-      <Screen>
+      // Stack.Screen is a SIBLING of Screen, not a child: nested in the ScrollView's content
+      // container its options never reach the navigator — the back button AND the Delete
+      // action (headerRight is Delete's only home) would both silently vanish.
+      <>
         <Stack.Screen
           options={{
             title: '',
@@ -113,7 +116,7 @@ export default function EventScreen() {
               canEdit ? <HeaderAction label={t('events.delete')} onPress={remove} /> : null,
           }}
         />
-
+        <Screen>
         <View style={{ gap: space[2] }}>
           <Text variant="overline">{t(`events.kinds.${event.kind}`)}</Text>
           <Text variant="display">{formatDay(at)}</Text>
@@ -148,13 +151,14 @@ export default function EventScreen() {
             />
           </View>
         )}
-      </Screen>
+        </Screen>
+      </>
     );
   }
 
   if (step === 'kind') {
     return (
-      <Screen>
+      <>
         <Stack.Screen
           options={{
             title: '',
@@ -163,6 +167,7 @@ export default function EventScreen() {
             ),
           }}
         />
+        <Screen>
         <Text variant="display">{t('events.kindQuestion')}</Text>
         <View>
           {EVENT_KINDS.map((k, index) => (
@@ -175,7 +180,8 @@ export default function EventScreen() {
             />
           ))}
         </View>
-      </Screen>
+        </Screen>
+      </>
     );
   }
 

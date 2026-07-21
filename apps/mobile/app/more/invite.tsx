@@ -203,7 +203,7 @@ export default function InviteScreen() {
             assignments.map((assignment, index) => (
               <Row
                 key={assignment.id}
-                title={assignment.label ?? t('settings.roles.role-coparent')}
+                title={assignment.label ?? t('settings.roles.roleCoparentName')}
                 subtitle={
                   roles.find((r) => r.id === assignment.roleId)
                     ? t(`settings.roles.${roles.find((r) => r.id === assignment.roleId)!.name}`)

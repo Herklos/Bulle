@@ -123,7 +123,9 @@ function EditableNumber({
       }}
       accessibilityRole="button"
       accessibilityLabel={label}
-      hitSlop={10}
+      // 12 all round over a ~20px glyph clears the 44pt floor (§15.8 item 5); 10 left it a
+      // hair short at ~40.
+      hitSlop={12}
     >
       <Text variant="bodyMed" color={color} style={{ minWidth: 20, textAlign: align }}>
         {value}

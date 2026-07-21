@@ -42,6 +42,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { HeaderAction } from '@/components/HeaderAction';
 import { goBack, useHardwareBack } from '@/lib/go-back';
+import { usePauseState } from '@/lib/use-pause';
 import { usePermissions } from '@/lib/permissions/usePermissions';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { usePremiumStore } from '@/store/usePremiumStore';
@@ -58,6 +59,9 @@ export default function MoreScreen() {
   // Pushed from the home header, so on a web reload it can be first in the stack where the
   // default arrow no-ops. Android's hardware back has the same dead end.
   useHardwareBack('/today');
+  // Pause (§3.1). Réglages is reachable in ONE tap from the Pause screen ("garder" →
+  // /more), so no pregnancy section may show here after a loss.
+  const paused = usePauseState();
 
   const language = useSettingsStore((s) => s.language);
   const notifications = useSettingsStore((s) => s.notifications);
@@ -95,8 +99,9 @@ export default function MoreScreen() {
 
       {/* The pregnancy. First because it is the only group whose rows change what every
           other screen SAYS: the DPA re-aims every task window, the birth date starts every
-          post-birth deadline. */}
-      {!bulle?.birthDate && (
+          post-birth deadline. Hidden in Pause: editing the DPA or announcing a birth is the
+          exact pregnancy content §3.1 keeps off every Pause-reachable screen. */}
+      {!paused && !bulle?.birthDate && (
         <View>
           <SectionHeader title={t('settings.sections.pregnancy')} />
           {/* Owner-only: correcting the DPA re-aims every window for everyone in the bulle.

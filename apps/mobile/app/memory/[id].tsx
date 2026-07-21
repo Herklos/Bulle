@@ -15,6 +15,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { usePauseState } from '@/lib/use-pause';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
 
@@ -27,6 +28,9 @@ export default function MemoryScreen() {
   // A deep link or web reload can open this first in the stack; the platform arrow no-ops
   // there, and Android's hardware back has the same dead end.
   useHardwareBack('/memories');
+  // The app-generated "Semaine N" stamp is pregnancy framing; drop it in Pause (§3.1). The
+  // keepsake itself stays readable — the user may have chosen to keep it.
+  const paused = usePauseState();
 
   const memory = useMemoriesStore((s) => s.memories.find((m) => m.id === id));
 
@@ -69,7 +73,7 @@ export default function MemoryScreen() {
       <Screen>
         <View style={{ gap: space[2] }}>
           <Text variant="overline">
-            {memory.week !== undefined
+            {memory.week !== undefined && !paused
               ? `${when} · ${t('memories.weekStamp', { week: memory.week })}`
               : when}
           </Text>
