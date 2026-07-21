@@ -74,6 +74,11 @@ export default function EditDueDateScreen() {
     <Screen scroll={false}>
       <Stack.Screen
         options={{
+          // Explicit back button: the platform arrow is absent when this opens first in the
+          // stack (deep link / web reload), and goBack always lands.
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/more')} />
+          ),
           headerRight: () =>
             changed ? <HeaderAction label={t('common.save')} onPress={save} /> : null,
         }}

@@ -10,6 +10,7 @@
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import { View, useWindowDimensions } from 'react-native';
+import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Clipboard from 'expo-clipboard';
 import QRCode from 'react-native-qrcode-svg';
@@ -17,6 +18,8 @@ import { DEFAULT_PERMISSION_ROLES, type RoleDefinition } from '@bulle/sdk';
 import { Button, Row, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { HeaderAction } from '@/components/HeaderAction';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { revokeCollaborator } from '@/lib/permissions/revoke';
 import { mintInvite } from '@/lib/invite-link';
 import { getSession, initSync, isSyncActive } from '@/lib/starfish';
@@ -31,6 +34,9 @@ export default function InviteScreen() {
   const { t } = useTranslation();
   const { colors, space } = useBulleTheme();
   const { width } = useWindowDimensions();
+  // A web reload can open this first in the stack, where the default arrow no-ops; Android's
+  // hardware back has the same dead end. Land back on Réglages either way.
+  useHardwareBack('/more');
   const active = useActiveBulle();
   const roles = usePermissionsStore((s) => s.roles);
 
@@ -150,7 +156,17 @@ export default function InviteScreen() {
   const qrSize = Math.max(250, Math.min(320, Math.round(width - 64)));
 
   return (
-    <Screen>
+    // Stack.Screen is a SIBLING of Screen, not a child: nested inside the ScrollView's
+    // content container its options never reach the navigator and the header stays bare.
+    <>
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/more')} />
+          ),
+        }}
+      />
+      <Screen>
       <Text variant="display">{t('settings.invite')}</Text>
       <Text variant="body" color="inkSoft">
         {t('settings.inviteBody')}
@@ -213,6 +229,7 @@ export default function InviteScreen() {
           <Button label={copied ? t('settings.linkCopied') : t('settings.copyLink')} onPress={copy} block />
         </View>
       )}
-    </Screen>
+      </Screen>
+    </>
   );
 }

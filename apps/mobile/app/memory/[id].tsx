@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
-import { goBack } from '@/lib/go-back';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
@@ -24,6 +24,9 @@ export default function MemoryScreen() {
   const router = useRouter();
   const { space } = useBulleTheme();
   const canEdit = useCanEdit('memories');
+  // A deep link or web reload can open this first in the stack; the platform arrow no-ops
+  // there, and Android's hardware back has the same dead end.
+  useHardwareBack('/memories');
 
   const memory = useMemoriesStore((s) => s.memories.find((m) => m.id === id));
 
@@ -54,6 +57,11 @@ export default function MemoryScreen() {
     <>
       <Stack.Screen
         options={{
+          // Explicit back button: the platform arrow is absent when this opens first in the
+          // stack (deep link / web reload), and goBack always lands.
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/memories')} />
+          ),
           headerRight: () =>
             canEdit ? <HeaderAction label={t('memories.delete')} onPress={remove} /> : null,
         }}

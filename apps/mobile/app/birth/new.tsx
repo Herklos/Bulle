@@ -50,7 +50,16 @@ export default function NewBirthScreen() {
     // same fixed height and is what used to get squeezed off-screen at larger Dynamic Type
     // or on a small device.
     <Screen scroll={false}>
-      <Stack.Screen options={{ headerRight: () => <HeaderAction label={t('common.save')} onPress={save} /> }} />
+      <Stack.Screen
+        options={{
+          // Explicit back button: the platform arrow is absent when this opens first in the
+          // stack (deep link / web reload), and goBack always lands.
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/more')} />
+          ),
+          headerRight: () => <HeaderAction label={t('common.save')} onPress={save} />,
+        }}
+      />
 
       <View style={{ gap: space[2] }}>
         <Text variant="display">{t('birth.title')}</Text>

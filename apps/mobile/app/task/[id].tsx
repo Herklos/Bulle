@@ -36,7 +36,8 @@ import { Button, Checkbox, Row, SectionHeader, Stepper, Text } from '@bulle/ui/c
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
-import { goBack } from '@/lib/go-back';
+import { HeaderAction } from '@/components/HeaderAction';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
@@ -49,6 +50,9 @@ export default function TaskScreen() {
   const router = useRouter();
   const { colors, space } = useBulleTheme();
   const now = useNow();
+  // A deep link, a notification, or a web reload can open this screen first in the stack,
+  // where the default arrow no-ops. Android's hardware back has the same dead end.
+  useHardwareBack('/plan');
 
   const bulle = useBulleStore((s) => s.bulle);
   const task = usePlanStore((s) => s.tasks.find((x) => x.id === id));
@@ -124,9 +128,20 @@ export default function TaskScreen() {
   };
 
   return (
-    <Screen>
-      <Stack.Screen options={{ title: '' }} />
-
+    // Stack.Screen is a SIBLING of Screen, not a child: nested inside the ScrollView's
+    // content container its options never reach the navigator and the header stays bare.
+    <>
+      <Stack.Screen
+        options={{
+          title: '',
+          // Explicit, not the platform default arrow: that arrow is absent when this screen
+          // opens first in the stack (deep link / web reload), and goBack always lands.
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/plan')} />
+          ),
+        }}
+      />
+      <Screen>
       <View style={{ gap: space[2] }}>
         <Text variant="overline">{project?.title ?? ''}</Text>
         <Text variant="display">{task.title}</Text>
@@ -255,6 +270,7 @@ export default function TaskScreen() {
           block
         />
       )}
-    </Screen>
+      </Screen>
+    </>
   );
 }
