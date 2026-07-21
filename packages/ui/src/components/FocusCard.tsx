@@ -15,6 +15,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { Glyph } from '../primitives/Glyph.js';
 import { useBulleTheme } from '../theme/context.js';
 import { Button } from './Button.js';
+import { Stepper } from './Stepper.js';
 import { Text } from './Text.js';
 
 export interface FocusCardProps {
@@ -27,6 +28,19 @@ export interface FocusCardProps {
   laterLabel: string;
   onDone: () => void;
   onLater: () => void;
+  /**
+   * A counted task (§5.3) answers "how many", not "done yet". When set, the card shows the
+   * stepper in place of the terracotta "Fait" — completing a stock in one tap would fill it
+   * to target and lie about a cupboard nobody counted. The `count with +` IS the action here.
+   */
+  counted?: {
+    count: number;
+    target: number;
+    onStep: (delta: number) => void;
+    onSetCount?: (next: number) => void;
+    onSetTarget?: (next: number) => void;
+    accessibilityLabel: string;
+  };
   /**
    * Opens the task's details. Only the TEXT is pressable, never the whole card: the card
    * carries its own actions, and a card-wide target would swallow taps meant for them.
@@ -46,6 +60,7 @@ export function FocusCard({
   onDone,
   onLater,
   onOpen,
+  counted,
 }: FocusCardProps) {
   const { colors, radius, space } = useBulleTheme();
 
@@ -92,8 +107,21 @@ export function FocusCard({
         )}
       </Pressable>
 
-      <View style={{ flexDirection: 'row', gap: space[3], marginTop: space[3] }}>
-        <Button label={doneLabel} tone="accent" onPress={onDone} />
+      <View style={{ flexDirection: 'row', gap: space[3], marginTop: space[3], alignItems: 'center' }}>
+        {/* A counted task steps toward its target here; a plain one gets the terracotta CTA.
+            Either way "Plus tard" stays a ghost beside it. */}
+        {counted ? (
+          <Stepper
+            count={counted.count}
+            target={counted.target}
+            onStep={counted.onStep}
+            onSetCount={counted.onSetCount}
+            onSetTarget={counted.onSetTarget}
+            accessibilityLabel={counted.accessibilityLabel}
+          />
+        ) : (
+          <Button label={doneLabel} tone="accent" onPress={onDone} />
+        )}
         <Button label={laterLabel} tone="ghost" onPress={onLater} />
       </View>
     </Animated.View>

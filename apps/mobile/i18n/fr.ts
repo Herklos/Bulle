@@ -29,7 +29,7 @@ export const fr = {
     journey: 'Chemin',
     plan: 'Préparer',
     memories: 'Souvenirs',
-    more: 'Plus',
+    more: 'Réglages',
   },
 
   readiness: {
@@ -121,7 +121,6 @@ export const fr = {
     targetLabel: 'Combien ?',
     targetPlaceholder: '6',
     targetHint: 'Laissez vide pour une simple case à cocher. Avec un nombre, la tâche se compte et se termine quand vous y êtes.',
-    countHint: 'Touchez un chiffre pour le saisir directement. Le repère se change aussi.',
     effortQuestion: 'Ça demande quoi ?',
     whenQuestion: 'Quand ?',
     when: {
@@ -161,6 +160,7 @@ export const fr = {
     openSource: 'Lire la page officielle',
     markTodo: 'Finalement pas fait',
     afterBirthPending: 'Quand le bébé sera là',
+    countHint: 'Touchez le compteur pour le saisir. Touchez l’objectif de la même façon pour changer combien vous visez.',
     checklistProgress: '{{done}} sur {{total}}',
     choiceQuestion: 'Votre choix',
     choiceMade: 'Les autres pistes sont passées en « pas pour nous ». Changez d’avis quand vous voulez, elles reviendront.',
@@ -259,7 +259,7 @@ export const fr = {
       account: 'Votre compte',
       quiet: 'Plus discret',
     },
-    title: 'Plus',
+    title: 'Réglages',
     family: 'Famille',
     invite: 'Inviter',
     inviteBody: 'Partagez ce lien avec votre co-parent. Il rejoint votre bulle, sans compte.',

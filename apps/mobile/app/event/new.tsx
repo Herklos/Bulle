@@ -72,7 +72,9 @@ export default function NewEventScreen() {
   // Kind first. Choosing the thing before its time is the order people think in.
   if (step === 'kind') {
     return (
-      <Screen>
+      // Sibling of Screen, not a child: nested in the ScrollView's content container the
+      // options never reach the navigator and the back button vanishes.
+      <>
         {/* See memory/new: the default arrow no-ops with no history. */}
         <Stack.Screen
           options={{
@@ -81,6 +83,7 @@ export default function NewEventScreen() {
             ),
           }}
         />
+        <Screen>
         <Text variant="display">{t('events.newTitle')}</Text>
         <View>
           <SectionHeader title={t('events.kindQuestion')} />
@@ -97,7 +100,8 @@ export default function NewEventScreen() {
             />
           ))}
         </View>
-      </Screen>
+        </Screen>
+      </>
     );
   }
 

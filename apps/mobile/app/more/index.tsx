@@ -32,7 +32,7 @@
  */
 import React from 'react';
 import { Alert, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Host, Switch } from '@expo/ui';
 import { DEFAULT_COUNTRY } from '@bulle/sdk';
@@ -40,6 +40,9 @@ import { Row, SectionHeader, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { HeaderAction } from '@/components/HeaderAction';
+import { goBack, useHardwareBack } from '@/lib/go-back';
+import { usePauseState } from '@/lib/use-pause';
 import { usePermissions } from '@/lib/permissions/usePermissions';
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { usePremiumStore } from '@/store/usePremiumStore';
@@ -53,6 +56,12 @@ export default function MoreScreen() {
   const router = useRouter();
   const { colors } = useBulleTheme();
   const { isOwner } = usePermissions();
+  // Pushed from the home header, so on a web reload it can be first in the stack where the
+  // default arrow no-ops. Android's hardware back has the same dead end.
+  useHardwareBack('/today');
+  // Pause (§3.1). Réglages is reachable in ONE tap from the Pause screen ("garder" →
+  // /more), so no pregnancy section may show here after a loss.
+  const paused = usePauseState();
 
   const language = useSettingsStore((s) => s.language);
   const notifications = useSettingsStore((s) => s.notifications);
@@ -74,13 +83,25 @@ export default function MoreScreen() {
     // Scrolls again. The lazy native container needed a bounded height and therefore
     // scroll={false}; Bulle's own rows are ordinary views, so the Screen just scrolls and
     // the whole infinity-height constraint goes away with the container that caused it.
-    <Screen>
+    <>
+      {/* Sibling of Screen, not a child: nested in the ScrollView's content container the
+          options never reach the navigator and the header stays bare. Explicit back button
+          because the platform arrow is absent when this opens first (web reload). */}
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/today')} />
+          ),
+        }}
+      />
+      <Screen>
       <Text variant="display">{t('settings.title')}</Text>
 
       {/* The pregnancy. First because it is the only group whose rows change what every
           other screen SAYS: the DPA re-aims every task window, the birth date starts every
-          post-birth deadline. */}
-      {!bulle?.birthDate && (
+          post-birth deadline. Hidden in Pause: editing the DPA or announcing a birth is the
+          exact pregnancy content §3.1 keeps off every Pause-reachable screen. */}
+      {!paused && !bulle?.birthDate && (
         <View>
           <SectionHeader title={t('settings.sections.pregnancy')} />
           {/* Owner-only: correcting the DPA re-aims every window for everyone in the bulle.
@@ -236,6 +257,7 @@ export default function MoreScreen() {
             container's height fight — it is last because it belongs last. */}
         <Row title={t('settings.about')} subtitle={t('settings.aboutBody')} divider={false} />
       </View>
-    </Screen>
+      </Screen>
+    </>
   );
 }

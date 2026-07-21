@@ -16,11 +16,16 @@ import {
   daysLeftAfterBirth,
   daysSinceBirth,
   daysUntilEvent,
+  isCounted,
   nextEvents,
   openPostBirthTasks,
   partnerActivity,
   pregnancyProgress,
+  setTaskCount,
+  setTaskTarget,
+  stepTaskCount,
   suggestFocus,
+  taskCount,
   weekDisplay,
   weekEssentials,
   currentWeekSG,
@@ -29,7 +34,7 @@ import {
   type Task,
 } from '@bulle/sdk';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
-import { Checkbox, EmptyState, FocusCard, Row, SectionHeader, Text } from '@bulle/ui/components';
+import { Checkbox, EmptyState, FocusCard, Row, SectionHeader, Stepper, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
@@ -176,6 +181,33 @@ export default function TodayScreen() {
     if (essential) useReadinessStore.getState().pulse();
   };
 
+  /**
+   * A counted task is nudged, not completed, from here — the same contract as the Préparer
+   * list and the task screen. `status` is derived alongside `count` (see stepTaskCount), so
+   * readiness only pulses on the tap that actually reaches the target.
+   */
+  const applyCount = (
+    task: Task,
+    next: { count: number; status: Task['status']; target?: number },
+  ) => {
+    updateTask(task.id, next);
+    if (next.status === 'done' && task.status !== 'done' && task.essential) {
+      useReadinessStore.getState().pulse();
+    }
+  };
+
+  const step = (task: Task, delta: number) => applyCount(task, stepTaskCount(task, delta));
+
+  /** The stepper wiring a counted task needs, wherever the home screen shows one. */
+  const countedProps = (task: Task) => ({
+    count: taskCount(task),
+    target: task.target!,
+    onStep: (delta: number) => step(task, delta),
+    onSetCount: (nextCount: number) => applyCount(task, setTaskCount(task, nextCount)),
+    onSetTarget: (nextTarget: number) => applyCount(task, setTaskTarget(task, nextTarget)),
+    accessibilityLabel: task.title,
+  });
+
   return (
     <Screen>
       <FeatureWelcomeFor area='today' visible={welcome.visible} onDismiss={welcome.dismiss} />
@@ -295,6 +327,8 @@ export default function TodayScreen() {
           onDone={() => complete(focus)}
           onLater={() => useReadinessStore.getState().defer(focus.id)}
           onOpen={() => router.push(`/task/${focus.id}` as never)}
+          // A counted focus task steps toward its target instead of jumping to done.
+          counted={isCounted(focus) ? countedProps(focus) : undefined}
         />
       ) : (
         <EmptyState glyph="leaf" message={t('today.emptyFocus')} />
@@ -360,30 +394,39 @@ export default function TodayScreen() {
       {essentials.length > 0 && (
         <View>
           <SectionHeader title={t('today.thisWeek')} />
-          {essentials.map((task) => (
-            <View
-              key={task.id}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: space[4],
-                paddingVertical: space[3],
-              }}
-            >
-              <Checkbox
-                checked={false}
-                onChange={() => complete(task)}
-                accessibilityLabel={task.title}
-              />
-              <Pressable
-                style={{ flex: 1 }}
-                onPress={() => router.push(`/task/${task.id}` as never)}
-                accessibilityRole="button"
+          {essentials.map((task) => {
+            // A counted task answers "how many", so it carries the stepper here rather than a
+            // checkbox that would fill it to target in one tap. Same split as the Préparer
+            // list. The leading pad keeps its title aligned with the checkbox rows above it.
+            const counted = isCounted(task);
+            return (
+              <View
+                key={task.id}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: space[4],
+                  paddingVertical: space[3],
+                }}
               >
-                <Text variant="body">{task.title}</Text>
-              </Pressable>
-            </View>
-          ))}
+                {!counted && (
+                  <Checkbox
+                    checked={false}
+                    onChange={() => complete(task)}
+                    accessibilityLabel={task.title}
+                  />
+                )}
+                <Pressable
+                  style={{ flex: 1, paddingLeft: counted ? 24 + space[4] : 0 }}
+                  onPress={() => router.push(`/task/${task.id}` as never)}
+                  accessibilityRole="button"
+                >
+                  <Text variant="body">{task.title}</Text>
+                </Pressable>
+                {counted && <Stepper {...countedProps(task)} />}
+              </View>
+            );
+          })}
         </View>
       )}
 

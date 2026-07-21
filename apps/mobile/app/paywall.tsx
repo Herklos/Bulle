@@ -101,7 +101,11 @@ export default function PaywallScreen() {
     // orb off the top and pushed Restore below the fold. Restore being unreachable is not a
     // cosmetic bug — with no account it is the only route back to a purchase, and both
     // stores require it.
-    <Screen>
+    // Stack.Screen is a SIBLING of Screen, not a child: nested in the ScrollView's content
+    // container its options never reach the navigator, and this file's Stack.Screen is the
+    // ONLY source of a header (there is no paywall/_layout and the root stack is headerless),
+    // so the "way out" back button would never render at all.
+    <>
       {/* The way out. In the header rather than inline text so it is reachable immediately
           and identically regardless of scroll position — and goBack() always lands
           somewhere real even with no navigation history (a paywall can be the first thing
@@ -113,6 +117,7 @@ export default function PaywallScreen() {
           headerLeft: () => <HeaderAction label={t('common.back')} onPress={() => goBack()} />,
         }}
       />
+      <Screen>
 
       <View style={{ gap: space[6], paddingVertical: space[4] }}>
         <Animated.View
@@ -192,6 +197,7 @@ export default function PaywallScreen() {
           </Text>
         </Animated.View>
       </View>
-    </Screen>
+      </Screen>
+    </>
   );
 }

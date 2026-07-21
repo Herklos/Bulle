@@ -30,7 +30,7 @@ export const en = {
     journey: 'Journey',
     plan: 'Prepare',
     memories: 'Memories',
-    more: 'More',
+    more: 'Settings',
   },
 
   readiness: {
@@ -119,7 +119,6 @@ export const en = {
     targetLabel: 'How many?',
     targetPlaceholder: '6',
     targetHint: 'Leave empty for a plain checkbox. With a number, the task counts up and finishes when you get there.',
-    countHint: 'Tap a number to type it in. The guide figure can change too.',
     effortQuestion: 'How much of a job?',
     whenQuestion: 'When?',
     when: {
@@ -159,6 +158,7 @@ export const en = {
     openSource: 'Read the official page',
     markTodo: 'Not done after all',
     afterBirthPending: 'Once the baby is here',
+    countHint: 'Tap the count to type it in. Tap the target the same way to change how many you are aiming for.',
     checklistProgress: '{{done}} of {{total}}',
     choiceQuestion: 'Your choice',
     choiceMade: 'The other routes moved to "not for us". Change your mind whenever you like and they come back.',
@@ -255,7 +255,7 @@ export const en = {
       account: 'Your account',
       quiet: 'Quieter',
     },
-    title: 'More',
+    title: 'Settings',
     family: 'Family',
     invite: 'Invite',
     inviteBody: 'Share this link with your co-parent. They join your bubble, with no account.',

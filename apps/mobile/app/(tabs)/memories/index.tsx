@@ -21,6 +21,7 @@ import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
+import { usePauseState } from '@/lib/use-pause';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
 
@@ -33,6 +34,9 @@ export default function MemoriesScreen() {
 
   const all = useMemoriesStore((s) => s.memories);
   const memories = useMemo(() => sortMemories(all), [all]);
+  // Keepsakes stay reachable in Pause (the user may choose to keep them — see app/pause.tsx),
+  // but the app-generated "Semaine N" stamp is pregnancy framing and is dropped there (§3.1).
+  const paused = usePauseState();
 
   const formatDate = (iso: string) =>
     new Intl.DateTimeFormat(i18n.language === 'en' ? 'en-GB' : 'fr-FR', {
@@ -76,7 +80,7 @@ export default function MemoriesScreen() {
               key={memory.id}
               title={memoryPreview(memory)}
               subtitle={
-                memory.week !== undefined
+                memory.week !== undefined && !paused
                   ? `${formatDate(memory.createdAt)} · ${t('memories.weekStamp', { week: memory.week })}`
                   : formatDate(memory.createdAt)
               }

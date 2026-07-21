@@ -81,7 +81,9 @@ export default function NewMemoryScreen() {
 
   if (!kind) {
     return (
-      <Screen>
+      // Sibling of Screen, not a child (see step 2 below): nested in the ScrollView's content
+      // container the options never reach the navigator and the header stays bare.
+      <>
         {/* The FIRST step needs this as much as the second. The default arrow calls the
             navigator's back, which no-ops on an empty stack — so arriving here from a deep
             link, a notification, or a web reload left the screen with a back button that
@@ -93,6 +95,7 @@ export default function NewMemoryScreen() {
             ),
           }}
         />
+        <Screen>
         <Text variant="display">{t('memories.newTitle')}</Text>
         <View>
           <SectionHeader title={t('memories.kindQuestion')} />
@@ -107,7 +110,8 @@ export default function NewMemoryScreen() {
             />
           ))}
         </View>
-      </Screen>
+        </Screen>
+      </>
     );
   }
 

@@ -8,7 +8,7 @@
  */
 import React, { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
   checklistProgress,
@@ -29,6 +29,8 @@ import {
 import { Checkbox, EmptyState, SectionHeader, Stepper, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
+import { HeaderAction } from '@/components/HeaderAction';
+import { goBack, useHardwareBack } from '@/lib/go-back';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
@@ -42,6 +44,9 @@ export default function ProjectScreen() {
   const router = useRouter();
   const { colors, space } = useBulleTheme();
   const now = useNow();
+  // A web reload can open this project first in the stack, where the default arrow no-ops;
+  // Android's hardware back has the same dead end. Land on the Préparer index either way.
+  useHardwareBack('/plan');
 
   const bulle = useBulleStore((s) => s.bulle);
   const project = usePlanStore((s) => s.projects.find((p) => p.id === id));
@@ -80,7 +85,17 @@ export default function ProjectScreen() {
   const step = (task: Task, delta: number) => applyCount(task, stepTaskCount(task, delta));
 
   return (
-    <Screen>
+    // Stack.Screen is a SIBLING of Screen, not a child: nested inside the ScrollView's
+    // content container its options never reach the navigator and the header stays bare.
+    <>
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <HeaderAction label={t('common.back')} onPress={() => goBack('/plan')} />
+          ),
+        }}
+      />
+      <Screen>
       <View style={{ gap: space[2] }}>
         <Text variant="display">{project.title}</Text>
         {project.description && <Text variant="body" color="inkSoft">{project.description}</Text>}
@@ -202,6 +217,7 @@ export default function ProjectScreen() {
           })}
         </View>
       ))}
-    </Screen>
+      </Screen>
+    </>
   );
 }
