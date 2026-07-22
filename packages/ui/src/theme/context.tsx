@@ -1,6 +1,6 @@
 'use client';
-import React, { createContext, useContext, useMemo } from 'react';
-import { useColorScheme } from 'react-native';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { Platform, useColorScheme } from 'react-native';
 import { color, layout, radius, space, touch, type as typeScale } from './tokens.js';
 import type { ColorScheme, Palette } from './tokens.js';
 
@@ -28,7 +28,19 @@ export interface BulleThemeProviderProps {
 
 export function BulleThemeProvider({ children, scheme }: BulleThemeProviderProps) {
   const system = useColorScheme();
-  const resolved: ColorScheme = scheme ?? (system === 'dark' ? 'dark' : 'light');
+
+  // Web only: the static export is prerendered in light. expo-router hydrates the layout
+  // (nav, footer, page background) and the route content in SEPARATE passes, so reading the
+  // OS scheme during the first client render lands the flip on one pass but not the other —
+  // the article turns dark-ink while the layout keeps the light background, i.e. cream text
+  // on cream. Defer the OS scheme to a post-mount state flip: the first paint matches the
+  // prerender exactly (no split), then a single provider re-render switches the WHOLE tree
+  // to the OS scheme at once. Native starts mounted, so its behaviour is unchanged.
+  const [mounted, setMounted] = useState(Platform.OS !== 'web');
+  useEffect(() => setMounted(true), []);
+  const effectiveSystem = mounted ? system : 'light';
+
+  const resolved: ColorScheme = scheme ?? (effectiveSystem === 'dark' ? 'dark' : 'light');
 
   const value = useMemo<BulleTheme>(
     () => ({

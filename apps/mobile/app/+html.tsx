@@ -128,6 +128,18 @@ export default function Root({ children }: PropsWithChildren) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
         />
 
+        {/* Scrollbars are chrome. On a phone-width viewport they are noise laid over the
+            content (touch already gets an auto-hiding overlay bar from the OS), so hide them
+            below the desktop breakpoint (layout.desktopBreakpoint, 1024px) and let a real
+            track return on wide screens, where it aids orientation in a long page. */}
+        <style
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html:
+              '@media (max-width: 1023px){*{scrollbar-width:none;-ms-overflow-style:none;}*::-webkit-scrollbar{display:none;}}',
+          }}
+        />
+
         {/* Required by expo-router for web scrolling to behave. */}
         <ScrollViewStyleReset />
       </head>
