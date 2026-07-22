@@ -68,12 +68,12 @@ export function BulleOrb({
   const box = size * HALO_SCALE;
   const stops = orbGradientStops(colors, trimesterProgress);
   const halo = stops[1];
-  const maskId = useRef(`orb-mask-${Math.random().toString(36).slice(2)}`).current;
   const pulseRef = useRef<HTMLDivElement | null>(null);
 
   // One pulse when an essential is ticked — re-triggered by restarting the animation.
   useEffect(() => {
     if (pulseKey === 0) return;
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     const el = pulseRef.current;
     if (!el) return;
     el.style.animation = 'none';
@@ -87,6 +87,7 @@ export function BulleOrb({
       accessible
       accessibilityRole="image"
       accessibilityLabel={label}
+      pointerEvents="none"
       style={{ width: box, height: box, alignItems: 'center', justifyContent: 'center' }}
     >
       <div ref={pulseRef} style={{ width: box, height: box, display: 'grid', placeItems: 'center' }}>
@@ -178,7 +179,6 @@ export function BulleOrb({
               transition: 'mask-image 350ms ease-out, -webkit-mask-image 350ms ease-out',
             }}
             aria-hidden
-            id={maskId}
           />
 
           {/* The baby, inside the glass and IN FRONT of the liquid. A near-full orb used to

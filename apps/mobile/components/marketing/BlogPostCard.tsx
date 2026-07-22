@@ -10,25 +10,24 @@ import type { BlogPost } from '@/lib/blog-types';
 
 export function BlogPostCard({ post, lang }: { post: BlogPost; lang: MarketingLang }) {
   const { t } = useTranslation();
-  const { colors, space } = useBulleTheme();
+  const { space } = useBulleTheme();
 
   return (
     <Link href={localizedPath(lang, `/blog/${post.slug}`) as never} asChild>
       <Pressable
         accessibilityRole="link"
         style={({ pressed }) => ({
-          gap: space[2],
-          paddingVertical: space[4],
-          borderTopWidth: 1,
-          borderTopColor: colors.line,
+          gap: space[3],
           opacity: pressed ? 0.7 : 1,
         })}
       >
-        <Text variant="overline">{post.category}</Text>
-        <Text variant="title">{post.title}</Text>
-        <Text variant="body" color="inkSoft">
-          {post.excerpt}
-        </Text>
+        <View style={{ gap: space[2] }}>
+          <Text variant="overline">{post.category}</Text>
+          <Text variant="title" heading={2}>{post.title}</Text>
+          <Text variant="body" color="inkSoft">
+            {post.excerpt}
+          </Text>
+        </View>
         <Text variant="caption">
           {t('marketing.blog.readingMinutes', { count: post.readingMinutes })}
         </Text>

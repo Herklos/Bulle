@@ -97,7 +97,7 @@ export default function TodayScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const welcome = useFeatureWelcome('today');
-  const { space } = useBulleTheme();
+  const { space, touch } = useBulleTheme();
   const now = useNow();
 
   const bulle = useBulleStore((s) => s.bulle);
@@ -271,17 +271,23 @@ export default function TodayScreen() {
             {daysSince === 0 ? t('birth.dayOne') : t('birth.dayN', { count: daysSince + 1 })}
           </Text>
         ) : (
-          <Text
-            variant="caption"
-            onPress={() => setShowSG((v) => !v)}
-            // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of the
-            // world quotes SG. Showing both, on demand, is a small competence signal.
+          // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of the
+          // world quotes SG. Showing both, on demand, is a small competence signal.
+          // A Pressable, not a bare tappable Text: it needs a real touch target and pressed
+          // feedback. hitSlop rather than padding, so the header's centred gap is unchanged.
+          <Pressable
             accessibilityRole="button"
+            accessibilityHint={t('today.weekToggleHint')}
+            hitSlop={touch.min}
+            onPress={() => setShowSG((v) => !v)}
+            style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
           >
-            {showSG
-              ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
-              : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
-          </Text>
+            <Text variant="caption">
+              {showSG
+                ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
+                : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
+            </Text>
+          </Pressable>
         )}
 
         {/*
@@ -306,7 +312,12 @@ export default function TodayScreen() {
           innerImage={born ? undefined : bulleForWeekSG(display.sg)}
         />
 
-        <Text variant="body" color="inkSoft">
+        <Text
+          variant="body"
+          color="inkSoft"
+          importantForAccessibility="no"
+          accessibilityElementsHidden={true}
+        >
           {t(readiness?.phraseKey ?? 'readiness.empty')}
         </Text>
 

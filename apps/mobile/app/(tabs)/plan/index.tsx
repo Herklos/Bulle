@@ -155,17 +155,27 @@ export default function PlanScreen() {
    * Pressable would put a button inside a button — two overlapping targets, and VoiceOver
    * announcing both. This looks like the button and lets the whole row be the target.
    */
-  const TemplateAction = ({ templateId }: { templateId: string }) => {
+  const templateAction = (templateId: string) => {
     // Say it is premium BEFORE the tap. A gate that only appears after you reach for
     // something feels like a trap, even when the price is fair.
     const locked = !isPremium && isPremiumTemplate(templateId);
     if (locked) {
-      // Wrapped, because Glyph takes no accessibility props: bare, this would be an
-      // unlabelled image and the row would announce only its title, losing the one fact
-      // the icon exists to carry.
+      // The same text-pill as the unlocked branch, with the premium label. Stated in visible
+      // text, not a done-looking checkmark that reads as "already added".
       return (
-        <View accessible accessibilityLabel={t('plan.premiumTemplate')}>
-          <Glyph name="check" size={20} color="sage" />
+        <View
+          accessible
+          accessibilityLabel={t('plan.premiumTemplate')}
+          style={{
+            paddingHorizontal: space[3],
+            paddingVertical: space[2],
+            borderRadius: radius.s,
+            backgroundColor: withAlpha(colors.sage, 0.12),
+          }}
+        >
+          <Text variant="caption" color="sage">
+            {t('plan.premiumTemplate')}
+          </Text>
         </View>
       );
     }
@@ -240,7 +250,7 @@ export default function PlanScreen() {
                 title={t(template.titleKey)}
                 subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
                 leading={<Glyph name={template.glyph as GlyphName} size={22} color="sage" />}
-                trailing={<TemplateAction templateId={suggestion.templateId} />}
+                trailing={templateAction(suggestion.templateId)}
                 onPress={() => addTemplate(suggestion.templateId)}
                 divider={index < suggestions.length - 1}
               />
@@ -262,7 +272,7 @@ export default function PlanScreen() {
               title={t(template.titleKey)}
               subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
               leading={<Glyph name={template.glyph as GlyphName} size={22} color="inkSoft" />}
-              trailing={<TemplateAction templateId={template.id} />}
+              trailing={templateAction(template.id)}
               onPress={() => addTemplate(template.id)}
               divider={index < later.length - 1}
             />

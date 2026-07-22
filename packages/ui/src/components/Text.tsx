@@ -32,12 +32,20 @@ export interface TextProps extends RNTextProps {
   color?: ColorToken;
   /** Applies to `overline` only — the token carries the tracking, this carries the case. */
   uppercase?: boolean;
+  /**
+   * Emit a document heading. On web (react-native-web) this renders a real `<h1>`–`<h6>`
+   * element via `accessibilityRole="header"` + `aria-level`; on native it maps to the
+   * `header` accessibility trait. Visual size is still the `variant` — level and look are
+   * decoupled, so a section title can be an `<h2>` at any type scale.
+   */
+  heading?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 export function Text({
   variant = 'body',
-  color = 'ink',
+  color,
   uppercase,
+  heading,
   style,
   children,
   ...rest
@@ -48,18 +56,28 @@ export function Text({
 
   // `caption` and `overline` are secondary by definition; default them to inkSoft so a
   // caller has to opt IN to full-contrast small text rather than remember to opt out.
-  const defaultColor: ColorToken =
-    variant === 'caption' || variant === 'overline' ? 'inkSoft' : color;
+  // An explicit `color` (including `ink`) always wins — hence `color ?? …`, not a check
+  // against the string 'ink', which would silently downgrade a full-contrast caption.
+  const resolved: ColorToken =
+    color ?? (variant === 'caption' || variant === 'overline' ? 'inkSoft' : 'ink');
+
+  // `aria-level` is read by react-native-web's `propsToAccessibilityComponent`, which then
+  // renders `h${level}`. It is not in RN's own prop types, hence the assertion.
+  const headingProps =
+    heading != null
+      ? ({ accessibilityRole: 'header', 'aria-level': heading } as RNTextProps)
+      : null;
 
   return (
     <RNText
+      {...headingProps}
       style={[
         {
           fontFamily: family,
           fontSize: t.size,
           lineHeight: t.lineHeight,
           letterSpacing: 'letterSpacing' in t ? t.letterSpacing : undefined,
-          color: theme.colors[color === 'ink' ? defaultColor : color],
+          color: theme.colors[resolved],
           textTransform: uppercase || variant === 'overline' ? 'uppercase' : undefined,
         },
         style,

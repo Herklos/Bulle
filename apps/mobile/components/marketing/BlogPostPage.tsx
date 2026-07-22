@@ -47,7 +47,7 @@ function ArticleSection({ section }: { section: BlogSection }) {
   if (section.type === 'list') {
     return (
       <View style={{ gap: space[3] }}>
-        {section.title && <Text variant="title">{section.title}</Text>}
+        {section.title && <Text variant="title" heading={2}>{section.title}</Text>}
         {section.items?.map((item, i) => (
           <View key={i} style={{ flexDirection: 'row', gap: space[3] }}>
             <Text variant="body" color="sage">
@@ -72,17 +72,27 @@ function ArticleSection({ section }: { section: BlogSection }) {
 
 export function BlogPostPage({ slug, lang }: { slug: string; lang: MarketingLang }) {
   const { t } = useTranslation();
-  const { layout, space } = useBulleTheme();
+  const { layout, space, touch } = useBulleTheme();
   const post = getPublishedBlogPost(lang, slug);
+
+  const fmtDate = (iso: string) =>
+    new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(iso + 'T00:00:00'));
 
   // The gate again, at render. A build should never produce this page for an unpublished
   // slug, but a stale client-side route must not become a leak.
   if (!post) {
     return (
       <View style={{ padding: space[6], gap: space[4] }}>
-        <Text variant="titleXL">{t('marketing.blog.notFoundTitle')}</Text>
+        <Text variant="titleXL" heading={1}>{t('marketing.blog.notFoundTitle')}</Text>
         <Link href={localizedPath(lang, '/blog') as never} asChild>
-          <Pressable accessibilityRole="link">
+          <Pressable
+            accessibilityRole="link"
+            style={{ minHeight: touch.min, justifyContent: 'center' }}
+          >
             <Text variant="body" color="sage">
               {t('marketing.blog.backToBlog')}
             </Text>
@@ -122,7 +132,10 @@ export function BlogPostPage({ slug, lang }: { slug: string; lang: MarketingLang
       />
 
       <Link href={localizedPath(lang, '/blog') as never} asChild>
-        <Pressable accessibilityRole="link">
+        <Pressable
+          accessibilityRole="link"
+          style={{ minHeight: touch.min, justifyContent: 'center' }}
+        >
           <Text variant="caption" color="sage">
             {t('marketing.blog.backToBlog')}
           </Text>
@@ -131,13 +144,13 @@ export function BlogPostPage({ slug, lang }: { slug: string; lang: MarketingLang
 
       <View style={{ gap: space[3] }}>
         <Text variant="overline">{post.category}</Text>
-        <Text variant="display">{post.title}</Text>
+        <Text variant="display" heading={1}>{post.title}</Text>
         <Text variant="body" color="inkSoft">
           {post.excerpt}
         </Text>
         <Text variant="caption">
-          {author.name} · {post.date}
-          {showUpdated ? ` · ${t('marketing.blog.updated', { date: post.updated })}` : ''} ·{' '}
+          {author.name} · {fmtDate(post.date)}
+          {showUpdated ? ` · ${t('marketing.blog.updated', { date: fmtDate(post.updated!) })}` : ''} ·{' '}
           {t('marketing.blog.readingMinutes', { count: post.readingMinutes })}
         </Text>
       </View>
@@ -149,7 +162,10 @@ export function BlogPostPage({ slug, lang }: { slug: string; lang: MarketingLang
       </View>
 
       <Link href={authorProfileUrl(authorSlug, lang) as never} asChild>
-        <Pressable accessibilityRole="link">
+        <Pressable
+          accessibilityRole="link"
+          style={{ minHeight: touch.min, justifyContent: 'center' }}
+        >
           <Text variant="caption" color="sage">
             {author.name}
           </Text>

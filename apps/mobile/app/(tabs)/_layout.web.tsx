@@ -19,7 +19,7 @@ import { usePauseState } from '@/lib/use-pause';
 
 export default function TabLayout() {
   const { t } = useTranslation();
-  const { colors } = useBulleTheme();
+  const { colors, type } = useBulleTheme();
   const isWide = useIsWideScreen();
   const paused = usePauseState();
 
@@ -37,7 +37,7 @@ export default function TabLayout() {
               borderTopWidth: 1,
               elevation: 0,
             },
-        tabBarLabelStyle: { fontSize: 11, fontFamily: 'Inter_500Medium' },
+        tabBarLabelStyle: { fontSize: type.overline.size, fontFamily: 'Inter_500Medium' },
       }}
     >
       <Tabs.Screen

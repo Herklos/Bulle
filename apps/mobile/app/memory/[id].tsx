@@ -15,6 +15,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { usePauseState } from '@/lib/use-pause';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
@@ -64,7 +65,7 @@ export default function MemoryScreen() {
           // Explicit back button: the platform arrow is absent when this opens first in the
           // stack (deep link / web reload), and goBack always lands.
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/memories')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/memories')} />
           ),
           headerRight: () =>
             canEdit ? <HeaderAction label={t('memories.delete')} onPress={remove} /> : null,

@@ -18,7 +18,7 @@ import { DEFAULT_PERMISSION_ROLES, type RoleDefinition } from '@bulle/sdk';
 import { Button, Row, SectionHeader, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
-import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { revokeCollaborator } from '@/lib/permissions/revoke';
 import { mintInvite } from '@/lib/invite-link';
@@ -45,6 +45,7 @@ export default function InviteScreen() {
   const [link, setLink] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const available: RoleDefinition[] =
     roles.length > 0
@@ -54,6 +55,7 @@ export default function InviteScreen() {
   const invite = async (role: RoleDefinition) => {
     if (!active) return;
 
+    setNotice(null);
     setBusy(true);
     try {
       /**
@@ -67,7 +69,10 @@ export default function InviteScreen() {
        *
        * A bulle with no seed is local-only by design (§9) and has nothing to share.
        */
-      if (!active.seedPhrase) return;
+      if (!active.seedPhrase) {
+        setNotice(t('settings.inviteLocalOnly'));
+        return;
+      }
       const session = getSession() ?? (await deriveSessionFromPhrase(active.seedPhrase));
 
       // Creates the space on first use. Idempotent, and the reason sharing can start at all.
@@ -116,6 +121,7 @@ export default function InviteScreen() {
       setLink(minted);
     } catch (error) {
       console.warn('[invite] mint failed', error);
+      setNotice(t('settings.inviteFailed'));
     } finally {
       setBusy(false);
     }
@@ -162,7 +168,7 @@ export default function InviteScreen() {
       <Stack.Screen
         options={{
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/more')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/more')} />
           ),
         }}
       />
@@ -188,6 +194,10 @@ export default function InviteScreen() {
       )}
 
       {busy && <Text variant="caption">{t('common.loading')}</Text>}
+
+      {/* A calm inline note, not a red alert: a share that could not start is a state to
+          explain, not an error to sound. */}
+      {notice && <Text variant="caption" color="inkSoft">{notice}</Text>}
 
       {/*
         The roster. Without it, revoking was implemented and unreachable, which is the same

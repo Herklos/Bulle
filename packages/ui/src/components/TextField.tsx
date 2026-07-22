@@ -33,6 +33,8 @@ export function TextField({ label, hint, onFocus, onBlur, style, ...props }: Tex
       {label && <Text variant="overline">{label}</Text>}
       <TextInput
         {...props}
+        accessibilityLabel={props.accessibilityLabel ?? label}
+        accessibilityHint={props.accessibilityHint ?? hint}
         onFocus={(e) => {
           setFocused(true);
           onFocus?.(e);

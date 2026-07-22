@@ -11,8 +11,8 @@
  * ordinary encrypted content; media needs its own path and would otherwise exist on one
  * parent's phone and silently not the other's.
  */
-import React, { useMemo } from 'react';
-import { Pressable, View } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { FlatList, Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { memoryPreview, sortMemories } from '@bulle/sdk';
@@ -38,14 +38,41 @@ export default function MemoriesScreen() {
   // but the app-generated "Semaine N" stamp is pregnancy framing and is dropped there (§3.1).
   const paused = usePauseState();
 
-  const formatDate = (iso: string) =>
-    new Intl.DateTimeFormat(i18n.language === 'en' ? 'en-GB' : 'fr-FR', {
-      day: 'numeric',
-      month: 'long',
-    }).format(new Date(iso));
+  const formatDate = useCallback(
+    (iso: string) =>
+      new Intl.DateTimeFormat(i18n.language === 'en' ? 'en-GB' : 'fr-FR', {
+        day: 'numeric',
+        month: 'long',
+      }).format(new Date(iso)),
+    [i18n.language],
+  );
+
+  const renderItem = useCallback(
+    ({ item: memory, index }: { item: (typeof memories)[number]; index: number }) => (
+      <Row
+        title={memoryPreview(memory)}
+        subtitle={
+          memory.week !== undefined && !paused
+            ? `${formatDate(memory.createdAt)} · ${t('memories.weekStamp', { week: memory.week })}`
+            : formatDate(memory.createdAt)
+        }
+        leading={
+          <Glyph
+            name={memory.kind === 'milestone' ? 'souvenirs' : 'leaf'}
+            size={20}
+            color="sage"
+          />
+        }
+        onPress={() => router.push(`/memory/${memory.id}` as never)}
+        chevron
+        divider={index < memories.length - 1}
+      />
+    ),
+    [memories.length, paused, t, formatDate, router],
+  );
 
   return (
-    <Screen>
+    <Screen scroll={false}>
       <FeatureWelcomeFor area="memories" visible={welcome.visible} onDismiss={welcome.dismiss} />
 
       {/*
@@ -63,6 +90,7 @@ export default function MemoriesScreen() {
             onPress={() => router.push('/memory/new')}
             accessibilityRole="button"
             hitSlop={touch.min / 2}
+            style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
           >
             <Text variant="body" color="sage">
               {t('memories.add')}
@@ -74,29 +102,12 @@ export default function MemoriesScreen() {
       {memories.length === 0 ? (
         <EmptyState glyph="souvenirs" message={t('memories.placeholder')} />
       ) : (
-        <View>
-          {memories.map((memory, index) => (
-            <Row
-              key={memory.id}
-              title={memoryPreview(memory)}
-              subtitle={
-                memory.week !== undefined && !paused
-                  ? `${formatDate(memory.createdAt)} · ${t('memories.weekStamp', { week: memory.week })}`
-                  : formatDate(memory.createdAt)
-              }
-              leading={
-                <Glyph
-                  name={memory.kind === 'milestone' ? 'souvenirs' : 'leaf'}
-                  size={20}
-                  color="sage"
-                />
-              }
-              onPress={() => router.push(`/memory/${memory.id}` as never)}
-              chevron
-              divider={index < memories.length - 1}
-            />
-          ))}
-        </View>
+        <FlatList
+          style={{ flex: 1 }}
+          data={memories}
+          keyExtractor={(m) => m.id}
+          renderItem={renderItem}
+        />
       )}
     </Screen>
   );

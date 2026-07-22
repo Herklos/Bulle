@@ -108,6 +108,7 @@ function EditableNumber({
           minWidth: 28,
           textAlign: align,
           fontSize: 16,
+          fontFamily: 'Inter_500Medium',
           padding: 0,
           color: colors.ink,
         }}

@@ -27,6 +27,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { EVENT_KINDS, withDate, withTime } from '@/lib/event-when';
 import { useEventsStore } from '@/store/useEventsStore';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
@@ -110,7 +111,7 @@ export default function EventScreen() {
             // The default arrow no-ops on an empty stack (see lib/go-back.ts) — and this
             // screen is reachable from a notification, so that stack is often empty.
             headerLeft: () => (
-              <HeaderAction label={t('common.back')} onPress={() => goBack('/today')} />
+              <HeaderBackButton label={t('common.back')} onPress={() => goBack('/today')} />
             ),
             headerRight: () =>
               canEdit ? <HeaderAction label={t('events.delete')} onPress={remove} /> : null,
@@ -163,7 +164,7 @@ export default function EventScreen() {
           options={{
             title: '',
             headerLeft: () => (
-              <HeaderAction label={t('common.back')} onPress={() => setStep('overview')} />
+              <HeaderBackButton label={t('common.back')} onPress={() => setStep('overview')} />
             ),
           }}
         />
@@ -174,7 +175,7 @@ export default function EventScreen() {
             <Row
               key={k}
               title={t(`events.kinds.${k}`)}
-              subtitle={k === event.kind ? t('settings.languageCurrent') : undefined}
+              subtitle={k === event.kind ? t('events.kindCurrent') : undefined}
               onPress={() => setKind(k)}
               divider={index < EVENT_KINDS.length - 1}
             />
@@ -198,7 +199,7 @@ export default function EventScreen() {
           // "C'est fait" — task-completion phrasing, which on a picker header reads as
           // though it finishes something rather than closes it.
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => setStep('overview')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => setStep('overview')} />
           ),
         }}
       />

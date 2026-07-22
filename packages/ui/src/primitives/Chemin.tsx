@@ -4,7 +4,7 @@
  *
  * One continuous serpentine path down the screen, one inflection per week. The boundary
  * between the sage (travelled) and line (ahead) segments is *where you are* — marked by a
- * 16px mini-orb that breathes with the same tempo as the big one.
+ * static 16px "vous êtes ici" mini-orb in the orb's colour family (no animation).
  *
  * Rendered with react-native-svg rather than Skia: the geometry is a single stroked path,
  * which SVG does natively on all three platforms, and the fil needs no gradient or blur.

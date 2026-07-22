@@ -20,7 +20,7 @@
  */
 import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { DateTimePicker } from '@expo/ui/community/datetime-picker';
 import { randomId, type BulleEvent, type EventKind } from '@bulle/sdk';
@@ -29,6 +29,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { EVENT_KINDS, defaultEventAt, withDate, withTime } from '@/lib/event-when';
 import { useEventsStore } from '@/store/useEventsStore';
 
@@ -42,7 +43,6 @@ export default function NewEventScreen() {
     setStep(stepRef.current === 'time' ? 'date' : 'kind');
     return true;
   });
-  const router = useRouter();
   const { colors, space } = useBulleTheme();
 
   const [step, setStep] = useState<Step>('kind');
@@ -79,7 +79,7 @@ export default function NewEventScreen() {
         <Stack.Screen
           options={{
             headerLeft: () => (
-              <HeaderAction label={t('common.back')} onPress={() => goBack('/today')} />
+              <HeaderBackButton label={t('common.back')} onPress={() => goBack('/today')} />
             ),
           }}
         />
@@ -116,7 +116,7 @@ export default function NewEventScreen() {
           // Overrides the native back, which would otherwise abandon the whole screen from
           // the time step rather than return to the date.
           headerLeft: () => (
-            <HeaderAction
+            <HeaderBackButton
               label={t('common.back')}
               onPress={() => setStep(isDate ? 'kind' : 'date')}
             />

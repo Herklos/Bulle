@@ -29,7 +29,7 @@ import {
 import { Checkbox, EmptyState, SectionHeader, Stepper, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
-import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
@@ -91,7 +91,7 @@ export default function ProjectScreen() {
       <Stack.Screen
         options={{
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/plan')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/plan')} />
           ),
         }}
       />
@@ -115,7 +115,7 @@ export default function ProjectScreen() {
         />
       )}
 
-      {tasks.length === 0 && <EmptyState glyph="plan" message={t('plan.empty')} />}
+      {tasks.length === 0 && <EmptyState glyph="plan" message={t('plan.tasksEmpty')} />}
 
       {groups.map((group) => (
         <View key={`${group.weekStart}-${group.weekEnd}`}>

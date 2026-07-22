@@ -14,7 +14,7 @@ import {
   authorProfileUrl,
   buildAuthorPersonJsonLd,
 } from '@/lib/blog-authors';
-import { localizedSeo, normalizeLang } from '@/lib/seo-urls';
+import { localizedSeo, localizedUrl, normalizeLang } from '@/lib/seo-urls';
 import type { BlogAuthorSlug } from '@/lib/blog-types';
 
 export function generateStaticParams({ params }: { params: { lang: string } }): {
@@ -50,7 +50,7 @@ export default function AuthorPage() {
       }}
     >
       <Seo
-        title={`${author.name} · Bulle`}
+        title={t(author.metaTitleKey)}
         description={t(author.bioKey)}
         {...localizedSeo(resolvedLang, `/author/${resolvedSlug}`)}
         jsonLd={[
@@ -62,11 +62,33 @@ export default function AuthorPage() {
             '@id': `${authorProfileUrl(resolvedSlug, resolvedLang)}#profile`,
             mainEntity: { '@id': `${authorProfileUrl(resolvedSlug, resolvedLang)}#person` },
           },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            '@id': `${authorProfileUrl(resolvedSlug, resolvedLang)}#breadcrumb`,
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Bulle', item: localizedUrl(resolvedLang, '/') },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: t('marketing.nav.blog'),
+                item: localizedUrl(resolvedLang, '/blog'),
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: author.name,
+                item: authorProfileUrl(resolvedSlug, resolvedLang),
+              },
+            ],
+          },
         ]}
       />
 
       <View style={{ gap: space[2] }}>
-        <Text variant="display">{author.name}</Text>
+        <Text variant="display" heading={1}>
+          {author.name}
+        </Text>
         <Text variant="overline">{t(author.roleKey)}</Text>
         <Text variant="body" color="inkSoft">
           {t(author.bioKey)}

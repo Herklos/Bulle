@@ -25,7 +25,7 @@ import { Button, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack } from '@/lib/go-back';
-import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { usePremiumStore } from '@/store/usePremiumStore';
 import { getOffering, redeemPromoCode } from '@/lib/revenuecat';
 import type { GateReason } from '@/lib/premium';
@@ -114,7 +114,7 @@ export default function PaywallScreen() {
         options={{
           headerShown: true,
           title: '',
-          headerLeft: () => <HeaderAction label={t('common.back')} onPress={() => goBack()} />,
+          headerLeft: () => <HeaderBackButton label={t('common.back')} onPress={() => goBack()} />,
         }}
       />
       <Screen>

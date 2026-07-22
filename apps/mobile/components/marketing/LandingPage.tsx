@@ -25,23 +25,18 @@ import { getLandingBlogPosts } from '@/lib/blog';
 import { BLOG_HERO } from '@/lib/blog-posts-shared';
 import { localizedPath, localizedSeo, type MarketingLang } from '@/lib/seo-urls';
 
-export function LandingPage({ lang }: { lang: MarketingLang }) {
-  const { t } = useTranslation();
-  const { colors, layout, radius, space, touch } = useBulleTheme();
-  const { width } = useWindowDimensions();
-
-  /**
-   * During static export there is no window and `useWindowDimensions` reports 0. Treating
-   * an unmeasured width as DESKTOP is deliberate: `0 < 720` would otherwise bake the
-   * narrow layout into the exported HTML, and every desktop visitor would get the phone
-   * version until hydration corrected it.
-   */
-  const isNarrow = width > 0 && width < 720;
-
-  const posts = getLandingBlogPosts(lang);
-
-  const Section = ({ children, tint }: { children: React.ReactNode; tint?: boolean }) => (
-    <View style={{ backgroundColor: tint ? colors.surface : colors.bg, paddingVertical: space[8] }}>
+/**
+ * One section band. Hoisted to module scope so its identity is stable across renders (an
+ * inline component would remount its whole subtree on every parent render). It reads the
+ * theme itself rather than closing over the parent's locals.
+ *
+ * Every section sits on `colors.bg`: separation comes from vertical rhythm and type alone,
+ * no tints, dividers, borders or shadows (§15.0).
+ */
+function Section({ children }: { children: React.ReactNode }) {
+  const { colors, layout, space } = useBulleTheme();
+  return (
+    <View style={{ backgroundColor: colors.bg, paddingVertical: space[8] }}>
       <View
         style={{
           width: '100%',
@@ -55,6 +50,22 @@ export function LandingPage({ lang }: { lang: MarketingLang }) {
       </View>
     </View>
   );
+}
+
+export function LandingPage({ lang }: { lang: MarketingLang }) {
+  const { t } = useTranslation();
+  const { colors, radius, space, touch } = useBulleTheme();
+  const { width } = useWindowDimensions();
+
+  /**
+   * During static export there is no window and `useWindowDimensions` reports 0. Treating
+   * an unmeasured width as DESKTOP is deliberate: `0 < 720` would otherwise bake the
+   * narrow layout into the exported HTML, and every desktop visitor would get the phone
+   * version until hydration corrected it.
+   */
+  const isNarrow = width > 0 && width < 720;
+
+  const posts = getLandingBlogPosts(lang);
 
   return (
     <View>
@@ -76,7 +87,9 @@ export function LandingPage({ lang }: { lang: MarketingLang }) {
         >
           <View style={{ flex: 1, gap: space[5] }}>
             <Text variant="overline">{t('marketing.landing.eyebrow')}</Text>
-            <Text variant="display">{t('marketing.landing.headline')}</Text>
+            <Text variant="display" heading={1}>
+              {t('marketing.landing.headline')}
+            </Text>
             <Text variant="body" color="inkSoft">
               {t('marketing.landing.subhead')}
             </Text>
@@ -134,12 +147,16 @@ export function LandingPage({ lang }: { lang: MarketingLang }) {
       </Section>
 
       {/* ── What it is ── */}
-      <Section tint>
-        <Text variant="titleXL">{t('marketing.landing.whatTitle')}</Text>
+      <Section>
+        <Text variant="titleXL" heading={2}>
+          {t('marketing.landing.whatTitle')}
+        </Text>
         <View style={{ flexDirection: isNarrow ? 'column' : 'row', gap: space[6] }}>
           {(['calm', 'together', 'admin'] as const).map((key) => (
             <View key={key} style={{ flex: 1, gap: space[2] }}>
-              <Text variant="title">{t(`marketing.landing.pillars.${key}.title`)}</Text>
+              <Text variant="title" heading={3}>
+                {t(`marketing.landing.pillars.${key}.title`)}
+              </Text>
               <Text variant="body" color="inkSoft">
                 {t(`marketing.landing.pillars.${key}.body`)}
               </Text>
@@ -150,7 +167,9 @@ export function LandingPage({ lang }: { lang: MarketingLang }) {
 
       {/* ── Privacy: the actual differentiator, so it gets its own section ── */}
       <Section>
-        <Text variant="titleXL">{t('marketing.landing.privacyTitle')}</Text>
+        <Text variant="titleXL" heading={2}>
+          {t('marketing.landing.privacyTitle')}
+        </Text>
         <Text variant="body" color="inkSoft">
           {t('marketing.landing.privacyBody')}
         </Text>
@@ -165,8 +184,10 @@ export function LandingPage({ lang }: { lang: MarketingLang }) {
 
       {/* ── Le Carnet. Empty (and silent) until the first publish date. ── */}
       {posts.length > 0 && (
-        <Section tint>
-          <Text variant="titleXL">{t('marketing.landing.carnetTitle')}</Text>
+        <Section>
+          <Text variant="titleXL" heading={2}>
+            {t('marketing.landing.carnetTitle')}
+          </Text>
           <View style={{ flexDirection: isNarrow ? 'column' : 'row', gap: space[5] }}>
             {posts.map((post) => (
               <View key={post.slug} style={{ flex: 1 }}>

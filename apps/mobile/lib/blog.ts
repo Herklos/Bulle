@@ -181,7 +181,7 @@ export function buildBlogPostingNode(
 }
 
 export function blogName(lang: MarketingLang): string {
-  return lang === 'fr' ? 'Bulle — Le Carnet' : 'Bulle Journal';
+  return lang === 'fr' ? 'Le Carnet de Bulle' : 'Bulle Journal';
 }
 
 export function buildPostJsonLd(
@@ -248,6 +248,19 @@ export function buildBlogJsonLd(
       publisher: { '@id': PUBLISHER['@id'] },
       // Lightweight @id refs on the index; the full BlogPosting lives on the post page.
       blogPost: posts.map((p) => ({ '@id': `${postCanonicalUrl(p.slug, lang)}#article` })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${url}#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Bulle', item: localizedUrl(lang, '/') },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: lang === 'fr' ? 'Le Carnet' : 'Journal',
+          item: url,
+        },
+      ],
     },
     PUBLISHER,
   ];

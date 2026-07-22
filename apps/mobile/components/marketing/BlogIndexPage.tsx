@@ -34,7 +34,7 @@ export function BlogIndexPage({ lang }: { lang: MarketingLang }) {
       />
 
       <View style={{ gap: space[3] }}>
-        <Text variant="display">{t('marketing.blog.title')}</Text>
+        <Text variant="display" heading={1}>{t('marketing.blog.title')}</Text>
         <Text variant="body" color="inkSoft">
           {t('marketing.blog.subtitle')}
         </Text>
@@ -44,13 +44,13 @@ export function BlogIndexPage({ lang }: { lang: MarketingLang }) {
           an error, so it gets real copy. */}
       {posts.length === 0 ? (
         <View style={{ gap: space[3], paddingVertical: space[6] }}>
-          <Text variant="title">{t('marketing.blog.emptyTitle')}</Text>
+          <Text variant="title" heading={2}>{t('marketing.blog.emptyTitle')}</Text>
           <Text variant="body" color="inkSoft">
             {t('marketing.blog.emptyBody')}
           </Text>
         </View>
       ) : (
-        <View>
+        <View style={{ gap: space[6] }}>
           {posts.map((post) => (
             <BlogPostCard key={post.slug} post={post} lang={lang} />
           ))}

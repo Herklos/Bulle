@@ -26,6 +26,7 @@ import {
   eventsInWeek,
   isResolved,
   memoriesForWeek,
+  memoryPreview,
   SA_TO_SG_OFFSET,
 } from '@bulle/sdk';
 import { Chemin, Glyph, type CheminWeek, type GlyphName } from '@bulle/ui/primitives';
@@ -235,7 +236,7 @@ export default function JourneyScreen() {
           {memories.map((memory) => (
             <Row
               key={memory.id}
-              title={memory.title ?? memory.body ?? ''}
+              title={memoryPreview(memory)}
               leading={<Glyph name="souvenirs" size={20} color="sage" />}
               onPress={() => router.push(`/memory/${memory.id}` as never)}
               chevron

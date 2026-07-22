@@ -18,6 +18,9 @@ export interface BlogAuthorProfile {
   /** i18n keys under `marketing.authors.{slug}.*`. */
   roleKey: string;
   bioKey: string;
+  /** `<title>` for the author page. Dedicated so it reads well at ~40–50 chars rather than
+   *  being a thin "Name · Bulle" fragment. */
+  metaTitleKey: string;
   expertiseKeys: string[];
 }
 
@@ -28,6 +31,7 @@ export const BLOG_AUTHORS: Record<BlogAuthorSlug, BlogAuthorProfile> = {
     initials: 'P',
     roleKey: 'marketing.authors.paul.role',
     bioKey: 'marketing.authors.paul.bio',
+    metaTitleKey: 'marketing.authors.paul.metaTitle',
     expertiseKeys: [
       'marketing.authors.paul.expertise.admin',
       'marketing.authors.paul.expertise.privacy',
@@ -40,6 +44,7 @@ export const BLOG_AUTHORS: Record<BlogAuthorSlug, BlogAuthorProfile> = {
     initials: 'C',
     roleKey: 'marketing.authors.sageFemme.role',
     bioKey: 'marketing.authors.sageFemme.bio',
+    metaTitleKey: 'marketing.authors.sageFemme.metaTitle',
     expertiseKeys: [
       'marketing.authors.sageFemme.expertise.suivi',
       'marketing.authors.sageFemme.expertise.maternite',

@@ -40,7 +40,7 @@ import { Row, SectionHeader, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
-import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { usePauseState } from '@/lib/use-pause';
 import { usePermissions } from '@/lib/permissions/usePermissions';
@@ -90,7 +90,7 @@ export default function MoreScreen() {
       <Stack.Screen
         options={{
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/today')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/today')} />
           ),
         }}
       />

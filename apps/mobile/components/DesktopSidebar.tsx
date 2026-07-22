@@ -11,7 +11,7 @@ import { Pressable, View } from 'react-native';
 import { Link, useSegments } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useBulleTheme } from '@bulle/ui/theme';
-import { Glyph, type GlyphName } from '@bulle/ui/primitives';
+import { Glyph, withAlpha, type GlyphName } from '@bulle/ui/primitives';
 import { Text } from '@bulle/ui/components';
 import { usePauseState } from '@/lib/use-pause';
 
@@ -57,9 +57,9 @@ function SidebarLink({ item, active }: { item: NavItem; active: boolean }) {
           borderRadius: radius.s,
           // Active state is a wash of the accent, not a border or a pill outline (§15.4).
           backgroundColor: active
-            ? colors.sage + '1F'
+            ? withAlpha(colors.sage, 0.12)
             : hovered
-              ? colors.line + '80'
+              ? withAlpha(colors.line, 0.5)
               : 'transparent',
         }}
       >

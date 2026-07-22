@@ -12,7 +12,7 @@
  */
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { DateTimePicker } from '@expo/ui/community/datetime-picker';
 import { Text } from '@bulle/ui/components';
@@ -20,13 +20,13 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { useBulleStore } from '@/store/useBulleStore';
 
 export default function NewBirthScreen() {
   const { t } = useTranslation();
   // Android's back must never strand a half-written entry outside the app.
   useHardwareBack('/more');
-  const router = useRouter();
   const { colors, space } = useBulleTheme();
 
   const bulle = useBulleStore((s) => s.bulle);
@@ -55,7 +55,7 @@ export default function NewBirthScreen() {
           // Explicit back button: the platform arrow is absent when this opens first in the
           // stack (deep link / web reload), and goBack always lands.
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/more')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/more')} />
           ),
           headerRight: () => <HeaderAction label={t('common.save')} onPress={save} />,
         }}

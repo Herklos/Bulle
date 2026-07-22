@@ -14,7 +14,8 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { defaultDueDate, type DueDatePickerProps } from './due-date';
 
 function toInputValue(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}`;
 }
 
 export function DueDatePicker({ value, onChange }: DueDatePickerProps) {
@@ -36,7 +37,7 @@ export function DueDatePicker({ value, onChange }: DueDatePickerProps) {
           border: `1px solid ${colors.line}`,
           background: colors.surface,
           color: colors.ink,
-          fontFamily: 'Inter_400Regular',
+          fontFamily: type.body.family,
           fontSize: type.body.size,
           width: '100%',
         }}

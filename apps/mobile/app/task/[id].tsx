@@ -36,7 +36,7 @@ import { Button, Checkbox, Row, SectionHeader, Stepper, Text } from '@bulle/ui/c
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
-import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
@@ -137,7 +137,7 @@ export default function TaskScreen() {
           // Explicit, not the platform default arrow: that arrow is absent when this screen
           // opens first in the stack (deep link / web reload), and goBack always lands.
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/plan')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/plan')} />
           ),
         }}
       />

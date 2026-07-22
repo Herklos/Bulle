@@ -28,6 +28,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { DueDatePicker } from '@/components/DueDatePicker';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useNow } from '@/lib/use-now';
@@ -77,7 +78,7 @@ export default function EditDueDateScreen() {
           // Explicit back button: the platform arrow is absent when this opens first in the
           // stack (deep link / web reload), and goBack always lands.
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/more')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/more')} />
           ),
           headerRight: () =>
             changed ? <HeaderAction label={t('common.save')} onPress={save} /> : null,

@@ -50,6 +50,7 @@ export const fr = {
     greeting: 'Bonjour',
     weekLine: 'Semaine {{sa}} SA · J-{{days}}',
     weekLineSG: 'Semaine {{sg}} SG · J-{{days}}',
+    weekToggleHint: 'Touchez pour basculer entre les semaines d’aménorrhée et de grossesse.',
     weekBulleLabel: 'Illustration : {{week}} semaines de grossesse.',
     focusTitle: 'À faire maintenant',
     done: 'C’est fait',
@@ -99,6 +100,7 @@ export const fr = {
     progress: '{{resolved}} sur {{total}}',
     noEssentials: 'Pas encore d’essentiel ici.',
     empty: 'Rien à préparer pour l’instant. Ajoutez un projet quand vous le sentez.',
+    tasksEmpty: 'Aucune tâche ici pour l’instant. Ajoutez-en une quand vous le sentez.',
     windowLabel: 'Semaines {{start}} à {{end}}',
     effort: {
       S: '~20 min',
@@ -168,7 +170,7 @@ export const fr = {
 
   memories: {
     title: 'Souvenirs',
-    placeholder: 'Rien ici pour l’instant. Écrivez quelque chose quand vous en avez envie.',
+    placeholder: 'Les moments que vous voulez garder apparaîtront ici.',
     add: 'Ajouter',
     newTitle: 'Quelque chose à garder',
     kindQuestion: 'C’est quoi ?',
@@ -263,6 +265,8 @@ export const fr = {
     family: 'Famille',
     invite: 'Inviter',
     inviteBody: 'Partagez ce lien avec votre co-parent. Il rejoint votre bulle, sans compte.',
+    inviteFailed: 'Le partage n’a pas pu démarrer. Réessayez dans un moment.',
+    inviteLocalOnly: 'Cette bulle est locale, il n’y a rien à partager pour le moment.',
     copyLink: 'Copier le lien',
     linkCopied: 'Lien copié',
     language: 'Langue',
@@ -314,6 +318,7 @@ export const fr = {
     delete: 'Supprimer le rendez-vous',
     newTitle: 'Un rendez-vous',
     kindQuestion: 'De quel type ?',
+    kindCurrent: 'Sélectionné',
     dateQuestion: 'Quel jour ?',
     timeQuestion: 'À quelle heure ?',
     kinds: {
@@ -401,9 +406,9 @@ export const fr = {
       madeWith: 'Fait en France, hors ligne, sans publicité.',
     },
     landing: {
-      metaTitle: 'Bulle — préparer l’arrivée de bébé, à deux et sans stress',
+      metaTitle: 'Préparer l’arrivée de bébé à deux, sans stress | Bulle',
       metaDescription:
-        'L’application privée pour préparer l’arrivée de votre bébé à deux : démarches administratives françaises, valise maternité, achats utiles. Sans compte, sans publicité, vos données restent sur votre téléphone.',
+        'L’appli privée pour préparer l’arrivée de bébé à deux : démarches françaises, valise maternité, achats utiles. Sans compte, vos données restent chez vous.',
       eyebrow: 'Avant l’arrivée',
       headline: 'Votre bulle à deux avant l’arrivée de bébé',
       subhead:
@@ -442,7 +447,7 @@ export const fr = {
       carnetTitle: 'Le Carnet',
     },
     blog: {
-      metaTitle: 'Le Carnet — préparer l’arrivée de bébé | Bulle',
+      metaTitle: 'Le Carnet, préparer l’arrivée de bébé | Bulle',
       metaDescription:
         'Démarches administratives, valise maternité, achats utiles, vie privée. Des articles courts et honnêtes pour préparer l’arrivée de votre bébé en France.',
       title: 'Le Carnet',
@@ -457,6 +462,7 @@ export const fr = {
     authors: {
       paul: {
         role: 'Fondateur de Bulle',
+        metaTitle: 'Paul, fondateur de Bulle et auteur du Carnet',
         bio:
           'Paul construit Bulle. Il écrit sur l’administratif français, la vie privée, et l’organisation à deux, parce que ce sont les sujets sur lesquels il a lui-même galéré.',
         expertise: {
@@ -467,6 +473,7 @@ export const fr = {
       },
       sageFemme: {
         role: 'Sage-femme',
+        metaTitle: 'Camille, sage-femme qui relit le contenu santé',
         bio:
           'Camille est sage-femme. Elle relit le contenu santé de Bulle et écrit les articles qui touchent au suivi de grossesse et au post-partum.',
         expertise: {
@@ -477,7 +484,7 @@ export const fr = {
       },
     },
     privacy: {
-      metaTitle: 'Confidentialité — Bulle',
+      metaTitle: 'Confidentialité et données de santé | Bulle',
       metaDescription:
         'Ce que Bulle sait de vous : rien. Pas de compte, pas de publicité, chiffrement de bout en bout. Notre politique de confidentialité, en français clair.',
       title: 'Confidentialité',
@@ -518,8 +525,9 @@ export const fr = {
       ],
     },
     terms: {
-      metaTitle: 'Conditions d’utilisation — Bulle',
-      metaDescription: 'Les conditions d’utilisation de Bulle, en français clair.',
+      metaTitle: 'Conditions d’utilisation | Bulle',
+      metaDescription:
+        'Les conditions d’utilisation de Bulle, en français clair : ce que fait l’application, votre phrase de récupération, et les règles d’achat.',
       title: 'Conditions d’utilisation',
       intro: 'Le strict nécessaire, écrit lisiblement.',
       updated: 'Dernière mise à jour : juillet 2026.',

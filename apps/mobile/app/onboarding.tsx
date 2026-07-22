@@ -363,13 +363,19 @@ export default function OnboardingScreen() {
               <OnboardingChoice
                 index={0}
                 label={t('onboarding.notificationsYes')}
-                onPress={() => void finish()}
+                onPress={() => {
+                  void useSettingsStore.getState().setNotifications(true);
+                  void finish();
+                }}
               />
               <OnboardingChoice
                 index={1}
                 last
                 label={t('onboarding.notificationsNo')}
-                onPress={() => void finish()}
+                onPress={() => {
+                  void useSettingsStore.getState().setNotifications(false);
+                  void finish();
+                }}
               />
             </View>
           </View>

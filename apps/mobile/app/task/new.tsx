@@ -30,6 +30,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { usePlanStore } from '@/store/usePlanStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useNow } from '@/lib/use-now';
@@ -114,7 +115,7 @@ export default function NewTaskScreen() {
         options={{
           // See memory/new: the default arrow no-ops with no history.
           headerLeft: () => (
-            <HeaderAction label={t('common.back')} onPress={() => goBack('/plan')} />
+            <HeaderBackButton label={t('common.back')} onPress={() => goBack('/plan')} />
           ),
           headerRight: () =>
             // Absent rather than greyed-out until there is something to save: a disabled

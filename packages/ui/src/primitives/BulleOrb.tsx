@@ -236,21 +236,7 @@ export function BulleOrb({
             </Circle>
 
             <Group clip={clip}>
-              {/* The baby, inside the glass. Softened so it reads as seen THROUGH something
-                  rather than pasted on — and so it never competes with the focus card. */}
-              {baby && (
-                <SkImage
-                  image={baby}
-                  x={babyRect.x}
-                  y={babyRect.y}
-                  width={babyRect.width}
-                  height={babyRect.height}
-                  fit="contain"
-                  opacity={scheme === 'dark' ? 0.75 : 0.9}
-                />
-              )}
-
-              {/* Liquid, over the baby. `start`/`end` span the full turn so the three stops
+              {/* Liquid, behind the baby. `start`/`end` span the full turn so the three stops
                   close seamlessly instead of seaming at 0°. */}
               <Path path={liquid} opacity={0.92}>
                 <SweepGradient c={vec(cx, cy)} start={0} end={360} colors={stops} />
@@ -264,6 +250,22 @@ export function BulleOrb({
                 strokeWidth={1.5}
                 color={withAlpha(colors.surface, 0.6)}
               />
+
+              {/* The baby, inside the glass and IN FRONT of the liquid — a near-full orb used
+                  to submerge and hide it, which fought the whole point of the metaphor (§1.1:
+                  the bubble protects the thing inside it, it does not bury it). Softened so it
+                  reads as seen THROUGH something rather than pasted on. */}
+              {baby && (
+                <SkImage
+                  image={baby}
+                  x={babyRect.x}
+                  y={babyRect.y}
+                  width={babyRect.width}
+                  height={babyRect.height}
+                  fit="contain"
+                  opacity={scheme === 'dark' ? 0.75 : 0.9}
+                />
+              )}
 
               {/* Bounce light: a dim, wide secondary low-right. Sells roundness without
                   implying a second lamp in the room. */}

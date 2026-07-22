@@ -26,6 +26,7 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { goBack, useHardwareBack } from '@/lib/go-back';
 import { HeaderAction } from '@/components/HeaderAction';
+import { HeaderBackButton } from '@/components/HeaderBackButton';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useBulleStore } from '@/store/useBulleStore';
 import { getSession } from '@/lib/starfish';
@@ -91,7 +92,7 @@ export default function NewMemoryScreen() {
         <Stack.Screen
           options={{
             headerLeft: () => (
-              <HeaderAction label={t('common.back')} onPress={() => goBack('/memories')} />
+              <HeaderBackButton label={t('common.back')} onPress={() => goBack('/memories')} />
             ),
           }}
         />
@@ -121,7 +122,7 @@ export default function NewMemoryScreen() {
           the options never reach the navigator and the header stays bare. */}
       <Stack.Screen
         options={{
-          headerLeft: () => <HeaderAction label={t('common.back')} onPress={() => setKind(null)} />,
+          headerLeft: () => <HeaderBackButton label={t('common.back')} onPress={() => setKind(null)} />,
           headerRight: () =>
             isMemoryEmpty(draft) ? null : (
               <HeaderAction label={t('common.save')} onPress={save} />

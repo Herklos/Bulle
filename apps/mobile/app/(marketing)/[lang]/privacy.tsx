@@ -13,13 +13,14 @@ import { useTranslation } from 'react-i18next';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Text } from '@bulle/ui/components';
 import { Seo } from '@/components/Seo';
-import { localizedSeo, normalizeLang } from '@/lib/seo-urls';
+import { BASE_URL, localizedSeo, localizedUrl, normalizeLang } from '@/lib/seo-urls';
 
 export default function PrivacyPage() {
   const { lang } = useLocalSearchParams<{ lang: string }>();
   const { t } = useTranslation();
   const { layout, space } = useBulleTheme();
   const resolved = normalizeLang(lang);
+  const canonical = localizedUrl(resolved, '/privacy');
 
   const sections = t('marketing.privacy.sections', { returnObjects: true }) as {
     title: string;
@@ -41,9 +42,32 @@ export default function PrivacyPage() {
         title={t('marketing.privacy.metaTitle')}
         description={t('marketing.privacy.metaDescription')}
         {...localizedSeo(resolved, '/privacy')}
+        jsonLd={[
+          {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            '@id': canonical,
+            url: canonical,
+            name: t('marketing.privacy.metaTitle'),
+            description: t('marketing.privacy.metaDescription'),
+            inLanguage: resolved === 'fr' ? 'fr-FR' : 'en-US',
+            isPartOf: { '@id': `${BASE_URL}/#website` },
+          },
+          {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            '@id': `${canonical}#breadcrumb`,
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Bulle', item: localizedUrl(resolved, '/') },
+              { '@type': 'ListItem', position: 2, name: t('marketing.privacy.title'), item: canonical },
+            ],
+          },
+        ]}
       />
 
-      <Text variant="display">{t('marketing.privacy.title')}</Text>
+      <Text variant="display" heading={1}>
+        {t('marketing.privacy.title')}
+      </Text>
       <Text variant="body" color="inkSoft">
         {t('marketing.privacy.intro')}
       </Text>
@@ -51,7 +75,9 @@ export default function PrivacyPage() {
       {Array.isArray(sections) &&
         sections.map((section) => (
           <View key={section.title} style={{ gap: space[2] }}>
-            <Text variant="title">{section.title}</Text>
+            <Text variant="title" heading={2}>
+              {section.title}
+            </Text>
             <Text variant="body" color="inkSoft">
               {section.body}
             </Text>

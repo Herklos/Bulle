@@ -50,7 +50,8 @@ export function TaskMenu({ dismissLabel, deleteLabel, onDismiss, onDelete }: Tas
               rather than falling through to a task row. */}
           <Pressable
             onPress={() => setOpen(false)}
-            accessibilityLabel=""
+            aria-hidden
+            focusable={false}
             style={{ position: 'fixed', inset: 0 } as never}
           />
           <View

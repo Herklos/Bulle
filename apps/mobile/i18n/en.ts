@@ -50,6 +50,7 @@ export const en = {
     greeting: 'Hello',
     weekLine: 'Week {{sa}} · {{days}} days to go',
     weekLineSG: 'Week {{sg}} · {{days}} days to go',
+    weekToggleHint: 'Tap to switch between amenorrhea weeks and pregnancy weeks.',
     weekBulleLabel: 'Illustration: {{week}} weeks of gestation.',
     focusTitle: 'To do now',
     done: 'Done',
@@ -98,6 +99,7 @@ export const en = {
     progress: '{{resolved}} of {{total}}',
     noEssentials: 'No essentials here yet.',
     empty: 'Nothing to prepare yet. Add a project when you feel like it.',
+    tasksEmpty: 'Nothing here yet. Add a task when you feel like it.',
     windowLabel: 'Weeks {{start}} to {{end}}',
     effort: {
       S: '~20 min',
@@ -166,7 +168,7 @@ export const en = {
 
   memories: {
     title: 'Memories',
-    placeholder: 'Nothing here yet. Write something when you feel like it.',
+    placeholder: 'The moments you want to keep will appear here.',
     add: 'Add',
     newTitle: 'Something to keep',
     kindQuestion: 'What is it?',
@@ -259,6 +261,8 @@ export const en = {
     family: 'Family',
     invite: 'Invite',
     inviteBody: 'Share this link with your co-parent. They join your bubble, with no account.',
+    inviteFailed: 'Sharing could not start. Try again in a moment.',
+    inviteLocalOnly: 'This bulle is local, there is nothing to share yet.',
     copyLink: 'Copy link',
     linkCopied: 'Link copied',
     language: 'Language',
@@ -310,6 +314,7 @@ export const en = {
     delete: 'Delete appointment',
     newTitle: 'An appointment',
     kindQuestion: 'What kind?',
+    kindCurrent: 'Selected',
     dateQuestion: 'Which day?',
     timeQuestion: 'At what time?',
     kinds: {
@@ -397,7 +402,7 @@ export const en = {
       madeWith: 'Made in France, offline, ad-free.',
     },
     landing: {
-      metaTitle: 'Bulle — prepare for your baby, together and calmly',
+      metaTitle: 'Prepare for your baby, together and calmly | Bulle',
       metaDescription:
         'The private app for preparing for your baby together: paperwork, hospital bag, the things worth buying. No account, no ads, your data stays on your phone.',
       eyebrow: 'Before the arrival',
@@ -438,9 +443,9 @@ export const en = {
       carnetTitle: 'From the Journal',
     },
     blog: {
-      metaTitle: 'Journal — preparing for a baby | Bulle',
+      metaTitle: 'Journal, preparing for your baby | Bulle',
       metaDescription:
-        'Paperwork, hospital bag, what is worth buying, privacy. Short, honest articles about preparing for a baby.',
+        'Paperwork, hospital bag, what is worth buying, and privacy. Short, honest articles to help you prepare for your baby, calmly and without the noise.',
       title: 'Journal',
       subtitle: 'What we wish we had read. Short, honest, with nothing to sell you.',
       readingMinutes: '{{count}} min read',
@@ -453,6 +458,7 @@ export const en = {
     authors: {
       paul: {
         role: 'Founder of Bulle',
+        metaTitle: 'Paul, founder of Bulle and author of the Journal',
         bio:
           'Paul builds Bulle. He writes about paperwork, privacy, and preparing as a couple, because those are the things he struggled with himself.',
         expertise: {
@@ -463,6 +469,7 @@ export const en = {
       },
       sageFemme: {
         role: 'Midwife',
+        metaTitle: 'Camille, midwife who reviews Bulle’s content',
         bio:
           'Camille is a midwife. She reviews Bulle’s health content and writes the articles about pregnancy care and the postpartum period.',
         expertise: {
@@ -473,9 +480,9 @@ export const en = {
       },
     },
     privacy: {
-      metaTitle: 'Privacy — Bulle',
+      metaTitle: 'Privacy and your health data | Bulle',
       metaDescription:
-        'What Bulle knows about you: nothing. No account, no ads, end-to-end encryption. Our privacy policy, in plain English.',
+        'What Bulle knows about you: nothing. No account, no ads, everything end-to-end encrypted. Our privacy policy, written to be read, in plain English.',
       title: 'Privacy',
       intro:
         'This page is written to be read, not to protect us. Here is exactly what happens with your data.',
@@ -514,8 +521,9 @@ export const en = {
       ],
     },
     terms: {
-      metaTitle: 'Terms of use — Bulle',
-      metaDescription: 'Bulle’s terms of use, in plain English.',
+      metaTitle: 'Terms of use and refunds | Bulle',
+      metaDescription:
+        'Bulle’s terms of use, in plain English: what the app does, your recovery phrase, and how the one-time purchase and refunds work.',
       title: 'Terms of use',
       intro: 'The necessary minimum, written to be read.',
       updated: 'Last updated: July 2026.',
