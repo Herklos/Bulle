@@ -38,8 +38,25 @@ import {
 export const SYNC_BASE =
   process.env.EXPO_PUBLIC_SYNC_BASE ?? 'https://sync.drakkar.software';
 
-/** The placeholder that has never resolved. Used only to warn, never to branch on. */
-const PLACEHOLDER_SYNC_BASE = 'https://sync.drakkar.software';
+/** The placeholder that has never resolved. */
+export const PLACEHOLDER_SYNC_BASE = 'https://sync.drakkar.software';
+
+/** True when `url` is the fiction host that cannot resolve. */
+export function isPlaceholderSyncBase(url: string): boolean {
+  return url === PLACEHOLDER_SYNC_BASE;
+}
+
+/**
+ * Whether invite / couple sync has a real Starfish host.
+ *
+ * `SYNC_BASE` always has a fallback (the placeholder), so "configured" means the env var is
+ * set to something other than that fiction — not merely that `SYNC_BASE` is a string.
+ */
+export function isSyncConfigured(
+  envBase: string | undefined = process.env.EXPO_PUBLIC_SYNC_BASE,
+): boolean {
+  return typeof envBase === 'string' && envBase.length > 0 && !isPlaceholderSyncBase(envBase);
+}
 
 /**
  * Say it out loud in dev.
@@ -49,7 +66,7 @@ const PLACEHOLDER_SYNC_BASE = 'https://sync.drakkar.software';
  * how "sync is broken" survives to launch.
  */
 function warnIfSyncBaseIsPlaceholder(): void {
-  if (__DEV__ && SYNC_BASE === PLACEHOLDER_SYNC_BASE) {
+  if (__DEV__ && !isSyncConfigured()) {
     console.warn(
       '[bulle] SYNC_BASE is the placeholder https://sync.drakkar.software, which does not ' +
         'resolve. Sync will fail silently and no co-parent will ever receive anything. ' +

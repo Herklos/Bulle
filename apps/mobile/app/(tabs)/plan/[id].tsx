@@ -20,6 +20,7 @@ import {
   isCounted,
   isLingering,
   isResolved,
+  rederiveTaskStatus,
   setTaskCount,
   setTaskTarget,
   stepTaskCount,
@@ -206,7 +207,10 @@ export default function ProjectScreen() {
                     deleteLabel={t('common.delete')}
                     onDismiss={() =>
                       updateTask(task.id, {
-                        status: task.status === 'dismissed' ? 'todo' : 'dismissed',
+                        status:
+                          task.status === 'dismissed'
+                            ? rederiveTaskStatus(task)
+                            : 'dismissed',
                       })
                     }
                     onDelete={() => usePlanStore.getState().removeTask(task.id)}

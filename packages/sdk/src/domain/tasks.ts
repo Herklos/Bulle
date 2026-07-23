@@ -301,6 +301,26 @@ export function completeTaskUpdates(
   return { status: 'done' };
 }
 
+/**
+ * Status implied by count / checklist / choice answer, ignoring a current `dismissed` flag.
+ *
+ * Used when undismissing: a counted task that already reached its target must become `done`
+ * again, not `todo`. Forcing `todo` would leave the Stepper looking complete while
+ * `projectProgress` under-counts — boolean tasks have no secondary state, so they alone
+ * stayed consistent.
+ */
+export function rederiveTaskStatus(task: Task): TaskStatus {
+  if (isCounted(task)) {
+    return taskCount(task) >= task.target! ? 'done' : 'todo';
+  }
+  if (hasChecklist(task)) {
+    const items = task.checklist ?? [];
+    return items.length > 0 && items.every((i) => i.done) ? 'done' : 'todo';
+  }
+  if (isChoice(task) && task.chosenOptionId) return 'done';
+  return 'todo';
+}
+
 // ─── Pure reducers (the store delegates to these) ─────────────────────────────
 
 export function addTask(tasks: Task[], task: Task): Task[] {

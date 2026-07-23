@@ -7,6 +7,7 @@
  * completion state or a nudge ("you have not written this week") it stops being a keepsake
  * and becomes another thing to fall behind on.
  */
+import { currentWeekSG } from './pregnancy.js';
 import type { Memory } from './types.js';
 
 /** Newest first — the way anyone reads back a journal. */
@@ -34,4 +35,31 @@ export function memoryPreview(memory: Memory, maxLength = 80): string {
 /** A memory with neither a title nor a body is not worth storing. */
 export function isMemoryEmpty(memory: Pick<Memory, 'title' | 'body'>): boolean {
   return !memory.title?.trim() && !memory.body?.trim();
+}
+
+/**
+ * Stamp `createdAt` / `week` from a calendar day the user picked (today or past).
+ *
+ * Future dates clamp to `now`: the picker sets `maximumDate`, but a peer or a clock skew
+ * must not invent a gestational week that has not happened yet. `now` is injected so tests
+ * stay deterministic.
+ */
+export interface MemoryDateStamp {
+  createdAt: string;
+  updatedAt: string;
+  week: number;
+}
+
+export function stampMemoryFromDate(
+  dueDate: string,
+  picked: Date,
+  now: number,
+): MemoryDateStamp {
+  const clamped = Math.min(picked.getTime(), now);
+  const iso = new Date(clamped).toISOString();
+  return {
+    createdAt: iso,
+    updatedAt: iso,
+    week: currentWeekSG(dueDate, clamped),
+  };
 }

@@ -184,6 +184,7 @@ export const en = {
     titlePlaceholder: 'Optional',
     bodyLabel: 'What happened?',
     bodyPlaceholder: 'Write as much or as little as you want.',
+    when: 'When?',
     weekStamp: 'Week {{week}}',
     delete: 'Delete',
   },
@@ -263,6 +264,7 @@ export const en = {
     inviteBody: 'Share this link with your co-parent. They join your bubble, with no account.',
     inviteFailed: 'Sharing could not start. Try again in a moment.',
     inviteLocalOnly: 'This bulle is local, there is nothing to share yet.',
+    inviteUnavailable: 'Sharing is not available right now.',
     copyLink: 'Copy link',
     linkCopied: 'Link copied',
     language: 'Language',
@@ -341,7 +343,7 @@ export const en = {
     journey: {
       eyebrow: 'Journey',
       title: 'Week after week',
-      tagline: 'One thread, from the first scan to the day itself.',
+      tagline: 'One thread, from the first weeks to the day itself.',
       bullets: {
         week: 'Where you are, without having to count',
         milestones: 'The scans and appointments that matter',

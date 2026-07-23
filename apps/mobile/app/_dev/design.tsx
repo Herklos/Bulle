@@ -23,7 +23,7 @@
 import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
-import { BulleOrb, Chemin, Glyph, GLYPHS, type CheminWeek, type GlyphName } from '@bulle/ui/primitives';
+import { BulleOrb, Chemin, Glyph, GLYPHS, buildCheminWeeks, type CheminWeek, type GlyphName } from '@bulle/ui/primitives';
 import { Button, ProgressRing, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
@@ -39,10 +39,7 @@ export default function DesignScreen() {
   const [trimester, setTrimester] = useState(0.4);
   const [pulseKey, setPulseKey] = useState(0);
 
-  const weeks: CheminWeek[] = Array.from({ length: 20 }, (_, i) => ({
-    week: i + 5,
-    milestone: [12, 16, 22].includes(i + 5),
-  }));
+  const weeks: CheminWeek[] = buildCheminWeeks(1, 20);
 
   return (
     <Screen>

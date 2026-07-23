@@ -16,21 +16,39 @@
  * path is deterministic, identical across platforms, and cheaper.
  */
 import React, { useMemo } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { useBulleTheme } from '../theme/context.js';
+import {
+  cheminPath,
+  cheminPoints,
+  type CheminWeek,
+} from './chemin-shared.js';
 
-export interface CheminWeek {
-  /** Week SA. */
-  week: number;
-  /** Échographies, trimester boundaries — drawn larger. */
-  milestone?: boolean;
-}
+export type {
+  CheminWeek,
+  Point,
+} from './chemin-shared.js';
+export {
+  buildCheminWeeks,
+  clampCheminWeek,
+  cheminPath,
+  cheminPoints,
+  CHEMIN_FIRST_WEEK,
+  CHEMIN_LAST_WEEK,
+  CHEMIN_MILESTONE_WEEKS,
+} from './chemin-shared.js';
 
 export interface CheminProps {
   weeks: CheminWeek[];
   /** Current week SA — the boundary between travelled and ahead. */
   currentWeek: number;
+  /** Week being browsed (heading / card). Distinct from `currentWeek` so the orb stays honest. */
+  selectedWeek?: number;
+  /** Tap a node to jump the browse week. Hit targets are ≥44pt overlays, not the SVG circles. */
+  onSelectWeek?: (week: number) => void;
+  /** a11y label for each node hit target. Defaults to the week number alone. */
+  weekAccessibilityLabel?: (week: number) => string;
   /** Horizontal serpentine amplitude. ≤24px per §15.3: a gentle meander, not a slalom. */
   amplitude?: number;
   /** Vertical distance between week nodes. */
@@ -38,48 +56,14 @@ export interface CheminProps {
   width?: number;
 }
 
-interface Point {
-  x: number;
-  y: number;
-}
-
-/**
- * A smooth path through `points` using mid-point cubic smoothing: each segment's control
- * points sit on the vertical between consecutive nodes, which keeps the curve gentle and
- * guarantees it never overshoots horizontally past a node.
- */
-export function cheminPath(points: Point[]): string {
-  if (points.length === 0) return '';
-  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
-
-  const parts = [`M ${points[0].x} ${points[0].y}`];
-  for (let i = 1; i < points.length; i++) {
-    const prev = points[i - 1];
-    const cur = points[i];
-    const midY = (prev.y + cur.y) / 2;
-    parts.push(`C ${prev.x} ${midY}, ${cur.x} ${midY}, ${cur.x} ${cur.y}`);
-  }
-  return parts.join(' ');
-}
-
-/** Node positions. Exported so tests can pin the geometry without rendering. */
-export function cheminPoints(
-  count: number,
-  width: number,
-  amplitude: number,
-  spacing: number,
-): Point[] {
-  const center = width / 2;
-  return Array.from({ length: count }, (_, i) => ({
-    // One inflection per node — a half-period per step.
-    x: center + Math.sin(i * (Math.PI / 2)) * amplitude,
-    y: spacing / 2 + i * spacing,
-  }));
-}
+const HIT = 44;
 
 export function Chemin({
   weeks,
   currentWeek,
+  selectedWeek,
+  onSelectWeek,
+  weekAccessibilityLabel,
   amplitude = 24,
   spacing = 72,
   width = 96,
@@ -99,6 +83,11 @@ export function Chemin({
     return weeks.length - 1;
   }, [weeks, currentWeek]);
 
+  const selectedIndex = useMemo(() => {
+    if (selectedWeek === undefined) return -1;
+    return weeks.findIndex((w) => w.week === selectedWeek);
+  }, [weeks, selectedWeek]);
+
   const height = weeks.length * spacing;
 
   // Split at the current node so the colour boundary IS "you are here". Both segments
@@ -107,7 +96,12 @@ export function Chemin({
   const ahead = currentIndex >= 0 ? cheminPath(points.slice(currentIndex)) : cheminPath(points);
 
   return (
-    <View style={{ width, height }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <View
+      style={{ width, height }}
+      // Hit targets below are labelled; the decorative SVG stays out of the a11y tree.
+      accessibilityElementsHidden={!onSelectWeek}
+      importantForAccessibility={onSelectWeek ? 'yes' : 'no-hide-descendants'}
+    >
       <Svg width={width} height={height}>
         {ahead !== '' && (
           <Path d={ahead} stroke={colors.line} strokeWidth={3} strokeLinecap="round" fill="none" />
@@ -120,6 +114,7 @@ export function Chemin({
           const p = points[i];
           const past = i < currentIndex;
           const isCurrent = i === currentIndex;
+          const isSelected = i === selectedIndex && i !== currentIndex;
           if (isCurrent) return null; // drawn below, on top of everything
 
           const r = w.milestone ? 6 : 4;
@@ -130,8 +125,8 @@ export function Chemin({
               cy={p.y}
               r={r}
               fill={past ? colors.sage : colors.bg}
-              stroke={past ? colors.sage : colors.line}
-              strokeWidth={2}
+              stroke={isSelected ? colors.ink : past ? colors.sage : colors.line}
+              strokeWidth={isSelected ? 2.5 : 2}
             />
           );
         })}
@@ -144,6 +139,31 @@ export function Chemin({
           </>
         )}
       </Svg>
+
+      {/*
+        Absolute overlays, not SVG presses: each node is a 4–6px circle on a 24px meander,
+        far under the 44pt floor. Centering a 44×44 Pressable on the node keeps the fil
+        tappable without inventing tiny hit areas.
+      */}
+      {onSelectWeek &&
+        weeks.map((w, i) => {
+          const p = points[i];
+          return (
+            <Pressable
+              key={`hit-${w.week}`}
+              accessibilityRole="button"
+              accessibilityLabel={weekAccessibilityLabel?.(w.week) ?? String(w.week)}
+              onPress={() => onSelectWeek(w.week)}
+              style={{
+                position: 'absolute',
+                left: p.x - HIT / 2,
+                top: p.y - HIT / 2,
+                width: HIT,
+                height: HIT,
+              }}
+            />
+          );
+        })}
     </View>
   );
 }

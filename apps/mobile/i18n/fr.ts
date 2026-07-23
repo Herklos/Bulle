@@ -186,6 +186,7 @@ export const fr = {
     titlePlaceholder: 'Facultatif',
     bodyLabel: 'Il s’est passé quoi ?',
     bodyPlaceholder: 'Écrivez autant ou aussi peu que vous voulez.',
+    when: 'Quand ?',
     weekStamp: 'Semaine {{week}}',
     delete: 'Supprimer',
   },
@@ -267,6 +268,7 @@ export const fr = {
     inviteBody: 'Partagez ce lien avec votre co-parent. Il rejoint votre bulle, sans compte.',
     inviteFailed: 'Le partage n’a pas pu démarrer. Réessayez dans un moment.',
     inviteLocalOnly: 'Cette bulle est locale, il n’y a rien à partager pour le moment.',
+    inviteUnavailable: 'Le partage n’est pas disponible pour le moment.',
     copyLink: 'Copier le lien',
     linkCopied: 'Lien copié',
     language: 'Langue',
@@ -345,7 +347,7 @@ export const fr = {
     journey: {
       eyebrow: 'Chemin',
       title: 'Semaine après semaine',
-      tagline: 'Un fil, de la première échographie au jour J.',
+      tagline: 'Un fil, des premières semaines au jour J.',
       bullets: {
         week: 'Où vous en êtes, sans avoir à compter',
         milestones: 'Les échographies et les rendez-vous qui comptent',

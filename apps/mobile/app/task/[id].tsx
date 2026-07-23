@@ -27,6 +27,7 @@ import {
   toggleChecklistItem,
   isLingering,
   isResolved,
+  rederiveTaskStatus,
   setTaskCount,
   setTaskTarget,
   stepTaskCount,
@@ -122,9 +123,9 @@ export default function TaskScreen() {
 
   /** "Pas pour nous", and back again. Never a one-way door. */
   const toggleIgnored = () => {
-    usePlanStore
-      .getState()
-      .updateTask(task.id, { status: task.status === 'dismissed' ? 'todo' : 'dismissed' });
+    usePlanStore.getState().updateTask(task.id, {
+      status: task.status === 'dismissed' ? rederiveTaskStatus(task) : 'dismissed',
+    });
   };
 
   return (

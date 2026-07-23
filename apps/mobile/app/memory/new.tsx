@@ -6,18 +6,19 @@
  * category system, and nothing filters on it. Two options exist because "un mot" and "un
  * moment" are genuinely different intentions, not because a taxonomy was wanted.
  *
- * The week is stamped automatically from the due date. Asking someone to tell the app what
- * week they are in, when the app already knows, is the kind of small insult that makes
- * software feel like paperwork.
+ * The week is stamped from the date the user picks (today or past), derived from the due
+ * date — never typed in by hand. Asking someone to tell the app what week they are in, when
+ * the app already knows, is the kind of small insult that makes software feel like paperwork.
  */
 import React, { useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { DateTimePicker } from '@expo/ui/community/datetime-picker';
 import {
-  currentWeekSG,
   isMemoryEmpty,
   randomId,
+  stampMemoryFromDate,
   type Memory,
   type MemoryKind,
 } from '@bulle/sdk';
@@ -43,8 +44,7 @@ export default function NewMemoryScreen() {
     setKind(null);
     return true;
   });
-  const router = useRouter();
-  const { space } = useBulleTheme();
+  const { colors, space } = useBulleTheme();
   const now = useNow();
 
   const bulle = useBulleStore((s) => s.bulle);
@@ -56,6 +56,7 @@ export default function NewMemoryScreen() {
   kindRef.current = kind;
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [at, setAt] = useState(() => new Date(now));
 
   const draft = useMemo(() => ({ title, body }), [title, body]);
 
@@ -64,17 +65,17 @@ export default function NewMemoryScreen() {
   const save = () => {
     // A souvenir with neither a title nor a body is not worth storing.
     if (!kind || isMemoryEmpty(draft)) return;
-    const nowIso = new Date().toISOString();
+    const stamp = stampMemoryFromDate(bulle.profile.dueDate, at, now);
     const memory: Memory = {
       id: randomId(),
       kind,
       title: title.trim() || undefined,
       body: body.trim() || undefined,
       // SG, not SA: the Chemin speaks gestational weeks (§7.2).
-      week: currentWeekSG(bulle.profile.dueDate, now),
+      week: stamp.week,
       authorId: getSession()?.userId,
-      createdAt: nowIso,
-      updatedAt: nowIso,
+      createdAt: stamp.createdAt,
+      updatedAt: stamp.updatedAt,
     };
     useMemoriesStore.getState().addMemory(memory);
     goBack('/memories');
@@ -153,6 +154,19 @@ export default function NewMemoryScreen() {
           // Room to write without the field growing the page under the keyboard.
           style={{ minHeight: 140, textAlignVertical: 'top' }}
         />
+
+        <View style={{ gap: space[2] }}>
+          <Text variant="caption">{t('memories.when')}</Text>
+          <DateTimePicker
+            mode="date"
+            presentation="inline"
+            accentColor={colors.sage}
+            value={at}
+            // A souvenir from the future is not a keepsake — only today or past.
+            maximumDate={new Date(now)}
+            onValueChange={(_event, date) => setAt(date)}
+          />
+        </View>
       </Screen>
     </>
   );

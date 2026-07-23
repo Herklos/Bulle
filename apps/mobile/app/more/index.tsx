@@ -38,6 +38,7 @@ import { Host, Switch } from '@expo/ui';
 import { DEFAULT_COUNTRY } from '@bulle/sdk';
 import { Row, SectionHeader, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
+import { isSyncConfigured } from '@/lib/config';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { HeaderBackButton } from '@/components/HeaderBackButton';
@@ -125,8 +126,9 @@ export default function MoreScreen() {
         </View>
       )}
 
-      {/* Couple sync is free (§10), so this is never a gated group. */}
-      {isOwner && (
+      {/* Couple sync is free (§10), so this is never a gated group — but it needs a real
+          sync host. Without EXPO_PUBLIC_SYNC_BASE the Inviter row is a dead end. */}
+      {isOwner && isSyncConfigured() && (
         <View>
           <SectionHeader title={t('settings.sections.family')} />
           <Row

@@ -7,6 +7,7 @@ import {
   isChoice,
   toggleChecklistItem,
   isCounted,
+  rederiveTaskStatus,
   setTaskCount,
   setTaskTarget,
   stepTaskCount,
@@ -301,5 +302,67 @@ describe('applyTaskChoice', () => {
   it('isChoice only for tasks that actually offer options', () => {
     expect(isChoice(choice)).toBe(true);
     expect(isChoice(task())).toBe(false);
+  });
+});
+
+describe('rederiveTaskStatus', () => {
+  it('restores done for a counted task already at target (undismiss path)', () => {
+    expect(
+      rederiveTaskStatus(task({ target: 6, count: 6, status: 'dismissed' })),
+    ).toBe('done');
+  });
+
+  it('returns todo when the count is still below target', () => {
+    expect(
+      rederiveTaskStatus(task({ target: 6, count: 2, status: 'dismissed' })),
+    ).toBe('todo');
+  });
+
+  it('restores done when every checklist item is ticked', () => {
+    expect(
+      rederiveTaskStatus(
+        task({
+          status: 'dismissed',
+          checklist: [
+            { id: 'a', label: 'A', done: true },
+            { id: 'b', label: 'B', done: true },
+          ],
+        }),
+      ),
+    ).toBe('done');
+  });
+
+  it('returns todo when a checklist item is still open', () => {
+    expect(
+      rederiveTaskStatus(
+        task({
+          status: 'dismissed',
+          checklist: [
+            { id: 'a', label: 'A', done: true },
+            { id: 'b', label: 'B', done: false },
+          ],
+        }),
+      ),
+    ).toBe('todo');
+  });
+
+  it('restores done for an answered choice', () => {
+    expect(
+      rederiveTaskStatus(
+        task({
+          status: 'dismissed',
+          chosenOptionId: 'creche',
+          options: [
+            { id: 'creche', label: 'Crèche' },
+            { id: 'assmat', label: 'Assmat' },
+          ],
+        }),
+      ),
+    ).toBe('done');
+  });
+
+  it('returns todo for a plain boolean task', () => {
+    expect(rederiveTaskStatus(task({ status: 'dismissed' }))).toBe('todo');
+    expect(rederiveTaskStatus(task({ status: 'done' }))).toBe('todo');
   });
 });

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { isMemoryEmpty, memoriesForWeek, memoryPreview, sortMemories } from './memories.js';
+import {
+  isMemoryEmpty,
+  memoriesForWeek,
+  memoryPreview,
+  sortMemories,
+  stampMemoryFromDate,
+  type MemoryDateStamp,
+} from './memories.js';
+import { currentWeekSG } from './pregnancy.js';
 import type { Memory } from './types.js';
 
 const memory = (id: string, over: Partial<Memory> = {}): Memory => ({
@@ -9,6 +17,9 @@ const memory = (id: string, over: Partial<Memory> = {}): Memory => ({
   updatedAt: '2026-07-01T10:00:00.000Z',
   ...over,
 });
+
+const DUE = '2027-02-11T00:00:00.000Z';
+const NOW = Date.parse('2026-07-16T12:00:00.000Z');
 
 describe('sortMemories', () => {
   it('puts the newest first', () => {
@@ -75,5 +86,29 @@ describe('isMemoryEmpty', () => {
 
   it('is not empty with a body alone', () => {
     expect(isMemoryEmpty({ body: 'something' })).toBe(false);
+  });
+});
+
+describe('stampMemoryFromDate', () => {
+  it('stamps week from a past day via currentWeekSG', () => {
+    const past = new Date('2026-06-01T10:00:00.000Z');
+    const stamp: MemoryDateStamp = stampMemoryFromDate(DUE, past, NOW);
+    expect(stamp.week).toBe(currentWeekSG(DUE, past.getTime()));
+    expect(stamp.createdAt).toBe(past.toISOString());
+    expect(stamp.updatedAt).toBe(stamp.createdAt);
+  });
+
+  it('stamps today the same as injecting now', () => {
+    const today = new Date(NOW);
+    const stamp: MemoryDateStamp = stampMemoryFromDate(DUE, today, NOW);
+    expect(stamp.week).toBe(currentWeekSG(DUE, NOW));
+    expect(stamp.createdAt).toBe(today.toISOString());
+  });
+
+  it('clamps a future pick to now', () => {
+    const future = new Date(NOW + 7 * 24 * 60 * 60 * 1000);
+    const stamp: MemoryDateStamp = stampMemoryFromDate(DUE, future, NOW);
+    expect(stamp.createdAt).toBe(new Date(NOW).toISOString());
+    expect(stamp.week).toBe(currentWeekSG(DUE, NOW));
   });
 });

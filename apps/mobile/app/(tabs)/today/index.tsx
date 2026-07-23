@@ -16,6 +16,8 @@ import {
   daysLeftAfterBirth,
   daysSinceBirth,
   daysUntilEvent,
+  hasChecklist,
+  isChoice,
   isCounted,
   nextEvents,
   openPostBirthTasks,
@@ -410,6 +412,9 @@ export default function TodayScreen() {
             // checkbox that would fill it to target in one tap. Same split as the Préparer
             // list. The leading pad keeps its title aligned with the checkbox rows above it.
             const counted = isCounted(task);
+            // Same split as Préparer: checklist/choice open the detail screen — a one-tap
+            // checkbox would bulk-complete a checklist or mark a choice done without an answer.
+            const booleanOnly = !counted && !hasChecklist(task) && !isChoice(task);
             return (
               <View
                 key={task.id}
@@ -420,7 +425,7 @@ export default function TodayScreen() {
                   paddingVertical: space[3],
                 }}
               >
-                {!counted && (
+                {booleanOnly && (
                   <Checkbox
                     checked={false}
                     onChange={() => complete(task)}
@@ -428,7 +433,10 @@ export default function TodayScreen() {
                   />
                 )}
                 <Pressable
-                  style={{ flex: 1, paddingLeft: counted ? 24 + space[4] : 0 }}
+                  style={{
+                    flex: 1,
+                    paddingLeft: booleanOnly ? 0 : 24 + space[4],
+                  }}
                   onPress={() => router.push(`/task/${task.id}` as never)}
                   accessibilityRole="button"
                 >

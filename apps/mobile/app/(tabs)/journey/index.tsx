@@ -29,7 +29,7 @@ import {
   memoryPreview,
   SA_TO_SG_OFFSET,
 } from '@bulle/sdk';
-import { Chemin, Glyph, type CheminWeek, type GlyphName } from '@bulle/ui/primitives';
+import { Chemin, Glyph, buildCheminWeeks, clampCheminWeek, type CheminWeek, type GlyphName } from '@bulle/ui/primitives';
 import { Row, Text } from '@bulle/ui/components';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
@@ -39,9 +39,6 @@ import { usePlanStore } from '@/store/usePlanStore';
 import { useEventsStore } from '@/store/useEventsStore';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useNow } from '@/lib/use-now';
-
-/** The three French échographies, plus the trimester boundaries. */
-const MILESTONE_WEEKS = new Set([12, 16, 22, 28, 32]);
 
 /**
  * One step of the week stepper.
@@ -104,14 +101,7 @@ export default function JourneyScreen() {
 
   const [selected, setSelected] = useState<number | null>(null);
 
-  const weeks = useMemo<CheminWeek[]>(
-    () =>
-      Array.from({ length: DPA_WEEKS_SA - 4 }, (_, i) => {
-        const week = i + 5; // the Chemin starts around the first missed period
-        return { week, milestone: MILESTONE_WEEKS.has(week) };
-      }),
-    [],
-  );
+  const weeks = useMemo<CheminWeek[]>(() => buildCheminWeeks(1, DPA_WEEKS_SA), []);
 
   const weekSA = bulle ? currentWeekSA(bulle.profile.dueDate, now) : 0;
   const shown = selected ?? weekSA;
@@ -149,6 +139,8 @@ export default function JourneyScreen() {
 
   const empty = events.length === 0 && opening.length === 0 && memories.length === 0;
 
+  const browse = (week: number) => setSelected(clampCheminWeek(week, 1, DPA_WEEKS_SA));
+
   return (
     <Screen>
       <FeatureWelcomeFor area="journey" visible={welcome.visible} onDismiss={welcome.dismiss} />
@@ -161,7 +153,13 @@ export default function JourneyScreen() {
           it to whatever week you happened to tap would make the fil lie about the pregnancy.
           The heading says which week is being looked at; the fil says which week is real.
         */}
-        <Chemin weeks={weeks} currentWeek={weekSA} />
+        <Chemin
+          weeks={weeks}
+          currentWeek={weekSA}
+          selectedWeek={shown}
+          onSelectWeek={browse}
+          weekAccessibilityLabel={(week) => t('journey.weekTitle', { week })}
+        />
 
         <View style={{ flex: 1, gap: space[5], paddingTop: space[4] }}>
           <View style={{ gap: space[2] }}>
@@ -175,25 +173,21 @@ export default function JourneyScreen() {
             </Text>
 
             {/*
-              The stepper sits WITH the week it changes, not under the fil. The fil is ~37
-              weeks tall, so anything below it is a very long scroll past an empty column
-              away from the thing it controls.
-
-              It is also why the fil itself is not the control: giving it per-node hit
-              targets would mean 37 touch areas on a 24px-wide serpentine, nearly all of them
-              under 44pt (§15.8 item 5).
+              The stepper sits WITH the week it changes, not under the fil. The fil is tall,
+              so anything below it is a long scroll past an empty column away from the thing
+              it controls. Nodes are also tappable (44pt overlays on the fil).
             */}
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: space[2] }}>
               <IconStep
                 glyph="chevronLeft"
                 label={t('journey.previousWeek')}
-                onPress={() => setSelected(Math.max(5, shown - 1))}
-                disabled={shown <= 5}
+                onPress={() => browse(shown - 1)}
+                disabled={shown <= 1}
               />
               <IconStep
                 glyph="chevronRight"
                 label={t('journey.nextWeek')}
-                onPress={() => setSelected(Math.min(DPA_WEEKS_SA, shown + 1))}
+                onPress={() => browse(shown + 1)}
                 disabled={shown >= DPA_WEEKS_SA}
               />
               {/* Only once you have wandered off. Showing a disabled "back to now" while you

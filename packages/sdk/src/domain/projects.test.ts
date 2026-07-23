@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { instantiateTemplate, resolveTaskHref } from './projects.js';
-import type { BulleProfile, ProjectTemplate } from './types.js';
+import { instantiateTemplate, projectProgress, resolveTaskHref } from './projects.js';
+import type { BulleProfile, ProjectTemplate, Task } from './types.js';
 
 const profile: BulleProfile = {
   dueDate: '2027-02-11T00:00:00.000Z',
@@ -94,5 +94,60 @@ describe('instantiateTemplate — details and links', () => {
     };
     const { tasks } = instantiateTemplate(bare, profile, deps);
     expect(tasks[0]!.details).toBeUndefined();
+  });
+});
+
+describe('projectProgress', () => {
+  const base = (over: Partial<Task> = {}): Task => ({
+    id: 't1',
+    projectId: 'p1',
+    title: 'T',
+    weekStart: 10,
+    weekEnd: 12,
+    effort: 'S',
+    domain: 'maison',
+    essential: true,
+    status: 'todo',
+    createdAt: '2026-01-01T00:00:00.000Z',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    ...over,
+  });
+
+  it('counts a counted task at target as resolved', () => {
+    const progress = projectProgress('p1', [
+      base({ id: 'a', target: 6, count: 6, status: 'done' }),
+      base({ id: 'b', status: 'todo' }),
+    ]);
+    expect(progress).toMatchObject({ resolved: 1, total: 2, fill: 0.5 });
+  });
+
+  it('counts a fully-ticked checklist as resolved', () => {
+    const progress = projectProgress('p1', [
+      base({
+        id: 'a',
+        status: 'done',
+        checklist: [
+          { id: '1', label: 'A', done: true },
+          { id: '2', label: 'B', done: true },
+        ],
+      }),
+    ]);
+    expect(progress.resolved).toBe(1);
+    expect(progress.total).toBe(1);
+  });
+
+  it('counts a dismissed counted task as resolved', () => {
+    const progress = projectProgress('p1', [
+      base({ id: 'a', target: 6, count: 3, status: 'dismissed' }),
+    ]);
+    expect(progress.resolved).toBe(1);
+  });
+
+  it('ignores optional tasks in the essential tally', () => {
+    const progress = projectProgress('p1', [
+      base({ id: 'a', status: 'done' }),
+      base({ id: 'b', essential: false, status: 'todo' }),
+    ]);
+    expect(progress).toMatchObject({ resolved: 1, total: 1, optionalCount: 1 });
   });
 });

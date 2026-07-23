@@ -28,6 +28,7 @@ import { ensureSpaceProvisioned } from '@/lib/space-provision';
 import { usePermissionsStore } from '@/store/usePermissionsStore';
 import { useActiveBulle } from '@/store/useBulleRegistryStore';
 import { pushSpaceSnapshot } from '@/lib/space-sync';
+import { isSyncConfigured } from '@/lib/config';
 import { randomId } from '@bulle/sdk';
 
 export default function InviteScreen() {
@@ -39,6 +40,7 @@ export default function InviteScreen() {
   useHardwareBack('/more');
   const active = useActiveBulle();
   const roles = usePermissionsStore((s) => s.roles);
+  const syncReady = isSyncConfigured();
 
   const assignments = usePermissionsStore((s) => s.assignments);
 
@@ -53,7 +55,7 @@ export default function InviteScreen() {
       : DEFAULT_PERMISSION_ROLES.map((r) => ({ ...r, createdAt: null, updatedAt: null }));
 
   const invite = async (role: RoleDefinition) => {
-    if (!active) return;
+    if (!active || !syncReady) return;
 
     setNotice(null);
     setBusy(true);
@@ -119,6 +121,10 @@ export default function InviteScreen() {
       await pushSpaceSnapshot();
 
       setLink(minted);
+      // Mint success used to leave the link only on screen — users expected the clipboard
+      // already filled. Copy immediately; the button remains for a deliberate re-copy.
+      await Clipboard.setStringAsync(minted);
+      setCopied(true);
     } catch (error) {
       console.warn('[invite] mint failed', error);
       setNotice(t('settings.inviteFailed'));
@@ -178,7 +184,13 @@ export default function InviteScreen() {
         {t('settings.inviteBody')}
       </Text>
 
-      {!link && (
+      {!syncReady && (
+        <Text variant="caption" color="inkSoft">
+          {t('settings.inviteUnavailable')}
+        </Text>
+      )}
+
+      {syncReady && !link && (
         <View>
           <SectionHeader title={t('settings.family')} />
           {available.map((role, index) => (
@@ -204,7 +216,7 @@ export default function InviteScreen() {
         gap wearing a different hat: an owner could hand out access and had no way to take
         it back.
       */}
-      {!link && (
+      {syncReady && !link && (
         <View>
           <SectionHeader title={t('settings.withAccess')} />
           {assignments.length === 0 ? (
