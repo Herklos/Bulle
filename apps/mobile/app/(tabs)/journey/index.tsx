@@ -120,8 +120,10 @@ export default function JourneyScreen() {
   );
 
   // Souvenirs are stamped in SG (§7.2), so the SA week has to be converted to match.
+  // Clamp at 0: currentWeekSG never goes negative, so SA 1 must query week 0 — not -1 —
+  // or early souvenirs vanish from the card.
   const memories = useMemo(
-    () => memoriesForWeek(allMemories, shown - SA_TO_SG_OFFSET),
+    () => memoriesForWeek(allMemories, Math.max(0, shown - SA_TO_SG_OFFSET)),
     [allMemories, shown],
   );
 

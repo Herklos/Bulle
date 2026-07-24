@@ -122,9 +122,14 @@ export default function InviteScreen() {
 
       setLink(minted);
       // Mint success used to leave the link only on screen — users expected the clipboard
-      // already filled. Copy immediately; the button remains for a deliberate re-copy.
-      await Clipboard.setStringAsync(minted);
-      setCopied(true);
+      // already filled. Copy outside the mint try: a clipboard failure must not pretend the
+      // invite itself failed after the link and QR are already live.
+      try {
+        await Clipboard.setStringAsync(minted);
+        setCopied(true);
+      } catch (error) {
+        console.warn('[invite] clipboard copy failed', error);
+      }
     } catch (error) {
       console.warn('[invite] mint failed', error);
       setNotice(t('settings.inviteFailed'));
