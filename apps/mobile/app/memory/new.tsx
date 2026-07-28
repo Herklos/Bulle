@@ -6,9 +6,10 @@
  * category system, and nothing filters on it. Two options exist because "un mot" and "un
  * moment" are genuinely different intentions, not because a taxonomy was wanted.
  *
- * The week is stamped from the date the user picks (today or past), derived from the due
- * date — never typed in by hand. Asking someone to tell the app what week they are in, when
- * the app already knows, is the kind of small insult that makes software feel like paperwork.
+ * The week is stamped in SA from the date the user picks (today or past), derived from the
+ * due date — never typed in by hand. Asking someone to tell the app what week they are in,
+ * when the app already knows, is the kind of small insult that makes software feel like
+ * paperwork. SA matches the Chemin and Aujourd'hui; SG here used to be off by two.
  */
 import React, { useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
@@ -71,7 +72,7 @@ export default function NewMemoryScreen() {
       kind,
       title: title.trim() || undefined,
       body: body.trim() || undefined,
-      // SG, not SA: the Chemin speaks gestational weeks (§7.2).
+      // SA, same scale as the Chemin heading (§7.2). Not SG — that was off by two unmarked.
       week: stamp.week,
       authorId: getSession()?.userId,
       createdAt: stamp.createdAt,

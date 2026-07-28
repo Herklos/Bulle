@@ -286,7 +286,7 @@ export interface Memory {
   kind: MemoryKind;
   title?: string;
   body?: string;
-  /** Gestational week this memory belongs to, for the Chemin. */
+  /** Week SA (aménorrhée) this memory belongs to — same scale as the Chemin. */
   week?: number;
   authorId?: string;
   createdAt: Iso;

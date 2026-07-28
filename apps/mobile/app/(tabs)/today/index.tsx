@@ -30,7 +30,6 @@ import {
   taskCount,
   weekDisplay,
   weekEssentials,
-  currentWeekSG,
   memoriesForWeek,
   type BulleEvent,
   type Task,
@@ -135,7 +134,7 @@ export default function TodayScreen() {
   // selector that filters returns a new array every call and re-renders forever.
   const allMemories = useMemoriesStore((s) => s.memories);
   const weekMemories = useMemo(
-    () => (bulle ? memoriesForWeek(allMemories, currentWeekSG(bulle.profile.dueDate, now)) : []),
+    () => (bulle ? memoriesForWeek(allMemories, currentWeekSA(bulle.profile.dueDate, now)) : []),
     [allMemories, bulle, now],
   );
 

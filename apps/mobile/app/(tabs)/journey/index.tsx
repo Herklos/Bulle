@@ -27,7 +27,6 @@ import {
   isResolved,
   memoriesForWeek,
   memoryPreview,
-  SA_TO_SG_OFFSET,
 } from '@bulle/sdk';
 import { Chemin, Glyph, buildCheminWeeks, clampCheminWeek, type CheminWeek, type GlyphName } from '@bulle/ui/primitives';
 import { Row, Text } from '@bulle/ui/components';
@@ -119,11 +118,9 @@ export default function JourneyScreen() {
     [allTasks, shown],
   );
 
-  // Souvenirs are stamped in SG (§7.2), so the SA week has to be converted to match.
-  // Clamp at 0: currentWeekSG never goes negative, so SA 1 must query week 0 — not -1 —
-  // or early souvenirs vanish from the card.
+  // Souvenirs are stamped in SA, same as the Chemin heading — look up by `shown` directly.
   const memories = useMemo(
-    () => memoriesForWeek(allMemories, Math.max(0, shown - SA_TO_SG_OFFSET)),
+    () => memoriesForWeek(allMemories, shown),
     [allMemories, shown],
   );
 
