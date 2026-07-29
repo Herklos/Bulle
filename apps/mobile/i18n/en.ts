@@ -554,6 +554,78 @@ export const en = {
     },
   },
 
+  /**
+   * See fr.ts for the full note. This is the country-agnostic subset of the FR pool — no
+   * France-specific administrative/benefits mechanics (CAF, PAJE, carte Vitale, congé
+   * paternité), same reasoning as `templates.adminFr` being absent from EN entirely (§7.1).
+   * Shorter than FR by design, not by omission.
+   */
+  advice: {
+    eyebrow: 'Did you know?',
+    items: [
+      // Buying and gear
+      'Room-sharing, baby nearby in their own bed, is recommended for the first six months. That is not the same as bed-sharing.',
+      'A bedside crib is only meant to last a few months. Once a baby can sit up alone or reaches the printed weight limit, it is no longer a suitable space.',
+      'The real test for a pushchair happens in the shop: fold it yourself, one-handed, with the other hand full, exactly as it will be in real life.',
+      'A pushchair promising to do everything from birth to preschool mostly adds weight and parts that are never used.',
+      'A low-speed impact can leave invisible micro-fractures in a car seat that only surface at the next crash.',
+      'Car seats have a printed lifespan. Past it, the shell loses its impact absorption even without ever being in a crash.',
+      'A second-hand item is not always covered by official recalls. An empty search result does not guarantee anything on its own.',
+      'A baby registry mainly saves other people from guessing what you already have or do not need.',
+      'Suggesting a group gift for one expensive item avoids both the awkwardness of asking and the risk of ending up with two pushchairs.',
+      'Two or three packs of newborn-size nappies are enough before the birth. Many babies move up a size before finishing them.',
+      'Newborn size usually lasts two to three weeks. It is the next size up that most often runs short in the drawer.',
+      'The most useful size to give as a gift is not newborn but one size up, matched to the season the baby will actually meet.',
+      'Frozen meals in labelled, single portions are still the gift new parents mention a year later.',
+      'Only three things really shift with the season of birth: the ratio of short to long sleeves, the sleep sack’s warmth rating, and the pramsuit.',
+      'A sleep sack’s warmth rating should match the room’s temperature, not the month on the calendar.',
+      'The first question for your maternity unit is not how much to pack, but what they already provide.',
+      'The co-parent’s own bag deserves its own planning: something to eat and a charger, since vending machines often run empty in the middle of the night.',
+      'Every clothing size lasts a different length of time. Three-month size is the one that surprises most people by how quickly it passes.',
+      'A registry with no quantities is not really a list, it is a theme twenty guests will each interpret differently.',
+
+      // Money
+      'No law requires an employer to keep paying full salary during birth-related leave. Where it happens, it comes from a collective agreement, never automatically.',
+
+      // Together
+      'Pregnancy’s mental load rarely lands on one person for lack of goodwill. It is because the paperwork and appointments arrive addressed to them.',
+      'Moving the task list out of one person’s head and into something both of you can check changes more than a conversation about goodwill ever will.',
+      'Owning a whole subject, rather than picking up one-off tasks, is what actually lifts the load. A delegated task still needs someone to check it got done.',
+      'Owning an appointment, not just attending it, means knowing it exists, tracking it, and following up if the confirmation does not arrive.',
+      'Three tasks genuinely owned outright beat ten that both of you half-track.',
+      'A very young child’s sense of time is too different for an early announcement to mean much. Waiting until it is visible is often enough.',
+      'A temporary regression in an older sibling, sleep or toilet training, after a birth is common and usually fades on its own within a few weeks.',
+      'The first name, childcare, and who takes which leave each carry a deadline set by the world around you. Not deciding just lets the calendar decide instead.',
+      'The real test of a shared load: if only one of you can say what is left to do this week, it is not actually shared.',
+
+      // Layette
+      'About twelve bodysuits in total, roughly five newborn and seven in the next size, covers most of what the first month actually needs.',
+      'A layette quantity means nothing without its assumption. Most are based on washing every three or four days, so halve the count if you wash daily.',
+
+      // Day-of logistics
+      'Nobody makes good decisions at three in the morning. A good plan for the day itself leaves as little as possible to decide in the moment.',
+      'The plan for the day itself needs a backup driver, not just a first choice, in case the one you had in mind is not available.',
+      'Keeping the document folder and your maternity unit’s number reachable somewhere other than the packed bag covers the case where things start away from home.',
+      'Many car seats are fitted or used incorrectly, and a single mistake can sharply reduce the protection they offer.',
+      'A car seat harness needs readjusting every time bulky clothing changes, especially in winter.',
+      'For renovations or a move during pregnancy, it helps to count backward from the due date rather than from today, with real margin built in.',
+      'The goal of the last two weeks is not finishing everything. It is having nothing left that still needs finishing.',
+
+      // Preparation
+      'What people search for in a panic on the day is never the clothes, it is the paperwork kept separately.',
+      'A simple way to sort a preparation list: anything with a safety or administrative consequence goes first, the rest can be bought in an afternoon.',
+      'The first few weeks genuinely need around ten essential items. The rest of a forty-item list is largely optional.',
+      'The i-Size safety standard requires a rear-facing seat until at least fifteen months, and keeping it longer is advised for as long as the seat allows.',
+      'An app that says "encrypted" can still mean the company itself holds the key. The real question is who holds it, not whether the data is encrypted.',
+
+      // Coming home
+      'Cooking and freezing a few meals before the birth removes a daily chore right when energy is scarcest.',
+      'Telling planned help apart from a courtesy visit, before the birth, makes it easier to say clearly what actually helps.',
+      'A refusal line prepared together in advance can be said without justification or apology when the moment comes.',
+      'Setting a default visit length in advance beats improvising a refusal with someone already at the door.',
+    ],
+  },
+
   templates: {
     fratrie: {
       title: 'The sibling',

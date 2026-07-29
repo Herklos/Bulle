@@ -6,8 +6,9 @@
  * no backlog count, no streak, no percentage on the orb, no red anything, and exactly ONE
  * focus task however many are waiting.
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import {
@@ -36,7 +37,7 @@ import {
 } from '@bulle/sdk';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
 import { Checkbox, EmptyState, FocusCard, Row, SectionHeader, Stepper, Text } from '@bulle/ui/components';
-import { useBulleTheme } from '@bulle/ui/theme';
+import { useBulleTheme, motion } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
 import { bulleForWeekSG } from '@/assets/bulles';
@@ -47,6 +48,7 @@ import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useReadinessStore } from '@/store/useReadinessStore';
 import { useReadiness } from '@/lib/use-readiness';
 import { useNow } from '@/lib/use-now';
+import { useHomeAdvice } from '@/lib/use-home-advice';
 import { getSession } from '@/lib/starfish';
 
 /**
@@ -144,6 +146,15 @@ export default function TodayScreen() {
     () => (solo ? [] : partnerActivity(tasks, { myUserId, now })),
     [solo, tasks, myUserId, now],
   );
+
+  const { tip, eyebrow, next } = useHomeAdvice();
+  const reducedMotion = useReducedMotion();
+  const adviceOpacity = useSharedValue(1);
+  useEffect(() => {
+    adviceOpacity.value = reducedMotion ? 1 : 0;
+    adviceOpacity.value = withTiming(1, { duration: reducedMotion ? 0 : motion.reducedFade.duration });
+  }, [tip, reducedMotion, adviceOpacity]);
+  const adviceStyle = useAnimatedStyle(() => ({ opacity: adviceOpacity.value }));
 
   if (!bulle) return null;
   // Pause hides the countdown and readiness entirely (§3.1).
@@ -503,6 +514,36 @@ export default function TodayScreen() {
           <Text variant="caption" color="sage">
             {t('today.memoryPromptAction')}
           </Text>
+        </Pressable>
+      )}
+
+      {/*
+        One tip from the advice pool (§1.2-adjacent content, see i18n `advice.items`).
+        Plain text, no glyph, no card: this is a quiet aside, not a feature. Tapping cycles
+        to another tip (never repeating the one just shown); it also re-rolls whenever the
+        app returns to the foreground. Hidden for free while paused, since the whole screen
+        redirects to /pause before this ever renders.
+      */}
+      {tip !== '' && (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`${eyebrow}. ${tip}`}
+          onPress={next}
+          style={({ pressed }) => ({
+            alignItems: 'center',
+            gap: space[1],
+            paddingVertical: space[3],
+            opacity: pressed ? 0.5 : 1,
+          })}
+        >
+          <Animated.View style={adviceStyle}>
+            <Text variant="caption" color="sage" style={{ textAlign: 'center' }}>
+              {eyebrow}
+            </Text>
+            <Text variant="body" color="inkSoft" style={{ textAlign: 'center' }}>
+              {tip}
+            </Text>
+          </Animated.View>
         </Pressable>
       )}
 

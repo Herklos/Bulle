@@ -558,6 +558,117 @@ export const fr = {
     },
   },
 
+  /**
+   * One random tip on Today (see lib/use-home-advice.ts). Sourced from the blog corpus
+   * (lib/blog-posts-*.ts) — the single non-obvious mechanism or gotcha behind each article,
+   * not the checklist task itself. Same content rule as the blog (§7.3): mechanism and
+   * timing, no euro amounts or thresholds that get revalorised, no diagnosis or symptom
+   * language, ever.
+   *
+   * FR carries the full pool, including France-specific administrative mechanics (CAF, PAJE,
+   * carte Vitale, congé paternité). EN carries only the country-agnostic subset — same
+   * reasoning as `templates.adminFr` being absent from EN: a literal translation of a French
+   * benefits system is worse than not mentioning it (§7.1).
+   */
+  advice: {
+    eyebrow: 'Le saviez-vous ?',
+    items: [
+      // Achats
+      'La chambre partagée, bébé dans son propre lit à proximité, est recommandée les six premiers mois ; ce n’est pas la même chose que partager le lit des parents.',
+      'Un lit cododo n’est prévu que pour quelques mois : dès que le bébé s’assoit seul ou atteint le poids limite indiqué, ce n’est plus un espace adapté.',
+      'Le bon test d’une poussette se fait en magasin, pliée vous-même, d’une seule main, l’autre occupée par un sac.',
+      'Une poussette qui promet de tout faire de la naissance à la maternelle ajoute surtout du poids et des pièces jamais utilisées.',
+      'Un choc à faible vitesse peut créer des microfissures invisibles dans un siège-auto, qui ne se révèlent qu’au choc suivant.',
+      'Les sièges-auto ont une durée de vie limitée indiquée sur l’étiquette, au-delà de laquelle la coque perd ses propriétés d’absorption même sans choc.',
+      'Un produit de seconde main n’est pas toujours couvert par les rappels officiels : l’absence de résultat dans une recherche ne garantit rien à elle seule.',
+      'Une liste de naissance sert d’abord à éviter aux autres de deviner ce que vous avez déjà ou ce dont vous n’avez pas besoin.',
+      'Proposer un cadeau groupé pour un objet cher évite à la fois la gêne de le demander et le risque de deux poussettes.',
+      'Deux ou trois paquets de couches taille naissance suffisent avant l’arrivée : beaucoup de bébés passent à la taille suivante avant de les avoir finis.',
+      'La plupart des maternités françaises fournissent les couches pendant le séjour, ce qui évite d’en emporter inutilement.',
+      'La taille naissance dure en général deux à trois semaines ; c’est la taille suivante qui manque le plus souvent dans l’armoire.',
+      'Le vêtement le plus utile à offrir n’est pas en taille naissance mais un cran au-dessus, pour la saison que le bébé rencontrera réellement.',
+      'Des repas congelés en portions individuelles restent, un an après, le cadeau dont les parents parlent le plus.',
+      'Seuls trois postes changent vraiment avec la saison de naissance : le ratio manches courtes ou longues, l’indice TOG de la gigoteuse, et le nid d’ange.',
+      'L’indice TOG d’une gigoteuse se choisit selon la température de la chambre, pas selon le mois du calendrier.',
+      'La première question à poser à sa maternité n’est pas combien emporter, mais ce qu’elle fournit déjà.',
+      'Le sac du co-parent mérite sa propre préparation : de quoi manger et un chargeur, car les distributeurs sont souvent vides au milieu de la nuit.',
+      'Chaque taille de vêtement dure un temps différent : la taille trois mois est celle qui surprend le plus de monde par sa brièveté.',
+      'Une liste sans quantités précises n’est pas vraiment une liste, c’est une suggestion de thème interprétée différemment par chaque invité.',
+
+      // Administratif (France)
+      'La déclaration de grossesse, faite avant la fin du 3e mois, débloque presque tous les droits qui suivent : suivi remboursé, prime, dates de congé.',
+      'Après la déclaration de grossesse, deux choses restent à faire soi-même : mettre à jour son dossier CAF et prévenir sa mutuelle, qui ne reçoit rien automatiquement.',
+      'Prévenir son employeur quelques mois à l’avance, par écrit, laisse le temps d’organiser un remplacement, ce qui joue souvent en sa faveur au retour.',
+      'Garder quelques jours de congé paternité pour la reprise du travail du premier parent vaut souvent mieux que tout consommer la première semaine.',
+      'Un niveau de maternité plus élevé n’est pas une meilleure maternité, c’est une maternité équipée pour des situations plus complexes.',
+      'Dans beaucoup de villes, les préinscriptions en crèche commencent dès le 3e ou 4e mois de grossesse.',
+      'Une préinscription en crèche n’est pas une place : mener aussi la piste de l’assistante maternelle en parallèle reste la meilleure protection.',
+      'Sans mariage, seule la mère a une filiation automatique ; la reconnaissance anticipée, gratuite en mairie, règle celle du second parent avant la naissance.',
+      'Si la filiation du second parent est établie avant le premier anniversaire de l’enfant, l’autorité parentale est exercée en commun automatiquement.',
+      'Le congé paternité est un droit individuel, non transférable : ce qui n’est pas pris dans les six mois est simplement perdu.',
+      'La seconde période de congé paternité peut se découper en deux blocs d’au moins cinq jours, une option que beaucoup de parents ignorent.',
+      'Contrairement à ce que son nom suggère, la prime à la naissance est versée pendant la grossesse, autour du 7e mois, pas après l’accouchement.',
+      'La déclaration de naissance à la mairie doit se faire dans les cinq jours suivant l’accouchement ; le jour de la naissance lui-même ne compte pas dans ce délai.',
+      'La mairie ne peut pas refuser un prénom au guichet : seul un juge peut, en dernier recours, en ordonner le retrait des registres.',
+      'Contrairement à la carte Vitale, l’ajout d’un enfant à la mutuelle ne suit aucun délai légal uniforme : chaque contrat fixe sa propre règle.',
+      'Il vaut mieux demander le rattachement à la carte Vitale pour les deux parents, même si l’enfant est déjà rattaché à l’un d’eux.',
+
+      // Budget
+      'L’indemnité journalière de congé maternité se calcule sur le salaire brut plafonné, pas sur le net habituel, ce qui explique un montant souvent plus bas qu’attendu.',
+      'Aucune loi n’oblige un employeur à maintenir le salaire pendant un congé de naissance ; quand cela existe, cela vient d’un accord collectif, jamais automatiquement.',
+      'En crèche collective, le tarif est calculé automatiquement selon vos revenus ; avec une assistante maternelle, vous devenez l’employeur avec un salaire à déclarer.',
+      'La déclaration Pajemploi doit être faite avant le 5 du mois suivant, sous peine de retarder le versement de l’aide pour ce mois.',
+      'La PAJE regroupe plusieurs aides distinctes, chacune avec ses propres conditions ; seul un simulateur sur votre situation réelle donne une réponse fiable.',
+      'Le délai de prévenance pour un congé parental est d’un mois s’il suit directement le congé maternité, mais de deux mois dans tous les autres cas.',
+
+      // À deux
+      'La charge mentale de la grossesse retombe rarement sur une seule personne par manque de bonne volonté, mais parce que le courrier administratif et médical lui est adressé à elle.',
+      'Sortir la liste des tâches de la tête d’une seule personne, vers un support que les deux peuvent consulter, change plus de choses qu’une conversation sur la bonne volonté.',
+      'Prendre en charge un sujet entier, plutôt que déléguer des tâches ponctuelles, retire vraiment une charge : la personne qui délègue doit encore vérifier que c’est fait.',
+      'Être responsable d’un rendez-vous, et pas seulement y assister, veut dire savoir qu’il existe, le noter, et relancer si la confirmation n’arrive pas.',
+      'Trois tâches vraiment prises en charge valent mieux que dix suivies à moitié par les deux parents.',
+      'Il n’existe pas de délai légal pour annoncer sa grossesse à son employeur ; la seule vraie obligation porte sur le moment où le congé commence réellement.',
+      'Un tout jeune enfant a une notion du temps trop différente pour qu’une annonce précoce ait un sens concret ; en parler quand le ventre devient visible suffit souvent.',
+      'Une régression temporaire chez l’aîné, sommeil ou propreté, après une naissance est courante et s’estompe seule en quelques semaines.',
+      'Le prénom, le mode de garde, et qui prend quel congé ont chacun une échéance déjà fixée par ce qui vous entoure : ne pas décider, c’est laisser le calendrier décider à votre place.',
+      'Le RSA majoré peut être versé dès la grossesse pour un parent isolé, sans démarche particulière si vous êtes déjà allocataire du RSA.',
+      'Le vrai test d’une charge partagée : si une seule personne sait dire ce qui reste à faire cette semaine, elle ne l’est pas.',
+
+      // Layette
+      'Douze bodies au total, environ cinq en taille naissance et sept en taille suivante, couvre la plupart des besoins réels du premier mois.',
+      'Un chiffre de layette ne veut rien dire sans son hypothèse : la plupart supposent une lessive tous les trois-quatre jours, à diviser par deux si vous lavez chaque jour.',
+      'Le tire-lait se loue en pharmacie sur prescription et est remboursé ; l’acheter neuf avant de savoir si vous en aurez l’usage est rarement le bon calcul.',
+
+      // Logistique du jour J
+      'Personne ne prend de bonnes décisions à 3 heures du matin : le bon plan du jour J laisse le moins de choses possible à décider sur le moment.',
+      'Le plan du jour J doit prévoir un deuxième conducteur, pas seulement un premier, au cas où celui prévu ne soit pas disponible.',
+      'Garder la pochette de documents et le numéro de la maternité accessibles ailleurs que dans la valise couvre le cas où tout commence loin de la maison.',
+      'De nombreux sièges-auto sont mal installés ou mal utilisés, et une seule erreur peut réduire fortement la protection.',
+      'Le harnais d’un siège-auto doit être réajusté à chaque changement de vêtement épais, notamment en hiver.',
+      'Le secteur du praticien qui vous suit change ce que rembourse l’Assurance Maladie ; un dépassement d’honoraires n’est jamais couvert par elle, quel que soit le secteur.',
+      'Pour des travaux ou un déménagement pendant la grossesse, mieux vaut compter à rebours depuis le terme que depuis aujourd’hui, en gardant une vraie marge.',
+      'Pour des jumeaux, le congé maternité s’allonge et le congé de naissance aussi, mais c’est la poussette qui double, pas le suivi administratif.',
+      'L’objectif des deux dernières semaines n’est pas de tout finir, c’est de ne plus rien avoir à finir.',
+
+      // Préparation
+      'Ce qu’on cherche en panique le jour J n’est jamais les vêtements, ce sont les papiers rangés à part.',
+      'Une règle simple pour trier une liste de préparation : ce qui a une conséquence administrative ou de sécurité passe devant, le reste s’achète en une après-midi.',
+      'Les premières semaines demandent réellement une dizaine d’articles essentiels ; le reste d’une liste de quarante objets est largement optionnel.',
+      'La norme i-Size impose le dos à la route au moins jusqu’à 15 mois, et le garder plus longtemps reste conseillé tant que le siège le permet.',
+      'Une appli qui dit « chiffré » peut vouloir dire que l’éditeur détient lui-même la clé ; la vraie question à poser est qui la détient, pas si les données sont chiffrées.',
+
+      // Retour à la maison
+      'Le programme de suivi à domicile par une sage-femme vous sera proposé à la maternité, pas avant ; le savoir évite de découvrir la question en même temps que l’offre.',
+      'La consultation postnatale, six à huit semaines après l’accouchement, examine votre corps ; l’entretien postnatal précoce parle de votre vécu : deux rendez-vous distincts, souvent confondus.',
+      'La loi oblige le professionnel à vous proposer l’entretien postnatal précoce entre la 4e et la 8e semaine ; elle ne vous oblige, vous, à rien.',
+      'La rééducation périnéale se prescrit à la consultation postnatale, jamais avant l’accouchement, et rien n’oblige à commencer les séances immédiatement.',
+      'Cuisiner et congeler quelques plats avant la naissance retire une charge quotidienne exactement au moment où l’énergie manque le plus.',
+      'Distinguer une aide planifiée d’une simple visite, avant la naissance, permet de dire clairement ce qui aide vraiment.',
+      'Une phrase de refus préparée à l’avance, en couple, se dit sans justification ni excuse le moment venu.',
+      'Fixer à l’avance une durée de visite par défaut évite d’improviser un refus face à quelqu’un déjà à la porte.',
+    ],
+  },
+
   templates: {
     adminFr: {
       title: 'Administratif',
