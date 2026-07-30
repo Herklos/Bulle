@@ -271,6 +271,17 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'fonctionnaire-supplement-familial-traitement',
   'avpf-parent-au-foyer-trimestres-retraite',
   'mineure-enceinte-droits-accompagnement',
+  // Batch 8 — reprise du travail
+  'temps-partiel-apres-conge-maternite-demander',
+  'prepare-temps-partiel-cumul-salaire',
+  'teletravail-retour-conge-negocier',
+  'conge-parental-fractionne-reprise-progressive',
+  'refus-conge-parental-employeur-recours',
+  'jours-enfant-malade-droit-conge',
+  'reprise-anticipee-conge-maternite-possible',
+  'entretien-professionnel-retour-conge',
+  'horaires-amenages-jeune-parent-droit',
+  'formation-cpf-pendant-conge-parental',
 ];
 
 /**
