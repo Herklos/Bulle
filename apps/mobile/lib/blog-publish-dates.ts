@@ -282,6 +282,17 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'entretien-professionnel-retour-conge',
   'horaires-amenages-jeune-parent-droit',
   'formation-cpf-pendant-conge-parental',
+  // Batch 9 — vie privée et données
+  'babyphone-connecte-donnees-securite',
+  'bracelet-chaussette-connectee-bebe-donnees',
+  'partage-photos-famille-cloud-parametres',
+  'droit-image-enfant-consentement-parents',
+  'objets-connectes-bebe-verifier-rgpd-avant-achat',
+  'application-suivi-bebe-donnees-hebergement',
+  'camera-surveillance-nounou-domicile-legalite',
+  'comptes-en-ligne-parents-securiser-donnees',
+  'jouets-connectes-enfant-conseils-securite',
+  'donnees-bebe-droit-suppression-rgpd',
 ];
 
 /**
