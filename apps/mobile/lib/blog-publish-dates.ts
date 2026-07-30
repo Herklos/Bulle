@@ -227,6 +227,17 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'prime-naissance-calendrier-versement',
   'livret-a-bebe-ouvrir-epargne',
   'naissance-prelevement-source-ajuster-taux',
+  // Batch 4 — mode de garde et Pajemploi
+  'inscription-creche-quand-liste-attente',
+  'assistante-maternelle-mensualisation-annee-incomplete',
+  'garde-partagee-deux-familles-contrat-cout',
+  'contrat-assistante-maternelle-mentions-obligatoires',
+  'micro-creche-cmg-ou-psu-difference',
+  'cesu-ou-pajemploi-quelle-difference',
+  'periode-adaptation-creche-comment-ca-marche',
+  'rupture-contrat-assistante-maternelle-procedure',
+  'maison-assistants-maternels-mam-fonctionnement',
+  'garde-horaires-atypiques-aides-solutions',
 ];
 
 /**
