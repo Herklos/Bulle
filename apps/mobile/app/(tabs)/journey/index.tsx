@@ -186,7 +186,9 @@ export default function JourneyScreen() {
   return (
     <Screen>
       <FeatureWelcomeFor area="journey" visible={welcome.visible} onDismiss={welcome.dismiss} />
-      <Text variant="display">{t('journey.title')}</Text>
+      <Text variant="display" heading={1}>
+        {t('journey.title')}
+      </Text>
 
       <View style={{ flexDirection: 'row', gap: space[4] }}>
         {/*

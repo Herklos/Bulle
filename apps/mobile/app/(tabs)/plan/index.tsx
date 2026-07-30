@@ -202,7 +202,9 @@ export default function PlanScreen() {
           sells ("des projets, pas une liste") and the bare screen never had. Inter, not
           Fraunces: the serif budget stays on the display title alone. */}
       <View style={{ gap: space[2] }}>
-        <Text variant="display">{t('plan.title')}</Text>
+        <Text variant="display" heading={1}>
+          {t('plan.title')}
+        </Text>
         {anything && (
           <Text variant="body" color="inkSoft">
             {t('plan.intro')}

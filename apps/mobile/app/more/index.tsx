@@ -96,7 +96,9 @@ export default function MoreScreen() {
         }}
       />
       <Screen>
-      <Text variant="display">{t('settings.title')}</Text>
+      <Text variant="display" heading={1}>
+        {t('settings.title')}
+      </Text>
 
       {/* The pregnancy. First because it is the only group whose rows change what every
           other screen SAYS: the DPA re-aims every task window, the birth date starts every
@@ -166,15 +168,26 @@ export default function MoreScreen() {
           // toggle, and as a leaf it imposes nothing on its neighbours — which is exactly
           // why a native CONTAINER was the problem here and a native control is not.
           trailing={
-            // seedColor on the Host, not a color prop on the Switch: Switch has none, and
-            // the tint is the Host's job. Without it the toggle is the platform's default
-            // blue on a screen with no blue in it.
-            <Host matchContents seedColor={colors.sage}>
-              <Switch
-                value={notifications}
-                onValueChange={(next) => void useSettingsStore.getState().setNotifications(next)}
-              />
-            </Host>
+            // Grouped as one labelled switch for VoiceOver: the @expo/ui Switch carries no
+            // label of its own, so on its own it announces "on/off, switch" with no statement
+            // of what it toggles, while its Row (no onPress) is inert text. The wrapper names it
+            // and reports its state, matching the labelling the rest of the screen's rows get.
+            <View
+              accessible
+              accessibilityRole="switch"
+              accessibilityLabel={t('settings.notifications')}
+              accessibilityState={{ checked: notifications }}
+            >
+              {/* seedColor on the Host, not a color prop on the Switch: Switch has none, and
+                  the tint is the Host's job. Without it the toggle is the platform's default
+                  blue on a screen with no blue in it. */}
+              <Host matchContents seedColor={colors.sage}>
+                <Switch
+                  value={notifications}
+                  onValueChange={(next) => void useSettingsStore.getState().setNotifications(next)}
+                />
+              </Host>
+            </View>
           }
           divider={false}
         />
