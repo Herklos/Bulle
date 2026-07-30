@@ -27,6 +27,7 @@ import { POSTS_SEO1_EN, POSTS_SEO1_FR } from './blog-posts-seo1';
 import { POSTS_SEO2_EN, POSTS_SEO2_FR } from './blog-posts-seo2';
 import { POSTS_SEO3_EN, POSTS_SEO3_FR } from './blog-posts-seo3';
 import { POSTS_SEO4_EN, POSTS_SEO4_FR } from './blog-posts-seo4';
+import { POSTS_SEO5_EN, POSTS_SEO5_FR } from './blog-posts-seo5';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
 /**
@@ -53,6 +54,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_SEO2_FR,
     ...POSTS_SEO3_FR,
     ...POSTS_SEO4_FR,
+    ...POSTS_SEO5_FR,
   ],
   en: [
     ...POSTS_ADMIN_EN,
@@ -73,6 +75,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_SEO2_EN,
     ...POSTS_SEO3_EN,
     ...POSTS_SEO4_EN,
+    ...POSTS_SEO5_EN,
   ],
 };
 

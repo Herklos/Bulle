@@ -238,6 +238,17 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'rupture-contrat-assistante-maternelle-procedure',
   'maison-assistants-maternels-mam-fonctionnement',
   'garde-horaires-atypiques-aides-solutions',
+  // Batch 5 — achats et matériel (anti-surachat)
+  'lit-parapluie-choisir-securite-voyage',
+  'baignoire-bebe-quelle-solution-choisir',
+  'transat-bebe-utilite-securite',
+  'sterilisateur-biberon-necessaire-ou-pas',
+  'echarpe-portage-ou-porte-bebe-choisir',
+  'tire-lait-location-ou-achat-cout',
+  'chauffe-biberon-utile-ou-superflu',
+  'tapis-eveil-parc-bebe-quand-utile',
+  'table-a-langer-ou-commode-choisir',
+  'cuiseur-mixeur-bebe-vraiment-utile',
 ];
 
 /**
