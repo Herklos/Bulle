@@ -132,7 +132,7 @@ export default function TodayScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const welcome = useFeatureWelcome('today');
-  const { space, touch } = useBulleTheme();
+  const { colors, space, touch } = useBulleTheme();
   const now = useNow();
 
   const bulle = useBulleStore((s) => s.bulle);
@@ -253,6 +253,12 @@ export default function TodayScreen() {
   const showTip = tip !== '';
   const showFooter = showMemoryPrompt || showTip || !!focus;
 
+  // A small piece of warmth: the greeting follows the clock. Derived from the injected `now`
+  // (never `Date.now()`), so it stays testable and moves with the app's sense of time. Late
+  // night counts as evening — a 3am feed is not a "Bonjour" moment.
+  const hour = new Date(now).getHours();
+  const greetingKey = hour >= 18 || hour < 5 ? 'today.greetingEvening' : 'today.greeting';
+
   /** The stepper wiring a counted task needs, wherever the home screen shows one. */
   const countedProps = (task: Task) => ({
     count: taskCount(task),
@@ -314,36 +320,45 @@ export default function TodayScreen() {
         <Glyph name="settings" size={22} color="inkSoft" />
       </Pressable>
 
-      {/* Header */}
-      <View style={{ alignItems: 'center', gap: space[2] }}>
-        <Text variant="caption">{t('today.greeting')}</Text>
+      {/*
+        Header — the emotional anchor. Composed as three deliberate groups rather than one
+        flat stack of evenly spaced lines: the greeting and week read as a single quiet pair,
+        the orb is given real air above and below so it is unmistakably the loudest thing on
+        the screen, and the readiness phrase sits under it as its caption. That grouping is
+        the whole reason the spacing is nested (`space[1]` inside a pair, `space[5]` between
+        groups) instead of a uniform gap.
+      */}
+      <View style={{ alignItems: 'center', gap: space[5] }}>
+        <View style={{ alignItems: 'center', gap: space[1] }}>
+          <Text variant="caption">{t(greetingKey)}</Text>
 
-        {/* After the birth the countdown is meaningless — the gestational week has stopped
-            and "J-0" is not information. Days since the birth is what a new parent is
-            actually keeping track of, and it is the unit every deadline below uses. */}
-        {born ? (
-          <Text variant="caption">
-            {daysSince === 0 ? t('birth.dayOne') : t('birth.dayN', { count: daysSince + 1 })}
-          </Text>
-        ) : (
-          // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of the
-          // world quotes SG. Showing both, on demand, is a small competence signal.
-          // A Pressable, not a bare tappable Text: it needs a real touch target and pressed
-          // feedback. hitSlop rather than padding, so the header's centred gap is unchanged.
-          <Pressable
-            accessibilityRole="button"
-            accessibilityHint={t('today.weekToggleHint')}
-            hitSlop={touch.min}
-            onPress={() => setShowSG((v) => !v)}
-            style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
-          >
+          {/* After the birth the countdown is meaningless — the gestational week has stopped
+              and "J-0" is not information. Days since the birth is what a new parent is
+              actually keeping track of, and it is the unit every deadline below uses. */}
+          {born ? (
             <Text variant="caption">
-              {showSG
-                ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
-                : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
+              {daysSince === 0 ? t('birth.dayOne') : t('birth.dayN', { count: daysSince + 1 })}
             </Text>
-          </Pressable>
-        )}
+          ) : (
+            // Tap to switch SA/SG (§7.2). French medical follow-up speaks SA; the rest of the
+            // world quotes SG. Showing both, on demand, is a small competence signal.
+            // A Pressable, not a bare tappable Text: it needs a real touch target and pressed
+            // feedback. hitSlop rather than padding, so the header's centred gap is unchanged.
+            <Pressable
+              accessibilityRole="button"
+              accessibilityHint={t('today.weekToggleHint')}
+              hitSlop={touch.min}
+              onPress={() => setShowSG((v) => !v)}
+              style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
+            >
+              <Text variant="caption">
+                {showSG
+                  ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
+                  : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
+              </Text>
+            </Pressable>
+          )}
+        </View>
 
         {/*
           The baby lives INSIDE the bulle, not beside it. That is the product's metaphor made
@@ -367,19 +382,21 @@ export default function TodayScreen() {
           innerImage={born ? undefined : bulleForWeekSG(display.sg)}
         />
 
-        <Text
-          variant="body"
-          color="inkSoft"
-          importantForAccessibility="no"
-          accessibilityElementsHidden={true}
-        >
-          {t(readiness?.phraseKey ?? 'readiness.empty')}
-        </Text>
+        <View style={{ alignItems: 'center', gap: space[2] }}>
+          <Text
+            variant="body"
+            color="inkSoft"
+            importantForAccessibility="no"
+            accessibilityElementsHidden={true}
+          >
+            {t(readiness?.phraseKey ?? 'readiness.empty')}
+          </Text>
 
-        {/* A drop is only ever shown WITH its reason (§6) — never a silent regression. */}
-        {readiness?.regressionReason === 'profile-changed' && (
-          <Text variant="caption">{t('readiness.profileChanged')}</Text>
-        )}
+          {/* A drop is only ever shown WITH its reason (§6) — never a silent regression. */}
+          {readiness?.regressionReason === 'profile-changed' && (
+            <Text variant="caption">{t('readiness.profileChanged')}</Text>
+          )}
+        </View>
       </View>
 
       {/* Focus — one task, or an honest empty state. */}
@@ -457,7 +474,7 @@ export default function TodayScreen() {
       {essentials.length > 0 && (
         <View>
           <SectionHeader title={t('today.thisWeek')} />
-          {essentials.map((task) => {
+          {essentials.map((task, index) => {
             // A counted task answers "how many", so it carries the stepper here rather than a
             // checkbox that would fill it to target in one tap. Same split as the Préparer
             // list. The leading pad keeps its title aligned with the checkbox rows above it.
@@ -472,7 +489,13 @@ export default function TodayScreen() {
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: space[4],
+                  minHeight: touch.min,
                   paddingVertical: space[3],
+                  // The same hairline every other list on this screen uses, so "Cette
+                  // semaine" reads as one family with "À venir" and "Ensemble" instead of a
+                  // borderless outlier. Omitted on the last row, exactly like Row does it.
+                  borderBottomWidth: index < essentials.length - 1 ? 1 : 0,
+                  borderBottomColor: colors.line,
                 }}
               >
                 {booleanOnly && (

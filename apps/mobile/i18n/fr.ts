@@ -48,6 +48,7 @@ export const fr = {
 
   today: {
     greeting: 'Bonjour',
+    greetingEvening: 'Bonsoir',
     weekLine: 'Semaine {{sa}} SA · J-{{days}}',
     weekLineSG: 'Semaine {{sg}} SG · J-{{days}}',
     weekToggleHint: 'Touchez pour basculer entre les semaines d’aménorrhée et de grossesse.',
