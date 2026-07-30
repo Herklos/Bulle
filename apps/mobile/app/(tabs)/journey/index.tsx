@@ -128,10 +128,12 @@ export default function JourneyScreen() {
   // The Journey is the single surface that must never appear in Pause mode (§3.1).
   if (bulle.pause.paused) return <Redirect href="/pause" />;
 
+  // Weekday + time, not day + month: inside a card that already names the week, the date is
+  // redundant and reads as a raw timestamp. "jeudi 14:30" orients you within the week at a
+  // glance.
   const formatTime = (iso: string) =>
     new Intl.DateTimeFormat(i18n.language === 'en' ? 'en-GB' : 'fr-FR', {
-      day: 'numeric',
-      month: 'short',
+      weekday: 'long',
       hour: '2-digit',
       minute: '2-digit',
     }).format(new Date(iso));
@@ -139,6 +141,47 @@ export default function JourneyScreen() {
   const empty = events.length === 0 && opening.length === 0 && memories.length === 0;
 
   const browse = (week: number) => setSelected(clampCheminWeek(week, 1, DPA_WEEKS_SA));
+
+  // Appointments, task windows and souvenirs used to render as three separate stacks of
+  // Row, each with its own 24px column gap AND its own hairline divider — a divider floating
+  // in whitespace, which reads as neither a tight list nor an airy one. Worse, tasks and
+  // souvenirs both led with a sage glyph, so a to-do and a memory looked identical. Unify
+  // them into ONE list: souvenirs take a non-action `inkSoft` (a memory is not something to
+  // act on), the divider is dropped only on the true last row, and the leading glyph shape
+  // still distinguishes the three (calendar / check / star). Order is appointments → tasks →
+  // souvenirs, the sequence a week is actually lived in.
+  const rows: Array<{
+    key: string;
+    title: string;
+    subtitle?: string;
+    glyph: GlyphName;
+    color: 'dustyBlue' | 'sage' | 'inkSoft';
+    onPress: () => void;
+  }> = [
+    ...events.map((event) => ({
+      key: `event-${event.id}`,
+      title: event.title,
+      subtitle: formatTime(event.at),
+      glyph: 'calendar' as GlyphName,
+      color: 'dustyBlue' as const,
+      onPress: () => router.push(`/event/${event.id}` as never),
+    })),
+    ...opening.map((task) => ({
+      key: `task-${task.id}`,
+      title: task.title,
+      subtitle: projects.find((p) => p.id === task.projectId)?.title,
+      glyph: 'check' as GlyphName,
+      color: 'sage' as const,
+      onPress: () => router.push(`/plan/${task.projectId}` as never),
+    })),
+    ...memories.map((memory) => ({
+      key: `memory-${memory.id}`,
+      title: memoryPreview(memory),
+      glyph: 'souvenirs' as GlyphName,
+      color: 'inkSoft' as const,
+      onPress: () => router.push(`/memory/${memory.id}` as never),
+    })),
+  ];
 
   return (
     <Screen>
@@ -201,44 +244,31 @@ export default function JourneyScreen() {
             </View>
           </View>
 
-          {events.map((event) => (
-            <Row
-              key={event.id}
-              title={event.title}
-              subtitle={formatTime(event.at)}
-              leading={<Glyph name="calendar" size={20} color="dustyBlue" />}
-              // The tasks and souvenirs beside it were already tappable; the appointment was
-              // the odd one out, which reads as "this one is broken" rather than "this one
-              // is different".
-              onPress={() => router.push(`/event/${event.id}` as never)}
-              chevron
-            />
-          ))}
-
-          {opening.map((task) => (
-            <Row
-              key={task.id}
-              title={task.title}
-              subtitle={projects.find((p) => p.id === task.projectId)?.title}
-              leading={<Glyph name="check" size={20} color="sage" />}
-              onPress={() => router.push(`/plan/${task.projectId}` as never)}
-              chevron
-            />
-          ))}
-
-          {memories.map((memory) => (
-            <Row
-              key={memory.id}
-              title={memoryPreview(memory)}
-              leading={<Glyph name="souvenirs" size={20} color="sage" />}
-              onPress={() => router.push(`/memory/${memory.id}` as never)}
-              chevron
-            />
-          ))}
+          {rows.length > 0 && (
+            <View>
+              {rows.map((row, index) => (
+                <Row
+                  key={row.key}
+                  title={row.title}
+                  subtitle={row.subtitle}
+                  leading={<Glyph name={row.glyph} size={20} color={row.color} />}
+                  onPress={row.onPress}
+                  chevron
+                  divider={index < rows.length - 1}
+                />
+              ))}
+            </View>
+          )}
 
           {/* A quiet line, not an EmptyState: most weeks hold nothing, and that is a calm
-              fact about a calm week rather than a gap to be filled. */}
-          {empty && <Text variant="caption">{t('journey.quietWeek')}</Text>}
+              fact about a calm week rather than a gap to be filled. A FUTURE week is empty
+              because it has not happened yet ("rien de prévu"), not because it went unrecorded
+              ("rien de noté") — the past-tense line would mislabel it. */}
+          {empty && (
+            <Text variant="caption">
+              {shown > weekSA ? t('journey.quietWeekAhead') : t('journey.quietWeek')}
+            </Text>
+          )}
         </View>
       </View>
     </Screen>
