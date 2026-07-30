@@ -107,7 +107,19 @@ export function FocusCard({
         )}
       </Pressable>
 
-      <View style={{ flexDirection: 'row', gap: space[3], marginTop: space[3], alignItems: 'center' }}>
+      {/* `flexWrap`: the counted variant puts a full Stepper (two 44pt targets plus a number)
+          beside the "Plus tard" ghost, which at Dynamic Type 130% on a narrow phone has no room
+          on one line. Wrapping lets the ghost drop below rather than squeeze or clip; `gap`
+          already spaces both axes. */}
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: space[3],
+          marginTop: space[3],
+          alignItems: 'center',
+        }}
+      >
         {/* A counted task steps toward its target here; a plain one gets the terracotta CTA.
             Either way "Plus tard" stays a ghost beside it. */}
         {counted ? (
