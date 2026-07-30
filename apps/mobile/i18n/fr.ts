@@ -171,8 +171,9 @@ export const fr = {
 
   memories: {
     title: 'Souvenirs',
+    intro: 'Ce que vous voulez garder de ces mois.',
     placeholder: 'Les moments que vous voulez garder apparaîtront ici.',
-    add: 'Ajouter',
+    addFull: 'Ajouter un souvenir',
     newTitle: 'Quelque chose à garder',
     kindQuestion: 'C’est quoi ?',
     kinds: {

@@ -169,8 +169,9 @@ export const en = {
 
   memories: {
     title: 'Memories',
+    intro: 'What you want to keep from these months.',
     placeholder: 'The moments you want to keep will appear here.',
-    add: 'Add',
+    addFull: 'Add a memory',
     newTitle: 'Something to keep',
     kindQuestion: 'What is it?',
     kinds: {

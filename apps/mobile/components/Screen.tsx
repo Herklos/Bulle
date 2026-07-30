@@ -48,7 +48,11 @@ export function Screen({ children, scroll = true, center }: ScreenProps) {
         style={{
           flex: 1,
           backgroundColor: colors.bg,
-          paddingTop: insets.top,
+          // `insets.top + space[4]`, matching the scroll branch's content padding below, so a
+          // non-scrolling screen (a native list like Souvenirs, a picker form) shares the
+          // same first-baseline as a scrolling one. Without the `space[4]`, the Souvenirs
+          // title sat 16px higher than every other root screen and visibly jumped on tab.
+          paddingTop: insets.top + space[4],
           paddingBottom: insets.bottom,
         }}
       >
