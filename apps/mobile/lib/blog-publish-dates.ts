@@ -152,6 +152,42 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'visite-de-reprise-apres-conge-maternite',
   'declarer-la-naissance-a-la-caf',
   'nom-de-famille-de-lenfant-choisir',
+
+  // ── The gap run continues — 24 more, appended in themed batches ──
+  // Same origin and rule as the block above: sourced, counterintuitive questions the FR
+  // market serves worst, verified against legifrance, service-public, ameli, caf, Pajemploi,
+  // impots, agriculture.gouv.fr and the CNIL before shipping. Append-only; reschedules
+  // nothing. Where a rule has a live 2024-2026 reform (CMG, infant vaccinations), the
+  // article states the current position with its date.
+  //
+  // Batch — droits au travail et état civil
+  'protection-licenciement-grossesse',
+  'conge-naissance-et-paternite-cumul',
+  'allaitement-au-travail-une-heure',
+  'amenagement-poste-travail-enceinte',
+  'reconnaissance-apres-la-naissance',
+  'livret-de-famille-a-quoi-il-sert',
+  // Batch — argent et Pajemploi
+  'cmg-comment-est-calcule',
+  'employer-assistante-maternelle-pajemploi',
+  'impots-annee-naissance-demi-part',
+  'credit-impot-frais-de-garde',
+  'rattacher-enfant-carte-vitale-deux-parents',
+  'couches-lavables-ou-jetables-le-cout',
+  // Batch — suivi de grossesse (attribué à la sage-femme)
+  'trois-echographies-quand-et-remboursement',
+  'sept-consultations-qui-peut-suivre',
+  'consultation-anesthesiste-8e-mois',
+  'projet-de-naissance-comment-lecrire',
+  'examens-sanguins-grossesse-obligatoires',
+  'calendrier-vaccins-rendez-vous-bebe',
+  // Batch — préparation, maison, entourage, vie privée
+  'trajet-maternite-anticiper',
+  'batch-cooking-avant-la-naissance',
+  'securiser-la-maison-par-ou-commencer',
+  'preparer-lanimal-a-larrivee',
+  'cadrer-laide-des-proches',
+  'photos-de-bebe-en-ligne',
 ];
 
 /**
