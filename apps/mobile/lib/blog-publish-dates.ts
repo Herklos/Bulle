@@ -140,6 +140,18 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'organiser-les-premieres-semaines',
   'reeducation-perineale-ce-quil-faut-savoir',
   'cadrer-les-visites-apres-naissance',
+
+  // ── The gap run — appended, not inserted ──
+  // These answer sourced, counterintuitive questions the FR market serves worst (see
+  // docs/FR-CORPUS-AUDIT.md "Blog material"). Everything above has publish history by now,
+  // so this block is append-only: it lands after the current tail and reschedules nothing.
+  // Verified against ameli, service-public, caf and legifrance before shipping.
+  'sept-seances-preparation-et-epp',
+  'conge-pathologique-14-jours-28-jours',
+  'absences-examens-grossesse-au-travail',
+  'visite-de-reprise-apres-conge-maternite',
+  'declarer-la-naissance-a-la-caf',
+  'nom-de-famille-de-lenfant-choisir',
 ];
 
 /**
