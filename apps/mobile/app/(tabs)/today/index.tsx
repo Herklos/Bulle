@@ -100,9 +100,12 @@ function deadlineLabel(
  * The home screen's single "add" affordance, styled as a quiet list row rather than a header
  * action. It closes the "À venir" list so that section always has a real, tappable body:
  * an empty appointments list used to be a lonely overline over a greyed "nothing here"
- * caption, which read as a dead end instead of an invitation. The plus glyph and sage text
- * line up exactly with the event rows above it (glyph 20 + `space[4]` gutter), so a full
- * list and an empty one share the same left edge.
+ * caption, which read as a dead end instead of an invitation.
+ *
+ * The plus rides the SAME fixed-width leading slot (`space[5]`) as every other row on the
+ * screen, and matches `Row`'s height (`touch.min + space[2]`), so a full list and an empty one
+ * share one title spine and one row rhythm — the checkbox rows in "Cette semaine" are 24 wide,
+ * and everything else is centred in a 24 slot to line up with them.
  */
 function AddRow({ label, onPress }: { label: string; onPress: () => void }) {
   const { space, touch } = useBulleTheme();
@@ -115,12 +118,14 @@ function AddRow({ label, onPress }: { label: string; onPress: () => void }) {
         flexDirection: 'row',
         alignItems: 'center',
         gap: space[4],
-        minHeight: touch.min,
+        minHeight: touch.min + space[2],
         paddingVertical: space[3],
         opacity: pressed ? 0.6 : 1,
       })}
     >
-      <Glyph name="plus" size={20} color="sage" />
+      <View style={{ width: space[5], alignItems: 'center' }}>
+        <Glyph name="plus" size={20} color="sage" />
+      </View>
       <Text variant="body" color="sage">
         {label}
       </Text>
@@ -132,7 +137,7 @@ export default function TodayScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const welcome = useFeatureWelcome('today');
-  const { colors, space, touch } = useBulleTheme();
+  const { space, touch } = useBulleTheme();
   const now = useNow();
 
   const bulle = useBulleStore((s) => s.bulle);
@@ -259,6 +264,14 @@ export default function TodayScreen() {
   const hour = new Date(now).getHours();
   const greetingKey = hour >= 18 || hour < 5 ? 'today.greetingEvening' : 'today.greeting';
 
+  // One leading slot for every row on the screen. The "Cette semaine" checkbox is 24 wide;
+  // the section glyphs are 20; a counted row has no leading at all. Centring each in a fixed
+  // `space[5]` (24) box gives them all one title spine, instead of the 4px jog the hand-rolled
+  // "Cette semaine" section used to introduce against the `Row`-based lists around it.
+  const lead = (node: React.ReactNode) => (
+    <View style={{ width: space[5], alignItems: 'center' }}>{node}</View>
+  );
+
   /** The stepper wiring a counted task needs, wherever the home screen shows one. */
   const countedProps = (task: Task) => ({
     count: taskCount(task),
@@ -329,14 +342,19 @@ export default function TodayScreen() {
         groups) instead of a uniform gap.
       */}
       <View style={{ alignItems: 'center', gap: space[5] }}>
-        <View style={{ alignItems: 'center', gap: space[1] }}>
+        {/* `paddingHorizontal: touch.min` keeps this centred pair clear of the absolute gear
+            in the top-right corner: a longer localized week line at Dynamic Type 130% would
+            otherwise grow into it. The greeting is the quiet label; the week/day line below is
+            lifted to `ink` so the number a parent actually holds is the focal datum, not an
+            equal to the pleasantry above it. */}
+        <View style={{ alignItems: 'center', gap: space[1], paddingHorizontal: touch.min }}>
           <Text variant="caption">{t(greetingKey)}</Text>
 
           {/* After the birth the countdown is meaningless — the gestational week has stopped
               and "J-0" is not information. Days since the birth is what a new parent is
               actually keeping track of, and it is the unit every deadline below uses. */}
           {born ? (
-            <Text variant="caption">
+            <Text variant="caption" color="ink">
               {daysSince === 0 ? t('birth.dayOne') : t('birth.dayN', { count: daysSince + 1 })}
             </Text>
           ) : (
@@ -351,7 +369,7 @@ export default function TodayScreen() {
               onPress={() => setShowSG((v) => !v)}
               style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
             >
-              <Text variant="caption">
+              <Text variant="caption" color="ink">
                 {showSG
                   ? t('today.weekLineSG', { sg: display.sg, days: display.daysUntil })
                   : t('today.weekLine', { sa: display.sa, days: display.daysUntil })}
@@ -383,9 +401,13 @@ export default function TodayScreen() {
         />
 
         <View style={{ alignItems: 'center', gap: space[2] }}>
+          {/* `ink`, not `inkSoft`: this is the orb's caption and the screen's emotional
+              anchor line, so it should land as a statement rather than read as muted filler
+              like every secondary caption. Still not Fraunces — a serif here would fight the
+              orb, which keeps the boldness. */}
           <Text
             variant="body"
-            color="inkSoft"
+            color="ink"
             importantForAccessibility="no"
             accessibilityElementsHidden={true}
           >
@@ -432,7 +454,7 @@ export default function TodayScreen() {
               key={task.id}
               title={task.title}
               subtitle={deadlineLabel(task, bulle.birthDate!, now, t)}
-              leading={<Glyph name="stamp" size={20} color="sage" />}
+              leading={lead(<Glyph name="stamp" size={20} color="sage" />)}
               onPress={() => router.push(`/task/${task.id}` as never)}
               chevron
               divider={index < postBirth.length - 1}
@@ -460,7 +482,7 @@ export default function TodayScreen() {
             key={event.id}
             title={event.title}
             subtitle={formatEventWhen(event, now, t, i18n.language)}
-            leading={<Glyph name="calendar" size={20} color="dustyBlue" />}
+            leading={lead(<Glyph name="calendar" size={20} color="dustyBlue" />)}
             // A scan gets MOVED; that is the normal case. Inert, this row showed a date the
             // user knew was wrong and offered nothing to do about it.
             onPress={() => router.push(`/event/${event.id}` as never)}
@@ -475,48 +497,35 @@ export default function TodayScreen() {
         <View>
           <SectionHeader title={t('today.thisWeek')} />
           {essentials.map((task, index) => {
-            // A counted task answers "how many", so it carries the stepper here rather than a
+            // A counted task answers "how many", so it carries the stepper rather than a
             // checkbox that would fill it to target in one tap. Same split as the Préparer
-            // list. The leading pad keeps its title aligned with the checkbox rows above it.
+            // list.
             const counted = isCounted(task);
             // Same split as Préparer: checklist/choice open the detail screen — a one-tap
             // checkbox would bulk-complete a checklist or mark a choice done without an answer.
             const booleanOnly = !counted && !hasChecklist(task) && !isChoice(task);
+            // A real `Row`, not a hand-rolled view: that hand-rolling is what let this section
+            // drift to a 44 height and a 40 title spine while every sibling list was 52 and 36.
+            // The leading slot is always present (a Checkbox for boolean tasks, an empty 24 box
+            // otherwise) so every title lines up; the whole row opens the task, and the nested
+            // Checkbox still owns its own tap to complete.
             return (
-              <View
+              <Row
                 key={task.id}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: space[4],
-                  minHeight: touch.min,
-                  paddingVertical: space[3],
-                  // The same hairline every other list on this screen uses, so "Cette
-                  // semaine" reads as one family with "À venir" and "Ensemble" instead of a
-                  // borderless outlier. Omitted on the last row, exactly like Row does it.
-                  borderBottomWidth: index < essentials.length - 1 ? 1 : 0,
-                  borderBottomColor: colors.line,
-                }}
-              >
-                {booleanOnly && (
-                  <Checkbox
-                    checked={false}
-                    onChange={() => complete(task)}
-                    accessibilityLabel={task.title}
-                  />
+                title={task.title}
+                leading={lead(
+                  booleanOnly ? (
+                    <Checkbox
+                      checked={false}
+                      onChange={() => complete(task)}
+                      accessibilityLabel={task.title}
+                    />
+                  ) : null,
                 )}
-                <Pressable
-                  style={{
-                    flex: 1,
-                    paddingLeft: booleanOnly ? 0 : 24 + space[4],
-                  }}
-                  onPress={() => router.push(`/task/${task.id}` as never)}
-                  accessibilityRole="button"
-                >
-                  <Text variant="body">{task.title}</Text>
-                </Pressable>
-                {counted && <Stepper {...countedProps(task)} />}
-              </View>
+                trailing={counted ? <Stepper {...countedProps(task)} /> : undefined}
+                onPress={() => router.push(`/task/${task.id}` as never)}
+                divider={index < essentials.length - 1}
+              />
             );
           })}
         </View>
@@ -537,7 +546,7 @@ export default function TodayScreen() {
               title={t(task.status === 'dismissed' ? 'today.partnerDismissed' : 'today.partnerDid', {
                 title: task.title,
               })}
-              leading={<Glyph name="members" size={20} color="sage" />}
+              leading={lead(<Glyph name="members" size={20} color="sage" />)}
               divider={index < partner.length - 1}
             />
           ))}
@@ -619,12 +628,14 @@ export default function TodayScreen() {
           )}
 
           {/*
-            One quiet, honest sign-off — and ONLY with a focus. When there is no focus, the
-            empty Focus state above ("Rien d'essentiel cette semaine…") already carries this
-            reassurance, and a second calm line here just repeated it. Never "You're doing
-            great!!".
+            One quiet, honest sign-off — with a focus, and only when the memory prompt is not
+            already closing the footer. Without a focus the empty Focus state above ("Rien
+            d'essentiel cette semaine…") carries this reassurance; with the memory prompt
+            present, that invitation is the warm last note and a second calm line just stacks a
+            third reassurance under it. Either way the footer stays at two blocks. Never
+            "You're doing great!!".
           */}
-          {focus && (
+          {focus && !showMemoryPrompt && (
             <Text variant="caption" style={{ textAlign: 'center' }}>
               {t('today.calm')}
             </Text>
