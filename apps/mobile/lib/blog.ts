@@ -32,6 +32,7 @@ import { POSTS_SEO6_EN, POSTS_SEO6_FR } from './blog-posts-seo6';
 import { POSTS_SEO7_EN, POSTS_SEO7_FR } from './blog-posts-seo7';
 import { POSTS_SEO8_EN, POSTS_SEO8_FR } from './blog-posts-seo8';
 import { POSTS_SEO9_EN, POSTS_SEO9_FR } from './blog-posts-seo9';
+import { POSTS_SEO10_EN, POSTS_SEO10_FR } from './blog-posts-seo10';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
 /**
@@ -63,6 +64,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_SEO7_FR,
     ...POSTS_SEO8_FR,
     ...POSTS_SEO9_FR,
+    ...POSTS_SEO10_FR,
   ],
   en: [
     ...POSTS_ADMIN_EN,
@@ -88,6 +90,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_SEO7_EN,
     ...POSTS_SEO8_EN,
     ...POSTS_SEO9_EN,
+    ...POSTS_SEO10_EN,
   ],
 };
 
