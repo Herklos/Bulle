@@ -293,6 +293,17 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'comptes-en-ligne-parents-securiser-donnees',
   'jouets-connectes-enfant-conseils-securite',
   'donnees-bebe-droit-suppression-rgpd',
+  // Batch 10 — suivi (logistique et remboursement)
+  'depistage-combine-trisomie-premier-trimestre-remboursement',
+  'dpni-adn-foetal-remboursement-conditions',
+  'amniocentese-remboursement-quand-prescrite',
+  'groupe-sanguin-rhesus-anti-d-calendrier-remboursement',
+  'carnet-de-sante-remis-naissance-a-quoi-il-sert',
+  'sage-femme-liberale-suivi-domicile-trouver',
+  'pmi-consultations-gratuites-a-quoi-ca-sert',
+  'examens-obligatoires-nourrisson-certificats-calendrier',
+  'mon-bilan-prevention-jeune-parent-rembourse',
+  'vaccination-cocooning-entourage-nourrisson',
 ];
 
 /**
