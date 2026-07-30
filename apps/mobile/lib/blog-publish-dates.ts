@@ -188,6 +188,23 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'preparer-lanimal-a-larrivee',
   'cadrer-laide-des-proches',
   'photos-de-bebe-en-ligne',
+
+  // ── SEO run — 100 keyword-targeted articles, appended in batches of 10 ──
+  // Real French search queries the corpus did not yet answer, deduped against everything
+  // above, verified against official sources before shipping. Append-only; reschedules
+  // nothing. Kept substantive and single-intent on purpose: a thin wall would trip Google's
+  // helpful-content demotion, which is the opposite of the goal (see the note at the top).
+  // Batch 1 — état civil et démarches
+  'acte-de-naissance-copie-integrale-demander',
+  'numero-securite-sociale-enfant-attribution',
+  'nom-usage-enfant-second-nom-accoler',
+  'declaration-naissance-hors-delai-que-faire',
+  'copie-integrale-ou-extrait-acte-naissance',
+  'livret-famille-perdu-demander-duplicata',
+  'enfant-ne-etranger-transcription-acte-naissance',
+  'reconnaissance-conjointe-anticipee-pma',
+  'acte-naissance-eviter-sites-payants',
+  'changer-prenom-enfant-apres-naissance',
 ];
 
 /**

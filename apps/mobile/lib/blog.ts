@@ -23,6 +23,7 @@ import { POSTS_GAP2_EN, POSTS_GAP2_FR } from './blog-posts-gap2';
 import { POSTS_GAP3_EN, POSTS_GAP3_FR } from './blog-posts-gap3';
 import { POSTS_GAP4_EN, POSTS_GAP4_FR } from './blog-posts-gap4';
 import { POSTS_GAP5_EN, POSTS_GAP5_FR } from './blog-posts-gap5';
+import { POSTS_SEO1_EN, POSTS_SEO1_FR } from './blog-posts-seo1';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
 /**
@@ -45,6 +46,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_GAP3_FR,
     ...POSTS_GAP4_FR,
     ...POSTS_GAP5_FR,
+    ...POSTS_SEO1_FR,
   ],
   en: [
     ...POSTS_ADMIN_EN,
@@ -61,6 +63,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_GAP3_EN,
     ...POSTS_GAP4_EN,
     ...POSTS_GAP5_EN,
+    ...POSTS_SEO1_EN,
   ],
 };
 
