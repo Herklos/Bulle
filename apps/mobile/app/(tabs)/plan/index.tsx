@@ -23,7 +23,7 @@ import {
   templateById,
 } from '@bulle/sdk';
 import { EmptyState, ProgressRing, Row, SectionHeader, Text } from '@bulle/ui/components';
-import { Glyph, withAlpha, type GlyphName } from '@bulle/ui/primitives';
+import { Glyph, type GlyphName } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
@@ -40,7 +40,7 @@ export default function PlanScreen() {
   const { t, i18n } = useTranslation();
   const welcome = useFeatureWelcome('plan');
   const router = useRouter();
-  const { colors, space, radius } = useBulleTheme();
+  const { space, touch } = useBulleTheme();
   const now = useNow();
 
   const bulle = useBulleStore((s) => s.bulle);
@@ -146,60 +146,60 @@ export default function PlanScreen() {
   /**
    * The trailing affordance on a template row.
    *
-   * A pill, not a sentence. "Ajouter à Préparer" spent three words and a wrapped line to say
-   * what a button says by being one, and it read as a label rather than an action — so the
-   * row looked inert. "à Préparer" was redundant besides: these sit under Modèles, inside
-   * the Préparer tab. The Chanel rule takes the other two words.
+   * It used to be a sage-tinted pill — on EVERY row, running down the right rail. A column of
+   * identical filled chips is the single loudest "generic cozy-startup template" tell on the
+   * whole screen (§15.0), and the pill was a fake button besides (`pointerEvents: none` — it
+   * looked pressable but the Row owned the press). Both states are now line-weight, no box:
    *
-   * `pointerEvents: none` is deliberate. The Row already owns the press, so a real nested
-   * Pressable would put a button inside a button — two overlapping targets, and VoiceOver
-   * announcing both. This looks like the button and lets the whole row be the target.
+   *  - addable → a lone sage `plus`, matching the chevron system on the project rows above
+   *    (chevron = open, plus = add). The Row still owns the press.
+   *  - locked (premium) → the words "Avec Complète" in sage. Differentiating by KIND — a plus
+   *    vs a short phrase — is what makes a gated row legible at a glance, now that neither
+   *    wears a box. Stated BEFORE the tap so the gate never feels like a trap.
    */
   const templateAction = (templateId: string) => {
-    // Say it is premium BEFORE the tap. A gate that only appears after you reach for
-    // something feels like a trap, even when the price is fair.
     const locked = !isPremium && isPremiumTemplate(templateId);
     if (locked) {
-      // The same text-pill as the unlocked branch, with the premium label. Stated in visible
-      // text, not a done-looking checkmark that reads as "already added".
       return (
-        <View
-          accessible
-          accessibilityLabel={t('plan.premiumTemplate')}
-          style={{
-            paddingHorizontal: space[3],
-            paddingVertical: space[2],
-            borderRadius: radius.s,
-            backgroundColor: withAlpha(colors.sage, 0.12),
-          }}
-        >
-          <Text variant="caption" color="sage">
-            {t('plan.premiumTemplate')}
-          </Text>
-        </View>
+        <Text variant="caption" color="sage" accessibilityLabel={t('plan.premiumTemplate')}>
+          {t('plan.premiumTemplate')}
+        </Text>
       );
     }
-    return (
-      <View
-        pointerEvents="none"
-        style={{
-          paddingHorizontal: space[3],
-          paddingVertical: space[2],
-          borderRadius: radius.s,
-          backgroundColor: withAlpha(colors.sage, 0.12),
-        }}
-      >
-        <Text variant="caption" color="sage">
-          {t('plan.addTemplate')}
-        </Text>
-      </View>
-    );
+    return <Glyph name="plus" size={20} color="sage" />;
   };
+
+  // Everything the screen can offer, in any section. Gates the orienting subtitle: over a
+  // genuinely empty plan the EmptyState speaks instead, and "chaque projet avance à son
+  // rythme" over zero projects would be hollow.
+  const anything = ordered.length > 0 || suggestions.length > 0 || later.length > 0;
+
+  // One 44px leading slot, shared by every row on the screen so the titles align to a single
+  // spine. Project rows already lead with a 44px ProgressRing; template glyphs were bare at
+  // 22px, so their titles started ~22px further left and the left edge wandered section to
+  // section. Centering the glyph in a touch-min box fixes the spine without adding any chrome.
+  const templateLeading = (glyph: GlyphName, color: 'sage' | 'inkSoft') => (
+    <View style={{ width: touch.min, alignItems: 'center' }}>
+      <Glyph name={glyph} size={22} color={color} />
+    </View>
+  );
 
   return (
     <Screen>
       <FeatureWelcomeFor area='plan' visible={welcome.visible} onDismiss={welcome.dismiss} />
-      <Text variant="display">{t('plan.title')}</Text>
+
+      {/* Title and its one orienting line read as a tight pair (space[2]), not two items in
+          the screen's 24px rhythm. The subtitle gives Préparer the voice the landing page
+          sells ("des projets, pas une liste") and the bare screen never had. Inter, not
+          Fraunces: the serif budget stays on the display title alone. */}
+      <View style={{ gap: space[2] }}>
+        <Text variant="display">{t('plan.title')}</Text>
+        {anything && (
+          <Text variant="body" color="inkSoft">
+            {t('plan.intro')}
+          </Text>
+        )}
+      </View>
 
       {/* Only when there is genuinely nothing to offer — never while templates exist. */}
       {ordered.length === 0 && suggestions.length === 0 && later.length === 0 && (
@@ -249,7 +249,7 @@ export default function PlanScreen() {
                 key={suggestion.templateId}
                 title={t(template.titleKey)}
                 subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
-                leading={<Glyph name={template.glyph as GlyphName} size={22} color="sage" />}
+                leading={templateLeading(template.glyph as GlyphName, 'sage')}
                 trailing={templateAction(suggestion.templateId)}
                 onPress={() => addTemplate(suggestion.templateId)}
                 divider={index < suggestions.length - 1}
@@ -271,7 +271,7 @@ export default function PlanScreen() {
               key={template.id}
               title={t(template.titleKey)}
               subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
-              leading={<Glyph name={template.glyph as GlyphName} size={22} color="inkSoft" />}
+              leading={templateLeading(template.glyph as GlyphName, 'inkSoft')}
               trailing={templateAction(template.id)}
               onPress={() => addTemplate(template.id)}
               divider={index < later.length - 1}
@@ -279,8 +279,6 @@ export default function PlanScreen() {
           ))}
         </View>
       )}
-
-      <View style={{ height: space[4] }} />
     </Screen>
   );
 }

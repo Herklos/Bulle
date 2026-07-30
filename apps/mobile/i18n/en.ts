@@ -91,10 +91,11 @@ export const en = {
 
   plan: {
     title: 'Prepare',
+    intro: 'Each project moves at its own pace.',
     projects: 'Projects',
     addProject: 'Add a project',
-    templates: 'Templates',
-    allTemplates: 'Everything else',
+    templates: 'Suggestions',
+    allTemplates: 'Later',
     ideas_one: '+{{count}} idea',
     ideas_other: '+{{count}} ideas',
     progress: '{{resolved}} of {{total}}',
@@ -112,7 +113,6 @@ export const en = {
     lingering: 'Still on your list',
     suggestTemplate: 'Bulle suggests: {{title}}',
     premiumTemplate: 'With Complète',
-    addTemplate: 'Add',
     tasks: 'Tasks',
     addTask: 'Add a task',
     newTaskTitle: 'A task of your own',
