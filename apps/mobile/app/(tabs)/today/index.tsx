@@ -36,7 +36,7 @@ import {
   type Task,
 } from '@bulle/sdk';
 import { BulleOrb, Glyph } from '@bulle/ui/primitives';
-import { Checkbox, EmptyState, FocusCard, Row, SectionHeader, Stepper, Text } from '@bulle/ui/components';
+import { AddRow, Checkbox, EmptyState, FocusCard, Row, SectionHeader, Stepper, Text } from '@bulle/ui/components';
 import { useBulleTheme, motion } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
 import { FeatureWelcomeFor, useFeatureWelcome } from '@/lib/feature-welcomes';
@@ -94,43 +94,6 @@ function deadlineLabel(
   if (left < 0) return t('birth.deadlinePassed');
   if (left === 0) return t('birth.deadlineToday');
   return t('birth.deadlineDays', { count: left });
-}
-
-/**
- * The home screen's single "add" affordance, styled as a quiet list row rather than a header
- * action. It closes the "À venir" list so that section always has a real, tappable body:
- * an empty appointments list used to be a lonely overline over a greyed "nothing here"
- * caption, which read as a dead end instead of an invitation.
- *
- * The plus rides the SAME fixed-width leading slot (`space[5]`) as every other row on the
- * screen, and matches `Row`'s height (`touch.min + space[2]`), so a full list and an empty one
- * share one title spine and one row rhythm — the checkbox rows in "Cette semaine" are 24 wide,
- * and everything else is centred in a 24 slot to line up with them.
- */
-function AddRow({ label, onPress }: { label: string; onPress: () => void }) {
-  const { space, touch } = useBulleTheme();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: space[4],
-        minHeight: touch.min + space[2],
-        paddingVertical: space[3],
-        opacity: pressed ? 0.6 : 1,
-      })}
-    >
-      <View style={{ width: space[5], alignItems: 'center' }}>
-        <Glyph name="plus" size={20} color="sage" />
-      </View>
-      <Text variant="body" color="sage">
-        {label}
-      </Text>
-    </Pressable>
-  );
 }
 
 export default function TodayScreen() {
@@ -546,7 +509,10 @@ export default function TodayScreen() {
               title={t(task.status === 'dismissed' ? 'today.partnerDismissed' : 'today.partnerDid', {
                 title: task.title,
               })}
-              leading={lead(<Glyph name="members" size={20} color="sage" />)}
+              // inkSoft, not sage: these rows have no onPress — they are a quiet record of
+              // what the co-parent did, not something to act on — so they follow the app's
+              // non-action glyph colour like the souvenirs on the Chemin do.
+              leading={lead(<Glyph name="members" size={20} color="inkSoft" />)}
               divider={index < partner.length - 1}
             />
           ))}

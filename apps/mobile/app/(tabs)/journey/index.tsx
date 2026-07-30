@@ -251,7 +251,13 @@ export default function JourneyScreen() {
                   key={row.key}
                   title={row.title}
                   subtitle={row.subtitle}
-                  leading={<Glyph name={row.glyph} size={20} color={row.color} />}
+                  // Same fixed `space[5]` leading slot the other glyph-led lists use, so the
+                  // week card's rows share one title spine with Aujourd'hui and Souvenirs.
+                  leading={
+                    <View style={{ width: space[5], alignItems: 'center' }}>
+                      <Glyph name={row.glyph} size={20} color={row.color} />
+                    </View>
+                  }
                   onPress={row.onPress}
                   chevron
                   divider={index < rows.length - 1}

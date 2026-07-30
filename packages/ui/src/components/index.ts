@@ -18,6 +18,8 @@ export { SectionHeader } from './SectionHeader.js';
 export type { SectionHeaderProps } from './SectionHeader.js';
 export { Row } from './Row.js';
 export type { RowProps } from './Row.js';
+export { AddRow } from './AddRow.js';
+export type { AddRowProps } from './AddRow.js';
 export { TextField } from './TextField.js';
 export type { TextFieldProps } from './TextField.js';
 export { FeatureWelcome } from './FeatureWelcome.js';
