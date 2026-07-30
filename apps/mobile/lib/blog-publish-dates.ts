@@ -205,6 +205,28 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'reconnaissance-conjointe-anticipee-pma',
   'acte-naissance-eviter-sites-payants',
   'changer-prenom-enfant-apres-naissance',
+  // Batch 2 — congés et indemnités
+  'conge-maternite-fonctionnaire-duree-remuneration',
+  'conge-maternite-independante-allocation-forfaitaire',
+  'conge-maternite-troisieme-enfant-26-semaines',
+  'ijss-conge-maternite-calcul-salaire-journalier',
+  'conge-maternite-chomage-demandeuse-emploi',
+  'conge-paternite-independant-indemnisation',
+  'conge-maternite-report-prenatal-postnatal',
+  'conge-adoption-duree-indemnisation',
+  'conge-maternite-jumeaux-duree',
+  'subrogation-employeur-conge-maternite',
+  // Batch 3 — aides CAF et budget
+  'complement-familial-conditions-montant',
+  'allocations-familiales-modulation-revenus',
+  'allocation-base-paje-conditions-plafonds',
+  'allocation-soutien-familial-parent-seul',
+  'quotient-familial-caf-tarifs-petite-enfance',
+  'apl-arrivee-enfant-recalcul-droits',
+  'rsa-parent-isole-grossesse-majoration',
+  'prime-naissance-calendrier-versement',
+  'livret-a-bebe-ouvrir-epargne',
+  'naissance-prelevement-source-ajuster-taux',
 ];
 
 /**
