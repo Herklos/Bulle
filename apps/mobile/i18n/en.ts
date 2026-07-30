@@ -48,6 +48,7 @@ export const en = {
 
   today: {
     greeting: 'Hello',
+    greetingEvening: 'Good evening',
     weekLine: 'Week {{sa}} · {{days}} days to go',
     weekLineSG: 'Week {{sg}} · {{days}} days to go',
     weekToggleHint: 'Tap to switch between amenorrhea weeks and pregnancy weeks.',
