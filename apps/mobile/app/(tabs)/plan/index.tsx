@@ -8,7 +8,7 @@
  * Progress counts ESSENTIAL tasks only; optional ones show as "+N idées" and never enter
  * the denominator, so adding ideas can't make you look further behind.
  */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Redirect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -103,6 +103,12 @@ export default function PlanScreen() {
   }, [available, suggestions]);
 
   const ordered = useMemo(() => sortProjects(projects), [projects]);
+
+  // "Plus tard" is the whole rest of the catalogue — the file's own docstring says a flat
+  // list of 40 items is a backlog, and a backlog is dread. So it stays collapsed by default:
+  // the door is always visible (the header + a "Afficher" action), but the screen does not
+  // dump the catalogue the moment you scroll past the suggestions. Opening it is one tap.
+  const [showLater, setShowLater] = useState(false);
 
   if (!bulle) return null;
   // Pause (§3.1). Préparer is a preparation surface — week-ranked templates for a birth that
@@ -265,18 +271,25 @@ export default function PlanScreen() {
       */}
       {canEdit && later.length > 0 && (
         <View>
-          <SectionHeader title={t('plan.allTemplates')} />
-          {later.map((template, index) => (
-            <Row
-              key={template.id}
-              title={t(template.titleKey)}
-              subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
-              leading={templateLeading(template.glyph as GlyphName, 'inkSoft')}
-              trailing={templateAction(template.id)}
-              onPress={() => addTemplate(template.id)}
-              divider={index < later.length - 1}
-            />
-          ))}
+          <SectionHeader
+            title={t('plan.allTemplates')}
+            action={{
+              label: t(showLater ? 'plan.hideLater' : 'plan.showLater'),
+              onPress: () => setShowLater((v) => !v),
+            }}
+          />
+          {showLater &&
+            later.map((template, index) => (
+              <Row
+                key={template.id}
+                title={t(template.titleKey)}
+                subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
+                leading={templateLeading(template.glyph as GlyphName, 'inkSoft')}
+                trailing={templateAction(template.id)}
+                onPress={() => addTemplate(template.id)}
+                divider={index < later.length - 1}
+              />
+            ))}
         </View>
       )}
     </Screen>

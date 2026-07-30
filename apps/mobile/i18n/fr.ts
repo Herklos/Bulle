@@ -97,6 +97,8 @@ export const fr = {
     addProject: 'Ajouter un projet',
     templates: 'Suggestions',
     allTemplates: 'Plus tard',
+    showLater: 'Afficher',
+    hideLater: 'Masquer',
     ideas_one: '+{{count}} idée',
     ideas_other: '+{{count}} idées',
     progress: '{{resolved}} sur {{total}}',

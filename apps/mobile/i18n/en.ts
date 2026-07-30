@@ -96,6 +96,8 @@ export const en = {
     addProject: 'Add a project',
     templates: 'Suggestions',
     allTemplates: 'Later',
+    showLater: 'Show',
+    hideLater: 'Hide',
     ideas_one: '+{{count}} idea',
     ideas_other: '+{{count}} ideas',
     progress: '{{resolved}} of {{total}}',
