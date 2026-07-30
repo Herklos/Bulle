@@ -249,6 +249,17 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'tapis-eveil-parc-bebe-quand-utile',
   'table-a-langer-ou-commode-choisir',
   'cuiseur-mixeur-bebe-vraiment-utile',
+  // Batch 6 — préparation et protéger la famille
+  'pre-admission-maternite-dossier-administratif',
+  'faire-part-naissance-quand-quoi-mettre',
+  'prevenir-mutuelle-naissance-documents',
+  'prevenir-employeur-grossesse-lettre-recommandee',
+  'garde-aine-pendant-accouchement-organiser',
+  'carte-vitale-mettre-a-jour-avant-naissance',
+  'prevenir-assurance-habitation-arrivee-enfant',
+  'changer-beneficiaire-assurance-vie-naissance',
+  'donation-au-dernier-vivant-proteger-conjoint',
+  'designer-tuteur-legal-enfant-testament',
 ];
 
 /**
