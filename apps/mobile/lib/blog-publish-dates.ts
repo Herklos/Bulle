@@ -260,6 +260,17 @@ export const BLOG_PUBLISH_PRIORITY: string[] = [
   'changer-beneficiaire-assurance-vie-naissance',
   'donation-au-dernier-vivant-proteger-conjoint',
   'designer-tuteur-legal-enfant-testament',
+  // Batch 7 — situations spécifiques
+  'auto-entrepreneur-grossesse-indemnites',
+  'frontalier-suisse-conge-maternite-allocations',
+  'etudiante-enceinte-droits-examens-bourse',
+  'couple-non-marie-autorite-parentale',
+  'famille-recomposee-declarer-enfants-caf-impots',
+  'residence-alternee-allocations-partage',
+  'parent-etranger-naissance-france-titre-sejour',
+  'fonctionnaire-supplement-familial-traitement',
+  'avpf-parent-au-foyer-trimestres-retraite',
+  'mineure-enceinte-droits-accompagnement',
 ];
 
 /**
