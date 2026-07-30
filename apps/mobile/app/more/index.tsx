@@ -191,6 +191,11 @@ export default function MoreScreen() {
             <Row
               key={c.code}
               title={t(c.labelKey)}
+              // The active row carries a subtitle, exactly like the language rows above it —
+              // without it the only mark of the current country was a trailing check glyph,
+              // which has no accessibility label, so VoiceOver announced four identical
+              // "country, button" rows with no way to tell which one is chosen.
+              subtitle={country === c.code ? t('settings.countryCurrent') : undefined}
               onPress={() => useBulleStore.getState().updateProfile({ country: c.code })}
               trailing={country === c.code ? <Glyph name="check" size={20} color="sage" /> : undefined}
               divider={index < SUPPORTED_COUNTRIES.length - 1}
@@ -235,11 +240,13 @@ export default function MoreScreen() {
             chevron
           />
         )}
+        {/* No chevron: restore runs in place (a restore call + an Alert), it does not push a
+            screen. The language rows above set this contract explicitly — a chevron here would
+            promise a forward navigation that never happens. */}
         <Row
           title={t('settings.restore')}
           subtitle={t('settings.restoreBody')}
           onPress={restore}
-          chevron
           divider={false}
         />
       </View>
