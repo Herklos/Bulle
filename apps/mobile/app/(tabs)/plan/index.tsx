@@ -186,7 +186,10 @@ export default function PlanScreen() {
   // section. Centering the glyph in a touch-min box fixes the spine without adding any chrome.
   const templateLeading = (glyph: GlyphName, color: 'sage' | 'inkSoft') => (
     <View style={{ width: touch.min, alignItems: 'center' }}>
-      <Glyph name={glyph} size={22} color={color} />
+      {/* size 20, matching every other row-leading glyph in the app; 22 was a lone outlier
+          even against this screen's own project glyph. The 44 slot aligns the spine regardless
+          of glyph size (the slot is ProgressRing-width, not glyph-width). */}
+      <Glyph name={glyph} size={20} color={color} />
     </View>
   );
 
@@ -255,7 +258,10 @@ export default function PlanScreen() {
                 key={suggestion.templateId}
                 title={t(template.titleKey)}
                 subtitle={template.descriptionKey ? t(template.descriptionKey) : undefined}
-                leading={templateLeading(template.glyph as GlyphName, 'sage')}
+                // inkSoft, like the "Plus tard" rows: the category glyph is not the action
+                // (the sage plus is), so it should not wear the action colour just because the
+                // template is suggested. Keeps sage meaning "act here" and nothing else.
+                leading={templateLeading(template.glyph as GlyphName, 'inkSoft')}
                 trailing={templateAction(suggestion.templateId)}
                 onPress={() => addTemplate(suggestion.templateId)}
                 divider={index < suggestions.length - 1}

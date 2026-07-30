@@ -12,11 +12,11 @@
  * parent's phone and silently not the other's.
  */
 import React, { useCallback, useMemo } from 'react';
-import { FlatList, Pressable, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { memoryPreview, sortMemories } from '@bulle/sdk';
-import { EmptyState, Row, Text } from '@bulle/ui/components';
+import { AddRow, EmptyState, Row, Text } from '@bulle/ui/components';
 import { Glyph } from '@bulle/ui/primitives';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { Screen } from '@/components/Screen';
@@ -25,37 +25,6 @@ import { usePauseState } from '@/lib/use-pause';
 import { useMemoriesStore } from '@/store/useMemoriesStore';
 import { useCanEdit } from '@/lib/permissions/usePermissions';
 import { useNow } from '@/lib/use-now';
-
-/**
- * The "add a memory" affordance, as a quiet list row — the same pattern the home screen uses
- * for adding an appointment (sage `plus` + label, glyph 20 + `space[4]` gutter so it lands on
- * the row spine). It closes the populated list; the empty state carries its own button
- * instead. The old design hung a small "Ajouter" link off the corner of the 34px serif
- * title — a mismatched satellite, and the only root screen to do so.
- */
-function AddRow({ label, onPress }: { label: string; onPress: () => void }) {
-  const { space, touch } = useBulleTheme();
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: space[4],
-        minHeight: touch.min,
-        paddingVertical: space[3],
-        opacity: pressed ? 0.6 : 1,
-      })}
-    >
-      <Glyph name="plus" size={20} color="sage" />
-      <Text variant="body" color="sage">
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 export default function MemoriesScreen() {
   const { t, i18n } = useTranslation();
@@ -95,22 +64,26 @@ export default function MemoriesScreen() {
             ? `${formatDate(memory.createdAt)} · ${t('memories.weekStamp', { week: memory.week })}`
             : formatDate(memory.createdAt)
         }
+        // One fixed `space[5]` leading slot, shared with the AddRow below and matching the
+        // spine on Aujourd'hui, so every title across the app's glyph-led lists lines up.
         leading={
-          <Glyph
-            name={memory.kind === 'milestone' ? 'souvenirs' : 'leaf'}
-            size={20}
-            // A keepsake is not something to act on, so it does not wear sage (the action
-            // colour). Same call the Chemin makes for the memories in a week card; the glyph
-            // SHAPE (star vs leaf) still tells a moment from a note.
-            color="inkSoft"
-          />
+          <View style={{ width: space[5], alignItems: 'center' }}>
+            <Glyph
+              name={memory.kind === 'milestone' ? 'souvenirs' : 'leaf'}
+              size={20}
+              // A keepsake is not something to act on, so it does not wear sage (the action
+              // colour). Same call the Chemin makes for the memories in a week card; the glyph
+              // SHAPE (star vs leaf) still tells a moment from a note.
+              color="inkSoft"
+            />
+          </View>
         }
         onPress={() => router.push(`/memory/${memory.id}` as never)}
         chevron
         divider={index < memories.length - 1}
       />
     ),
-    [memories.length, paused, t, formatDate, router],
+    [memories.length, paused, t, formatDate, router, space],
   );
 
   return (
