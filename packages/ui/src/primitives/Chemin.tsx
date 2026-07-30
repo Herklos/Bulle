@@ -49,6 +49,13 @@ export interface CheminProps {
   onSelectWeek?: (week: number) => void;
   /** a11y label for each node hit target. Defaults to the week number alone. */
   weekAccessibilityLabel?: (week: number) => string;
+  /**
+   * Whether the node hit targets are exposed to assistive tech. Default true. Set false when
+   * the screen already offers a complete labelled browse path (e.g. a prev/next/now stepper):
+   * 41 "Semaine N" buttons ahead of the actual content is a VoiceOver-order failure, and the
+   * fil is decorative once the stepper exists. The overlays stay tappable for sighted users.
+   */
+  nodesAccessible?: boolean;
   /** Horizontal serpentine amplitude. ≤24px per §15.3: a gentle meander, not a slalom. */
   amplitude?: number;
   /** Vertical distance between week nodes. */
@@ -64,6 +71,7 @@ export function Chemin({
   selectedWeek,
   onSelectWeek,
   weekAccessibilityLabel,
+  nodesAccessible = true,
   amplitude = 24,
   spacing = 72,
   width = 96,
@@ -153,6 +161,11 @@ export function Chemin({
               key={`hit-${w.week}`}
               accessibilityRole="button"
               accessibilityLabel={weekAccessibilityLabel?.(w.week) ?? String(w.week)}
+              // Tappable for sighted users, but out of the a11y tree when the screen has its
+              // own labelled browse control — otherwise VoiceOver wades through 41 node buttons
+              // before reaching the content.
+              accessibilityElementsHidden={!nodesAccessible}
+              importantForAccessibility={nodesAccessible ? 'auto' : 'no-hide-descendants'}
               onPress={() => onSelectWeek(w.week)}
               style={{
                 position: 'absolute',
