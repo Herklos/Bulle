@@ -96,7 +96,9 @@ export default function MemoriesScreen() {
           at the foot of the list. Either way the invitation sits with the content it acts on,
           not in the opposite corner from it. */}
       <View style={{ gap: space[2] }}>
-        <Text variant="display">{t('memories.title')}</Text>
+        <Text variant="display" heading={1}>
+          {t('memories.title')}
+        </Text>
         {memories.length > 0 && (
           <Text variant="body" color="inkSoft">
             {t('memories.intro')}
@@ -122,6 +124,10 @@ export default function MemoriesScreen() {
       ) : (
         <FlatList
           style={{ flex: 1 }}
+          // The non-scroll Screen branch only pads `insets.bottom`; the scroll branch every
+          // other tab uses adds `space[7]` on top of that. Without it here the last row and the
+          // AddRow footer scroll under the real UITabBar. Match the app's bottom rhythm.
+          contentContainerStyle={{ paddingBottom: space[7] }}
           data={memories}
           keyExtractor={(m) => m.id}
           renderItem={renderItem}
