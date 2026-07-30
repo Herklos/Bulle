@@ -56,7 +56,7 @@ export const en = {
     done: 'Done',
     later: 'Later',
     upcoming: 'Coming up',
-    addEvent: 'Add',
+    addEventRow: 'Add an appointment',
     eventToday: 'Today at {{time}}',
     eventTomorrow: 'Tomorrow at {{time}}',
     eventInDays: 'In {{count}} days',
@@ -68,7 +68,6 @@ export const en = {
     memoryPrompt: 'Anything worth keeping from this week?',
     memoryPromptAction: 'Write something',
     calm: 'All is quiet this week.',
-    caughtUp: 'Nothing to do right now. That is normal.',
     emptyFocus: 'Nothing essential this week. Enjoy it.',
   },
 

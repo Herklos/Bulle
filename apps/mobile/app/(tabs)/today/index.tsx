@@ -96,6 +96,38 @@ function deadlineLabel(
   return t('birth.deadlineDays', { count: left });
 }
 
+/**
+ * The home screen's single "add" affordance, styled as a quiet list row rather than a header
+ * action. It closes the "À venir" list so that section always has a real, tappable body:
+ * an empty appointments list used to be a lonely overline over a greyed "nothing here"
+ * caption, which read as a dead end instead of an invitation. The plus glyph and sage text
+ * line up exactly with the event rows above it (glyph 20 + `space[4]` gutter), so a full
+ * list and an empty one share the same left edge.
+ */
+function AddRow({ label, onPress }: { label: string; onPress: () => void }) {
+  const { space, touch } = useBulleTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={({ pressed }) => ({
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: space[4],
+        minHeight: touch.min,
+        paddingVertical: space[3],
+        opacity: pressed ? 0.6 : 1,
+      })}
+    >
+      <Glyph name="plus" size={20} color="sage" />
+      <Text variant="body" color="sage">
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
 export default function TodayScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
@@ -209,6 +241,17 @@ export default function TodayScreen() {
   };
 
   const step = (task: Task, delta: number) => applyCount(task, stepTaskCount(task, delta));
+
+  /**
+   * The bottom "aside" — the memory invitation, the rotating tip, and a one-line sign-off.
+   * Grouped so they read as one calm footer rather than three separately floating centred
+   * blocks. The sign-off only appears WITH a focus: when there is no focus the empty Focus
+   * state above ("Rien d'essentiel cette semaine…") already says it, and repeating it here
+   * was the kind of doubled reassurance the Chanel rule exists to trim.
+   */
+  const showMemoryPrompt = !born && weekMemories.length === 0;
+  const showTip = tip !== '';
+  const showFooter = showMemoryPrompt || showTip || !!focus;
 
   /** The stepper wiring a counted task needs, wherever the home screen shows one. */
   const countedProps = (task: Task) => ({
@@ -358,14 +401,6 @@ export default function TodayScreen() {
       )}
 
       {/*
-        À venir (§5.1) — at most 2. The home screen answers "what now?", and a full calendar
-        here would turn it back into the backlog it exists to avoid.
-
-        The header renders even with NO events, because it carries the only "add" affordance
-        in the app: gating it on `upcoming.length > 0` means a new user has no way to add
-        their first appointment. One quiet line is the price of the feature being reachable.
-      */}
-      {/*
         After the birth (§5.4). These carry real legal deadlines counted in DAYS from the
         birth — 5 for the mairie, 6 months for the congé paternité — so they are the one
         place in Bulle that shows a countdown at all. It is not a nudge: the congé is an
@@ -389,28 +424,33 @@ export default function TodayScreen() {
         </View>
       )}
 
+      {/*
+        À venir (§5.1) — at most 2. The home screen answers "what now?", and a full calendar
+        here would turn it back into the backlog it exists to avoid.
+
+        The section is always present because it carries the app's only "add appointment"
+        affordance. What changed: the add is no longer a header action paired with a greyed
+        "Aucun rendez-vous" caption when empty — that left the section as a lonely overline
+        over dead text. Now every event row is followed by a quiet `AddRow`, so the list has
+        a real tappable body whether there are two appointments or none. Events always draw
+        their divider (default), which becomes the hairline separating the last one from the
+        add row; the add row itself is border-free, closing the group.
+      */}
       <View>
-        <SectionHeader
-          title={t('today.upcoming')}
-          action={{ label: t('today.addEvent'), onPress: () => router.push('/event/new') }}
-        />
-        {upcoming.length === 0 ? (
-          <Text variant="caption">{t('today.noEvents')}</Text>
-        ) : (
-          upcoming.map((event, index) => (
-            <Row
-              key={event.id}
-              title={event.title}
-              subtitle={formatEventWhen(event, now, t, i18n.language)}
-              leading={<Glyph name="calendar" size={20} color="dustyBlue" />}
-              // A scan gets MOVED; that is the normal case. Inert, this row showed a date
-              // the user knew was wrong and offered nothing to do about it.
-              onPress={() => router.push(`/event/${event.id}` as never)}
-              chevron
-              divider={index < upcoming.length - 1}
-            />
-          ))
-        )}
+        <SectionHeader title={t('today.upcoming')} />
+        {upcoming.map((event) => (
+          <Row
+            key={event.id}
+            title={event.title}
+            subtitle={formatEventWhen(event, now, t, i18n.language)}
+            leading={<Glyph name="calendar" size={20} color="dustyBlue" />}
+            // A scan gets MOVED; that is the normal case. Inert, this row showed a date the
+            // user knew was wrong and offered nothing to do about it.
+            onPress={() => router.push(`/event/${event.id}` as never)}
+            chevron
+          />
+        ))}
+        <AddRow label={t('today.addEventRow')} onPress={() => router.push('/event/new')} />
       </View>
 
       {/* This week — at most 3, essentials only. */}
@@ -482,75 +522,92 @@ export default function TodayScreen() {
       )}
 
       {/*
-        A souvenir is the one thing here nobody will ever remind you about, because it has no
-        deadline: a task shouts by having a window, and a moment just quietly does not happen.
-        Preparing is the app's job and remembering is its point (§1.2), so the invitation has
-        to exist somewhere.
-
-        Only when the week is genuinely empty of them. Someone who already wrote something is
-        being asked "did nothing happen?" about a week they just recorded, which is worse than
-        silence.
-
-        A question, not a nudge. No count, no streak, no "you haven't written in 3 weeks" —
-        §5.1 bans exactly that, and this is the surface where it would be easiest to slip in.
-        It disappears the moment it is answered and never mentions having been ignored.
+        The quiet aside at the bottom of the home screen: an invitation to remember, a
+        passing tip, and a one-line sign-off. Grouped into a single centred column so they
+        read as one calm footer instead of three blocks floating on their own — and set apart
+        from the left-aligned list above by space, not a line. The shift from a left list to
+        centred text IS the separation; a divider here would be one decoration too many
+        (the Chanel rule).
       */}
-      {!born && weekMemories.length === 0 && (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t('today.memoryPrompt')}
-          onPress={() => router.push('/memory/new')}
-          style={({ pressed }) => ({
-            alignItems: 'center',
-            gap: space[2],
-            paddingVertical: space[3],
-            opacity: pressed ? 0.5 : 1,
-          })}
-        >
-          <Glyph name="souvenirs" size={20} color="sage" />
-          <Text variant="body" color="inkSoft" style={{ textAlign: 'center' }}>
-            {t('today.memoryPrompt')}
-          </Text>
-          <Text variant="caption" color="sage">
-            {t('today.memoryPromptAction')}
-          </Text>
-        </Pressable>
-      )}
+      {showFooter && (
+        <View style={{ alignItems: 'center', gap: space[5], marginTop: space[4] }}>
+          {/*
+            A souvenir is the one thing here nobody will ever remind you about, because it has
+            no deadline: a task shouts by having a window, and a moment just quietly does not
+            happen. Preparing is the app's job and remembering is its point (§1.2), so the
+            invitation has to exist somewhere.
 
-      {/*
-        One tip from the advice pool (§1.2-adjacent content, see i18n `advice.items`).
-        Plain text, no glyph, no card: this is a quiet aside, not a feature. Tapping cycles
-        to another tip (never repeating the one just shown); it also re-rolls whenever the
-        app returns to the foreground. Hidden for free while paused, since the whole screen
-        redirects to /pause before this ever renders.
-      */}
-      {tip !== '' && (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`${eyebrow}. ${tip}`}
-          onPress={next}
-          style={({ pressed }) => ({
-            alignItems: 'center',
-            gap: space[1],
-            paddingVertical: space[3],
-            opacity: pressed ? 0.5 : 1,
-          })}
-        >
-          <Animated.View style={adviceStyle}>
-            <Text variant="caption" color="sage" style={{ textAlign: 'center' }}>
-              {eyebrow}
-            </Text>
-            <Text variant="body" color="inkSoft" style={{ textAlign: 'center' }}>
-              {tip}
-            </Text>
-          </Animated.View>
-        </Pressable>
-      )}
+            Only when the week is genuinely empty of them. Someone who already wrote something
+            is being asked "did nothing happen?" about a week they just recorded, which is
+            worse than silence.
 
-      {/* One quiet, honest line. Never "You're doing great!!" */}
-      <Text variant="caption" style={{ textAlign: 'center' }}>
-        {focus ? t('today.calm') : t('today.caughtUp')}
-      </Text>
+            A question, not a nudge. No count, no streak, no "you haven't written in 3 weeks"
+            — §5.1 bans exactly that, and this is the surface where it would be easiest to slip
+            in. It disappears the moment it is answered and never mentions having been ignored.
+          */}
+          {showMemoryPrompt && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('today.memoryPrompt')}
+              onPress={() => router.push('/memory/new')}
+              style={({ pressed }) => ({
+                alignItems: 'center',
+                gap: space[2],
+                opacity: pressed ? 0.5 : 1,
+              })}
+            >
+              <Glyph name="souvenirs" size={20} color="sage" />
+              <Text variant="body" color="inkSoft" style={{ textAlign: 'center' }}>
+                {t('today.memoryPrompt')}
+              </Text>
+              <Text variant="caption" color="sage">
+                {t('today.memoryPromptAction')}
+              </Text>
+            </Pressable>
+          )}
+
+          {/*
+            One tip from the advice pool (§1.2-adjacent content, see i18n `advice.items`).
+            Plain text, no glyph, no card: this is a quiet aside, not a feature. Tapping cycles
+            to another tip (never repeating the one just shown); it also re-rolls whenever the
+            app returns to the foreground. Hidden for free while paused, since the whole screen
+            redirects to /pause before this ever renders.
+          */}
+          {showTip && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${eyebrow}. ${tip}`}
+              onPress={next}
+              style={({ pressed }) => ({
+                alignItems: 'center',
+                gap: space[1],
+                opacity: pressed ? 0.5 : 1,
+              })}
+            >
+              <Animated.View style={adviceStyle}>
+                <Text variant="caption" color="sage" style={{ textAlign: 'center' }}>
+                  {eyebrow}
+                </Text>
+                <Text variant="body" color="inkSoft" style={{ textAlign: 'center' }}>
+                  {tip}
+                </Text>
+              </Animated.View>
+            </Pressable>
+          )}
+
+          {/*
+            One quiet, honest sign-off — and ONLY with a focus. When there is no focus, the
+            empty Focus state above ("Rien d'essentiel cette semaine…") already carries this
+            reassurance, and a second calm line here just repeated it. Never "You're doing
+            great!!".
+          */}
+          {focus && (
+            <Text variant="caption" style={{ textAlign: 'center' }}>
+              {t('today.calm')}
+            </Text>
+          )}
+        </View>
+      )}
     </Screen>
   );
 }
