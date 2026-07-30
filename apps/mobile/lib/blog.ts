@@ -19,6 +19,10 @@ import { POSTS_ACHATS_EN, POSTS_ACHATS_FR } from './blog-posts-achats';
 import { POSTS_BUDGET_EN, POSTS_BUDGET_FR } from './blog-posts-budget';
 import { POSTS_LAYETTE_EN, POSTS_LAYETTE_FR } from './blog-posts-layette';
 import { POSTS_GAP_EN, POSTS_GAP_FR } from './blog-posts-gap';
+import { POSTS_GAP2_EN, POSTS_GAP2_FR } from './blog-posts-gap2';
+import { POSTS_GAP3_EN, POSTS_GAP3_FR } from './blog-posts-gap3';
+import { POSTS_GAP4_EN, POSTS_GAP4_FR } from './blog-posts-gap4';
+import { POSTS_GAP5_EN, POSTS_GAP5_FR } from './blog-posts-gap5';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
 /**
@@ -37,6 +41,10 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_BUDGET_FR,
     ...POSTS_LAYETTE_FR,
     ...POSTS_GAP_FR,
+    ...POSTS_GAP2_FR,
+    ...POSTS_GAP3_FR,
+    ...POSTS_GAP4_FR,
+    ...POSTS_GAP5_FR,
   ],
   en: [
     ...POSTS_ADMIN_EN,
@@ -49,6 +57,10 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_BUDGET_EN,
     ...POSTS_LAYETTE_EN,
     ...POSTS_GAP_EN,
+    ...POSTS_GAP2_EN,
+    ...POSTS_GAP3_EN,
+    ...POSTS_GAP4_EN,
+    ...POSTS_GAP5_EN,
   ],
 };
 
