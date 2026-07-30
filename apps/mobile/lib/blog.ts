@@ -18,6 +18,7 @@ import { POSTS_LOGISTIQUE_EN, POSTS_LOGISTIQUE_FR } from './blog-posts-logistiqu
 import { POSTS_ACHATS_EN, POSTS_ACHATS_FR } from './blog-posts-achats';
 import { POSTS_BUDGET_EN, POSTS_BUDGET_FR } from './blog-posts-budget';
 import { POSTS_LAYETTE_EN, POSTS_LAYETTE_FR } from './blog-posts-layette';
+import { POSTS_GAP_EN, POSTS_GAP_FR } from './blog-posts-gap';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
 /**
@@ -35,6 +36,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_ACHATS_FR,
     ...POSTS_BUDGET_FR,
     ...POSTS_LAYETTE_FR,
+    ...POSTS_GAP_FR,
   ],
   en: [
     ...POSTS_ADMIN_EN,
@@ -46,6 +48,7 @@ const POSTS: Record<MarketingLang, BlogPost[]> = {
     ...POSTS_ACHATS_EN,
     ...POSTS_BUDGET_EN,
     ...POSTS_LAYETTE_EN,
+    ...POSTS_GAP_EN,
   ],
 };
 
