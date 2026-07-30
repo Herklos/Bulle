@@ -201,12 +201,20 @@ export default function JourneyScreen() {
           selectedWeek={shown}
           onSelectWeek={browse}
           weekAccessibilityLabel={(week) => t('journey.weekTitle', { week })}
+          // The stepper below is the assistive-tech browse path (prev / next / back to now),
+          // so the fil's 41 node overlays stay tappable for sighted users but leave the a11y
+          // tree — otherwise VoiceOver reads 41 week buttons before the week card itself.
+          nodesAccessible={false}
         />
 
         <View style={{ flex: 1, gap: space[5], paddingTop: space[4] }}>
           <View style={{ gap: space[2] }}>
             <Text variant="titleXL">{t('journey.weekTitle', { week: shown })}</Text>
-            <Text variant="caption">
+            {/* "Vous êtes ici" is the Chemin's emotional anchor — the text twin of the fil's
+                orb — so it lands in ink, exactly as Aujourd'hui lifts its readiness phrase.
+                The two orientation states ("Derrière vous" / "Encore devant") stay the quiet
+                inkSoft default. */}
+            <Text variant="caption" color={shown === weekSA ? 'ink' : undefined}>
               {shown === weekSA
                 ? t('journey.youAreHere')
                 : shown < weekSA
