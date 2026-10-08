@@ -321,24 +321,6 @@ export function rederiveTaskStatus(task: Task): TaskStatus {
   return 'todo';
 }
 
-// ─── Pure reducers (the store delegates to these) ─────────────────────────────
-
-export function addTask(tasks: Task[], task: Task): Task[] {
-  return [...tasks, task];
-}
-
-export function updateTask(tasks: Task[], id: string, updates: Partial<Task>, now: string): Task[] {
-  return tasks.map((t) => (t.id === id ? { ...t, ...updates, updatedAt: now } : t));
-}
-
-export function removeTask(tasks: Task[], id: string): Task[] {
-  return tasks.filter((t) => t.id !== id);
-}
-
-export function setTaskStatus(tasks: Task[], id: string, status: TaskStatus, now: string): Task[] {
-  return updateTask(tasks, id, { status }, now);
-}
-
 /**
  * "Plus tard" (§5.1) is intentionally NOT a reducer.
  *

@@ -132,46 +132,19 @@ export function matrixAllows(
   return action === 'view' ? true : level === 'edit';
 }
 
-// ─── Pure reducers (the store delegates to these) ─────────────────────────────
-
-export function addPermissionRole(roles: RoleDefinition[], role: RoleDefinition): RoleDefinition[] {
-  return [...roles, role];
-}
-
-export function updatePermissionRole(
-  roles: RoleDefinition[],
-  id: string,
-  updates: Partial<RoleDefinition>,
-  now: string,
-): RoleDefinition[] {
-  return roles.map((r) => (r.id === id ? { ...r, ...updates, updatedAt: now } : r));
-}
-
-export function removePermissionRole(roles: RoleDefinition[], id: string): RoleDefinition[] {
-  return roles.filter((r) => r.id !== id);
-}
-
-/** Insert or replace the assignment for a subject (one role per collaborator). */
+/**
+ * Insert or replace the assignment for a subject (one role per collaborator).
+ *
+ * The permissions store calls this and then syncs the whole list. Appending instead would
+ * leave two assignments for one subject, and `resolvePermissionForSubject` would pick by
+ * array order.
+ */
 export function upsertPermissionAssignment(
   assignments: PermissionAssignment[],
   next: PermissionAssignment,
 ): PermissionAssignment[] {
   const rest = assignments.filter((a) => a.subjectUserId !== next.subjectUserId && a.id !== next.id);
   return [...rest, next];
-}
-
-export function removePermissionAssignment(
-  assignments: PermissionAssignment[],
-  id: string,
-): PermissionAssignment[] {
-  return assignments.filter((a) => a.id !== id);
-}
-
-export function removeAssignmentsForRole(
-  assignments: PermissionAssignment[],
-  roleId: string,
-): PermissionAssignment[] {
-  return assignments.filter((a) => a.roleId !== roleId);
 }
 
 /**

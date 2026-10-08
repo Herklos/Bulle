@@ -66,22 +66,3 @@ export function daysUntilEvent(event: BulleEvent, now: number): number {
 export function isToday(event: BulleEvent, now: number): boolean {
   return daysUntilEvent(event, now) === 0;
 }
-
-// ─── Pure reducers ───────────────────────────────────────────────────────────
-
-export function addEvent(events: BulleEvent[], event: BulleEvent): BulleEvent[] {
-  return [...events, event];
-}
-
-export function updateEvent(
-  events: BulleEvent[],
-  id: string,
-  updates: Partial<BulleEvent>,
-  now: string,
-): BulleEvent[] {
-  return events.map((e) => (e.id === id ? { ...e, ...updates, updatedAt: now } : e));
-}
-
-export function removeEvent(events: BulleEvent[], id: string): BulleEvent[] {
-  return events.filter((e) => e.id !== id);
-}
