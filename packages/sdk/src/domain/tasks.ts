@@ -1,5 +1,5 @@
 /**
- * Tasks — week-window helpers and pure reducers.
+ * Tasks — week windows, counts, checklists, and choices.
  *
  * A window is inclusive on both ends and expressed in SA. Note what is deliberately
  * ABSENT: any notion of "overdue". A task past its window is not late, it is simply still
