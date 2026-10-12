@@ -15,7 +15,7 @@ packages/ui/        @bulle/ui — tokens, primitives, components
 tools/              dev-sync-server.mjs (local Starfish harness)
 ```
 
-pnpm workspaces, Expo SDK 57, RN 0.86, React 19.2, expo-router ~57. The app consumes the
+pnpm workspaces, Expo SDK 57, RN 0.86, React 19.2.3, expo-router ~57. Derive exact Expo/RN pins from `pnpm --filter bulle check` (`expo install --check`), not npm `latest`. The app consumes the
 packages as **raw source** (`exports.source` → `./src`, plus `paths` in tsconfig), so there
 is no build step between editing the SDK and seeing it in Metro.
 
