@@ -8,7 +8,6 @@
  */
 import React from 'react';
 import Head from 'expo-router/head';
-import { BASE_URL } from '@/lib/seo-urls';
 
 export interface SeoProps {
   title: string;
@@ -104,5 +103,3 @@ export function Seo({
     </Head>
   );
 }
-
-export { BASE_URL };

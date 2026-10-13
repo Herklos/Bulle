@@ -6,7 +6,7 @@
  * being real code is the whole advantage.
  */
 
-export type BlogSectionType = 'text' | 'quote' | 'callout' | 'list';
+type BlogSectionType = 'text' | 'quote' | 'callout' | 'list';
 
 export interface BlogSection {
   /** Defaults to 'text'. */

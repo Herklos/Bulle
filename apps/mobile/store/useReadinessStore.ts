@@ -14,7 +14,7 @@
  */
 import { create } from 'zustand';
 import type { ReadinessSnapshot } from '@bulle/sdk';
-import { getStorage, readCollection, writeCollection } from '@bulle/ui/utils/kv-storage';
+import { getStorage, writeCollection } from '@bulle/ui/utils/kv-storage';
 
 export const READINESS_KEY = 'readinessSnapshot';
 
@@ -55,8 +55,3 @@ export const useReadinessStore = create<ReadinessState>((set, get) => ({
   clearDeferred: () => set({ deferredIds: new Set() }),
   pulse: () => set({ pulseKey: get().pulseKey + 1 }),
 }));
-
-/** Read the persisted snapshot. Called by the hydrate path. */
-export function readReadinessSnapshot(): ReadinessSnapshot | null {
-  return readCollection<ReadinessSnapshot>(READINESS_KEY);
-}

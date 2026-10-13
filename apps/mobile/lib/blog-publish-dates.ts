@@ -314,7 +314,7 @@ const PUBLISH_OFFSETS = [0, 2] as const;
 const DAYS_PER_WEEK = 7;
 
 /** Queue position → day offset from day 0. */
-export function publishOffsetForIndex(index: number): number {
+function publishOffsetForIndex(index: number): number {
   const week = Math.floor(index / PUBLISH_OFFSETS.length);
   const slot = index % PUBLISH_OFFSETS.length;
   return week * DAYS_PER_WEEK + PUBLISH_OFFSETS[slot]!;
@@ -328,7 +328,7 @@ function buildPublishDates(): Record<string, string> {
   return dates;
 }
 
-export const BLOG_PUBLISH_DATES: Record<string, string> = buildPublishDates();
+const BLOG_PUBLISH_DATES: Record<string, string> = buildPublishDates();
 
 /**
  * Slugs missing from the priority array are dated past the end of the queue — FAIL-CLOSED.

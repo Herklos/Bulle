@@ -19,7 +19,7 @@
 import { getStorage, writeCollection } from '@bulle/ui/utils/kv-storage';
 import { notifySync } from './starfish';
 
-export interface SyncedSlice<T extends { id: string }> {
+interface SyncedSlice<T extends { id: string }> {
   add: (item: T) => void;
   addMany: (items: T[]) => void;
   update: (id: string, updates: Partial<T>) => void;

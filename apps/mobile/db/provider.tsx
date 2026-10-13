@@ -7,11 +7,10 @@
  */
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { closeStorage, getStorage, initStorage } from '@bulle/ui/utils/kv-storage';
+import { closeStorage, initStorage } from '@bulle/ui/utils/kv-storage';
 import { useBulleTheme } from '@bulle/ui/theme';
 import { clearAllStores, hydrateAllStores } from '@/lib/persistence';
 
-const StorageContext = createContext<boolean>(false);
 const SwitchingContext = createContext<boolean>(false);
 
 /** Minimum overlay time, so a fast swap doesn't flash. */
@@ -70,39 +69,31 @@ export function DatabaseProvider({ dbFileName, children }: DatabaseProviderProps
     };
   }, [dbFileName, loadedDbFileName]);
 
-  const ready = !!getStorage() && !loading;
-
   return (
-    <StorageContext.Provider value={ready}>
-      <SwitchingContext.Provider value={switching}>
-        <View style={{ flex: 1 }}>
-          {children}
-          {/*
-            An OVERLAY, not a conditional unmount. Unmounting children makes expo-router
-            remount <Stack> at its first-declared screen, which flashes onboarding on every
-            bulle switch.
-          */}
-          {(switching || loading) && dbFileName && (
-            <View
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundColor: colors.bg,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <ActivityIndicator color={colors.sage} />
-            </View>
-          )}
-        </View>
-      </SwitchingContext.Provider>
-    </StorageContext.Provider>
+    <SwitchingContext.Provider value={switching}>
+      <View style={{ flex: 1 }}>
+        {children}
+        {/*
+          An OVERLAY, not a conditional unmount. Unmounting children makes expo-router
+          remount <Stack> at its first-declared screen, which flashes onboarding on every
+          bulle switch.
+        */}
+        {(switching || loading) && dbFileName && (
+          <View
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: colors.bg,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <ActivityIndicator color={colors.sage} />
+          </View>
+        )}
+      </View>
+    </SwitchingContext.Provider>
   );
-}
-
-export function useDatabaseReady(): boolean {
-  return useContext(StorageContext);
 }
 
 /**

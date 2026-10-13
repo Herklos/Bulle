@@ -20,7 +20,7 @@ import { pregnancyProgress } from '@bulle/sdk';
 import { useBulleStore } from '@/store/useBulleStore';
 import { useNow } from '@/lib/use-now';
 
-export type WelcomeKey = 'today' | 'journey' | 'plan' | 'memories';
+type WelcomeKey = 'today' | 'journey' | 'plan' | 'memories';
 
 const SEEN_KEY = 'welcomesSeen';
 

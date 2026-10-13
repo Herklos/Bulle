@@ -100,7 +100,7 @@ export async function getOffering(): Promise<PurchasesOffering | null> {
   }
 }
 
-export interface PurchaseResult {
+interface PurchaseResult {
   info: CustomerInfo | null;
   /** True when the user backed out. NOT an error — never show them one. */
   cancelled: boolean;
