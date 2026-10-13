@@ -109,6 +109,7 @@ export const fr = {
     },
     dismiss: 'Pas pour nous',
     undismiss: 'Remettre sur la liste',
+    taskMenu: "Plus d'actions pour {{title}}",
     // Never "en retard". A closed window is not a failure (§5.1).
     lingering: 'Toujours sur votre liste',
     suggestTemplate: 'Bulle propose : {{title}}',

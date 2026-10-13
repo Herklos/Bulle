@@ -199,6 +199,7 @@ export default function ProjectScreen() {
                 )}
                 {canEdit && (
                   <TaskMenu
+                    menuLabel={t('plan.taskMenu', { title: task.title })}
                     // Ignoring is a toggle, not a one-way door. A row dismissed by mistake
                     // was previously unrecoverable from the list.
                     dismissLabel={
