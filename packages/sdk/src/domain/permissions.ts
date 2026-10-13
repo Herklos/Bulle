@@ -151,7 +151,7 @@ export function upsertPermissionAssignment(
  * Resolve a subject's role + matrix. Returns null when the subject has no assignment or the
  * referenced role is gone.
  *
- * Callers MUST distinguish the two null cases (see lib/permissions/resolve.ts):
+ * Callers MUST distinguish the two null cases:
  *   - roles.length === 0        → the collection hasn't synced yet; retry, don't lock out.
  *   - roles.length > 0 + a prior roleId → the owner revoked; write `permissions: {}`.
  * An empty matrix `{}` means locked out; `undefined` means unrestricted. Fail-open is the
