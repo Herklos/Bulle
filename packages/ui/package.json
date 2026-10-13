@@ -58,7 +58,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly --skipLibCheck || true",
+    "build": "tsup && tsc --emitDeclarationOnly --skipLibCheck",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "lint": "tsc --noEmit"
