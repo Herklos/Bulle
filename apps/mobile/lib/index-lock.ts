@@ -23,8 +23,3 @@ export function withIndexLock<T>(spaceId: string, fn: () => Promise<T>): Promise
   );
   return next;
 }
-
-/** Drop the chains (on teardown / account switch). */
-export function clearIndexLocks(): void {
-  _chains.clear();
-}
