@@ -397,6 +397,9 @@ export default function TodayScreen() {
           onOpen={() => router.push(`/task/${focus.id}` as never)}
           // A counted focus task steps toward its target instead of jumping to done.
           counted={isCounted(focus) ? countedProps(focus) : undefined}
+          // Same split as the week list below: a checklist or a choice opens the task.
+          // One tap here would bulk-complete the list or close the choice with no answer.
+          showDone={!isChoice(focus) && !hasChecklist(focus)}
         />
       ) : (
         <EmptyState glyph="leaf" message={t('today.emptyFocus')} />

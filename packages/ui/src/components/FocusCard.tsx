@@ -29,6 +29,13 @@ export interface FocusCardProps {
   onDone: () => void;
   onLater: () => void;
   /**
+   * A choice or a checklist is not a one-tap "Fait". The week list and the task screen
+   * already refuse that: one tap would mark every checklist item done, or close a choice
+   * without an answer. When false, the terracotta button is omitted and the title opens
+   * the task. Defaults to true so a plain boolean task still completes here.
+   */
+  showDone?: boolean;
+  /**
    * A counted task (§5.3) answers "how many", not "done yet". When set, the card shows the
    * stepper in place of the terracotta "Fait" — completing a stock in one tap would fill it
    * to target and lie about a cupboard nobody counted. The `count with +` IS the action here.
@@ -61,6 +68,7 @@ export function FocusCard({
   onLater,
   onOpen,
   counted,
+  showDone = true,
 }: FocusCardProps) {
   const { colors, radius, space } = useBulleTheme();
 
@@ -121,7 +129,8 @@ export function FocusCard({
         }}
       >
         {/* A counted task steps toward its target here; a plain one gets the terracotta CTA.
-            Either way "Plus tard" stays a ghost beside it. */}
+            A choice or a checklist gets neither: one tap would invent an answer. "Plus tard"
+            stays a ghost beside whatever is left. */}
         {counted ? (
           <Stepper
             count={counted.count}
@@ -131,9 +140,9 @@ export function FocusCard({
             onSetTarget={counted.onSetTarget}
             accessibilityLabel={counted.accessibilityLabel}
           />
-        ) : (
+        ) : showDone ? (
           <Button label={doneLabel} tone="accent" onPress={onDone} />
-        )}
+        ) : null}
         <Button label={laterLabel} tone="ghost" onPress={onLater} />
       </View>
     </Animated.View>
