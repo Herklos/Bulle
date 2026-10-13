@@ -22,8 +22,8 @@ import {
   stableStringify,
   updateObjectIndex,
   bulleRootDescriptor,
+  bulleSchema,
   collectionDescriptor,
-  type Bulle,
   type CollectionEntity,
   type CollectionState,
   type Session,
@@ -60,6 +60,11 @@ export function resetDirtyPushBaseline(): void {
   _collectionEntityJson.clear();
   _lastPushedCollectionJson.clear();
   _lastPushedBulleJson = null;
+}
+
+/** Confirmed singleton JSON. Null until a validated pull or a successful push commits it. */
+export function lastPushedBulleJson(): string | null {
+  return _lastPushedBulleJson;
 }
 
 // ─── Build ───────────────────────────────────────────────────────────────────
@@ -235,6 +240,30 @@ export function scheduleSyncPush(): void {
 // ─── Hydrate ─────────────────────────────────────────────────────────────────
 
 /**
+ * Gate a pulled bulle singleton through bulleSchema, then the pure setter.
+ *
+ * The decrypted entity is content authored by another device. An unchecked cast would
+ * let a malformed peer payload into the store. On failure we warn with the issue paths
+ * only (never the payload), leave the current store value in place, and leave the push
+ * baseline uncommitted, the same as a singleton that has not been pushed yet.
+ *
+ * Returns whether the entity was written. Callers must not commit a baseline themselves.
+ */
+export function applyPulledBulle(entity: unknown): boolean {
+  const parsed = bulleSchema.safeParse(entity);
+  if (!parsed.success) {
+    const paths = parsed.error.issues.map((issue) =>
+      issue.path.length === 0 ? '(root)' : issue.path.map(String).join('.'),
+    );
+    console.warn('[space-sync] pulled bulle rejected', paths);
+    return false;
+  }
+  useBulleStore.getState().setBulle(parsed.data);
+  _lastPushedBulleJson = stableStringify(parsed.data);
+  return true;
+}
+
+/**
  * Pull every collection from the space and feed the stores.
  *
  * Feeds ONLY via the pure setters (`collection.write`), so receiving a peer's change does
@@ -276,7 +305,8 @@ export async function hydrateFromSpace(): Promise<void> {
       }),
     );
 
-    // The bulle singleton.
+    // The bulle singleton. Parsed before the pure setter; a reject leaves the store
+    // and the push baseline untouched, same as a pull that has not landed.
     try {
       const descriptor = collectionDescriptor('bulle', rootNodeId);
       const handle = await getNodeAccess(spaceId, rootNodeId, descriptor, session, null);
@@ -285,10 +315,7 @@ export async function hydrateFromSpace(): Promise<void> {
         ? await handle.encryptor.decrypt(pulled.data as never)
         : pulled.data;
       const { entity } = readSingletonEntity(decrypted, rootNodeId);
-      if (entity) {
-        useBulleStore.getState().setBulle(entity as unknown as Bulle);
-        _lastPushedBulleJson = stableStringify(entity);
-      }
+      if (entity) applyPulledBulle(entity);
     } catch {
       // Not yet pushed.
     }
