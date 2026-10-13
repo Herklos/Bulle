@@ -149,13 +149,13 @@ export function upsertPermissionAssignment(
 
 /**
  * Resolve a subject's role + matrix. Returns null when the subject has no assignment or the
- * referenced role is gone.
+ * referenced role is gone. Both misses look the same, so the caller tells them apart.
  *
- * Callers MUST distinguish the two null cases (see lib/permissions/resolve.ts):
- *   - roles.length === 0        → the collection hasn't synced yet; retry, don't lock out.
- *   - roles.length > 0 + a prior roleId → the owner revoked; write `permissions: {}`.
- * An empty matrix `{}` means locked out; `undefined` means unrestricted. Fail-open is the
- * deliberate default so a member is never accidentally locked out of their own bulle.
+ * See the registry matrix on `BulleRegistryEntry.permissions`:
+ *   - roles.length === 0: the collection has not synced yet. Leave permissions unset.
+ *   - roles.length > 0 and the role is gone: the owner revoked. Write permissions: {}.
+ * {} is locked out. undefined is unrestricted. Fail-open is the deliberate default so a
+ * member is never locked out of their own bulle before that sync lands.
  */
 export function resolvePermissionForSubject(
   roles: RoleDefinition[],
