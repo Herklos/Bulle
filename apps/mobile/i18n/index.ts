@@ -94,7 +94,7 @@ export function getI18nForLang(language: Language): typeof i18n {
   const existing = _langInstances.get(language);
   if (existing) return existing;
 
-  const instance = i18n.cloneInstance({ lng: language, initImmediate: false });
+  const instance = i18n.cloneInstance({ lng: language, initAsync: false });
   _langInstances.set(language, instance);
   return instance;
 }
