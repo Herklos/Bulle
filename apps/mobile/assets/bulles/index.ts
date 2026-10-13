@@ -10,7 +10,7 @@
  * in SA everywhere else (§7.2), and SG = SA - 2 — feeding it SA would show every parent an
  * illustration two weeks ahead of themselves.
  */
-export const WEEK_BULLES: Record<number, number> = {
+const WEEK_BULLES: Record<number, number> = {
   1: require('./week-01.png'),
   2: require('./week-02.png'),
   3: require('./week-03.png'),

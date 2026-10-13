@@ -8,9 +8,9 @@
 import { Platform, Share } from 'react-native';
 import type { Bulle, Project, Task } from '@bulle/sdk';
 
-export const EXPORT_VERSION = 1;
+const EXPORT_VERSION = 1;
 
-export interface BulleExport {
+interface BulleExport {
   version: number;
   exportedAt: string;
   bulle: Bulle | null;
@@ -18,7 +18,7 @@ export interface BulleExport {
   tasks: Task[];
 }
 
-export function buildExport(data: {
+function buildExport(data: {
   bulle: Bulle | null;
   projects: Project[];
   tasks: Task[];
@@ -30,7 +30,7 @@ export function buildExport(data: {
   };
 }
 
-export function exportFilename(now = new Date()): string {
+function exportFilename(now = new Date()): string {
   return `bulle-${now.toISOString().slice(0, 10)}.json`;
 }
 

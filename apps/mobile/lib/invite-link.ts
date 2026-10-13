@@ -26,7 +26,7 @@ import { APP_ORIGIN } from './config';
 /** KV key holding the serialized invite store, needed later to revoke. */
 export const INVITE_STORE_KEY = 'spaceInviteStore';
 
-export interface MintedInvite {
+interface MintedInvite {
   link: string;
   /** The invite's ephemeral subject id — the key a role assignment is filed under. */
   inviteUserId: string;

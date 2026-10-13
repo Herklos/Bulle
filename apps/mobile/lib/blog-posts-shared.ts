@@ -19,21 +19,21 @@ export const BLOG_HERO = `${BASE_URL}/assets/og-image.png`;
  * Bulle schedules preparation, never care — this keeps that promise visible to the reader
  * as well as true in the code.
  */
-export const DISCLAIMER_FR: BlogSection = {
+const DISCLAIMER_FR: BlogSection = {
   type: 'callout',
   paragraphs: [
     'Bulle vous aide à vous organiser, pas à vous soigner. Pour toute question médicale, ou au moindre doute, contactez votre sage-femme ou le 15.',
   ],
 };
 
-export const DISCLAIMER_EN: BlogSection = {
+const DISCLAIMER_EN: BlogSection = {
   type: 'callout',
   paragraphs: [
     'Bulle helps you get organised, not treated. For any medical question, or at the slightest doubt, contact your midwife or your doctor.',
   ],
 };
 
-export interface PostPairInput {
+interface PostPairInput {
   slug: string;
   categoryKey: string;
   categoryFr: string;

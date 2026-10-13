@@ -41,7 +41,7 @@ export const FREE_PROJECT_LIMIT = 2;
  * what justifies the price — so it is the gate. Everything else, including the whole
  * preparation flow, works free.
  */
-export const PREMIUM_TEMPLATE_IDS = new Set(['tpl-admin-fr']);
+const PREMIUM_TEMPLATE_IDS = new Set(['tpl-admin-fr']);
 
 export function isPremiumTemplate(templateId: string): boolean {
   return PREMIUM_TEMPLATE_IDS.has(templateId);

@@ -11,7 +11,7 @@
 import { BASE_URL, localizedUrl, type MarketingLang } from './seo-urls';
 import type { BlogAuthorSlug, BlogPost } from './blog-types';
 
-export interface BlogAuthorProfile {
+interface BlogAuthorProfile {
   slug: BlogAuthorSlug;
   name: string;
   initials: string;

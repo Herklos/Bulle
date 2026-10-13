@@ -35,7 +35,7 @@ import { activeEntry } from '@/lib/bulle-registry';
 import { usePermissionsStore } from '@/store/usePermissionsStore';
 import { useBulleRegistryStore } from '@/store/useBulleRegistryStore';
 
-export interface RevokeResult {
+interface RevokeResult {
   /** True when the keyring rotated (full eviction); false when only the roster was dropped. */
   evicted: boolean;
 }

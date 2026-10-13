@@ -37,7 +37,7 @@ import { useMemoriesStore, MEMORIES_KEY } from '@/store/useMemoriesStore';
  * `write` MUST be the store's pure setter, so the hydrate path can feed a collection
  * without triggering the mutator's notifySync (which would echo straight back out).
  */
-export interface CollectionDef<T extends { id: string }> {
+interface CollectionDef<T extends { id: string }> {
   /** KV key AND the identity used for dirty-tracking. */
   key: string;
   /** ObjectNode type — drives the `col:{type}:{rootId}` sentinel. */
@@ -124,7 +124,3 @@ export const COLLECTIONS: CollectionDef<CollectionEntity>[] = [
     parse: (rows) => parseCollection(assignmentSchema, rows),
   },
 ];
-
-export function collectionByType(type: string): CollectionDef<CollectionEntity> | undefined {
-  return COLLECTIONS.find((c) => c.type === type);
-}

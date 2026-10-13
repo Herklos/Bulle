@@ -18,7 +18,7 @@ import { matrixAllows, type FeatureSurface, type PermissionAction, type Permissi
 import { useActiveBulle } from '@/store/useBulleRegistryStore';
 import { useSyncAccessStore } from '@/store/useSyncAccessStore';
 
-export interface Permissions {
+interface Permissions {
   can: (surface: FeatureSurface, action?: PermissionAction) => boolean;
   isOwner: boolean;
   /** True when a 403 has proven this device cannot write, whatever the matrix says. */

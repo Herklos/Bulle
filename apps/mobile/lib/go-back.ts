@@ -22,7 +22,7 @@ import { BackHandler, Platform } from 'react-native';
 import { router } from 'expo-router';
 
 /** Where a screen lands when it has no history. Almost always the tab it belongs to. */
-export type BackFallback = '/today' | '/plan' | '/journey' | '/memories' | '/more';
+type BackFallback = '/today' | '/plan' | '/journey' | '/memories' | '/more';
 
 /**
  * Back, or the fallback. Never a no-op.

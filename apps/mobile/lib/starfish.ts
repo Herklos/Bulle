@@ -13,7 +13,7 @@ let _spaceId: string | null = null;
 let _rootNodeId: string | null = null;
 let _active = false;
 
-export interface InitSyncArgs {
+interface InitSyncArgs {
   session: Session;
   spaceId: string;
   rootNodeId: string;

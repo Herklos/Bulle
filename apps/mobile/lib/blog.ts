@@ -108,11 +108,6 @@ export const PUBLISHER = {
 
 // ─── Queries ─────────────────────────────────────────────────────────────────
 
-/** ALL posts, published or not. Only the sitemap builder and tests should use this. */
-export function getAllBlogPosts(lang: MarketingLang): BlogPost[] {
-  return POSTS[lang];
-}
-
 export function getBlogSlugs(): string[] {
   return POSTS.fr.map((p) => p.slug);
 }
@@ -174,7 +169,7 @@ export function postAlternates(slug: string): { fr: string; en: string } {
 }
 
 /** Plain text of the whole article, markdown links flattened to their label. */
-export function extractArticleBody(post: BlogPost): string {
+function extractArticleBody(post: BlogPost): string {
   const parts: string[] = [];
   for (const section of post.sections) {
     if (section.title) parts.push(section.title);
@@ -185,11 +180,11 @@ export function extractArticleBody(post: BlogPost): string {
   return parts.join(' ').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 }
 
-export function computeWordCount(post: BlogPost): number {
+function computeWordCount(post: BlogPost): number {
   return extractArticleBody(post).split(/\s+/).filter(Boolean).length;
 }
 
-export function buildBlogPostingNode(
+function buildBlogPostingNode(
   post: BlogPost,
   lang: MarketingLang,
 ): Record<string, unknown> {
@@ -225,7 +220,7 @@ export function buildBlogPostingNode(
   };
 }
 
-export function blogName(lang: MarketingLang): string {
+function blogName(lang: MarketingLang): string {
   return lang === 'fr' ? 'Le Carnet de Bulle' : 'Bulle Journal';
 }
 
