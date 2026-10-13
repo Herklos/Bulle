@@ -16,7 +16,6 @@ export const effortSchema = z.enum(['S', 'M', 'L']);
 export const taskStatusSchema = z.enum(['todo', 'done', 'dismissed']);
 export const readinessDomainSchema = z.enum(READINESS_DOMAINS);
 export const companionshipSchema = z.enum(['couple', 'solo']);
-export const memberRoleSchema = z.enum(['co-parent', 'famille', 'doula']);
 
 export const bulleProfileSchema = z.object({
   dueDate: iso,
@@ -105,15 +104,6 @@ export const eventSchema = z.object({
   kind: eventKindSchema,
   at: iso,
   notes: z.string().optional(),
-  createdAt: iso,
-  updatedAt: iso,
-});
-
-export const memberSchema = z.object({
-  id: z.string(),
-  displayName: z.string(),
-  role: memberRoleSchema,
-  subjectUserId: z.string().optional(),
   createdAt: iso,
   updatedAt: iso,
 });

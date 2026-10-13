@@ -18,7 +18,6 @@ export const BULLE_TYPES = {
   /** The ONLY datetime-bearing entity. Everything else lives on week-windows. */
   event: 'event',
   memory: 'memory',
-  member: 'member',
   permissionRole: 'permissionRole',
   permissionAssignment: 'permissionAssignment',
 } as const satisfies Record<string, ObjectType>;

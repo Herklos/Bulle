@@ -73,20 +73,6 @@ export interface Bulle {
   updatedAt: Iso;
 }
 
-// ─── Members (spec §5.10) ────────────────────────────────────────────────────
-
-export type MemberRole = 'co-parent' | 'famille' | 'doula';
-
-export interface Member {
-  id: string;
-  displayName: string;
-  role: MemberRole;
-  /** Ephemeral subject id from the invite cap — how a role reaches a joined member. */
-  subjectUserId?: string;
-  createdAt: Iso;
-  updatedAt: Iso;
-}
-
 // ─── Readiness domains (spec §6) ─────────────────────────────────────────────
 
 export const READINESS_DOMAINS = [
