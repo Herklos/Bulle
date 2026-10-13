@@ -13,7 +13,13 @@ import { Glyph } from '@bulle/ui/primitives';
 import { Text } from '@bulle/ui/components';
 import type { TaskMenuProps } from './TaskMenu';
 
-export function TaskMenu({ dismissLabel, deleteLabel, onDismiss, onDelete }: TaskMenuProps) {
+export function TaskMenu({
+  menuLabel,
+  dismissLabel,
+  deleteLabel,
+  onDismiss,
+  onDelete,
+}: TaskMenuProps) {
   const { colors, radius, space, touch } = useBulleTheme();
   const [open, setOpen] = useState(false);
 
@@ -37,6 +43,7 @@ export function TaskMenu({ dismissLabel, deleteLabel, onDismiss, onDelete }: Tas
       <Pressable
         onPress={() => setOpen((v) => !v)}
         accessibilityRole="button"
+        accessibilityLabel={menuLabel}
         accessibilityState={{ expanded: open }}
         hitSlop={touch.min / 2}
         style={{ padding: 8 }}

@@ -108,6 +108,7 @@ export const en = {
     },
     dismiss: 'Not for us',
     undismiss: 'Put back on the list',
+    taskMenu: 'More actions for {{title}}',
     lingering: 'Still on your list',
     suggestTemplate: 'Bulle suggests: {{title}}',
     premiumTemplate: 'With Complète',

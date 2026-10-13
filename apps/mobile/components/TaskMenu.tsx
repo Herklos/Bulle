@@ -16,13 +16,21 @@ import { useBulleTheme } from '@bulle/ui/theme';
 import { Glyph } from '@bulle/ui/primitives';
 
 export interface TaskMenuProps {
+  /** VoiceOver / TalkBack label for the icon-only overflow trigger. */
+  menuLabel: string;
   dismissLabel: string;
   deleteLabel: string;
   onDismiss: () => void;
   onDelete: () => void;
 }
 
-export function TaskMenu({ dismissLabel, deleteLabel, onDismiss, onDelete }: TaskMenuProps) {
+export function TaskMenu({
+  menuLabel,
+  dismissLabel,
+  deleteLabel,
+  onDismiss,
+  onDelete,
+}: TaskMenuProps) {
   const { touch } = useBulleTheme();
 
   return (
@@ -38,7 +46,12 @@ export function TaskMenu({ dismissLabel, deleteLabel, onDismiss, onDelete }: Tas
         if (nativeEvent.event === 'delete') onDelete();
       }}
     >
-      <Pressable accessibilityRole="button" hitSlop={touch.min / 2} style={{ padding: 8 }}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={menuLabel}
+        hitSlop={touch.min / 2}
+        style={{ padding: 8 }}
+      >
         <Glyph name="more" size={20} color="inkSoft" />
       </Pressable>
     </MenuView>
