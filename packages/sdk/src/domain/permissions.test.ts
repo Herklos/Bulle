@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { upsertPermissionAssignment } from './permissions.js';
-import type { PermissionAssignment } from './permissions.js';
+import { DEFAULT_PERMISSION_ROLES, resolvePermissionForSubject, upsertPermissionAssignment } from './permissions.js';
+import type { PermissionAssignment, RoleDefinition } from './permissions.js';
+
+const roles: RoleDefinition[] = DEFAULT_PERMISSION_ROLES.map((role) => ({
+  ...role,
+  createdAt: null,
+  updatedAt: null,
+}));
 
 const assignment = (
   id: string,
@@ -42,5 +48,39 @@ describe('upsertPermissionAssignment', () => {
     expect(
       upsertPermissionAssignment([keep, sameSubject, sameId], next),
     ).toEqual([keep, next]);
+  });
+});
+
+describe('resolvePermissionForSubject', () => {
+  it('returns the role and its matrix when the assignment matches', () => {
+    const result = resolvePermissionForSubject(
+      roles,
+      [assignment('a1', 'subject-1', 'role-famille')],
+      'subject-1',
+    );
+    expect(result).toEqual({
+      role: roles.find((role) => role.id === 'role-famille'),
+      matrix: { shopping: 'view' },
+    });
+  });
+
+  it('returns null when the subject has no assignment', () => {
+    expect(resolvePermissionForSubject(roles, [], 'subject-1')).toBeNull();
+  });
+
+  it('returns null when the assignment points at a role that is not in the list', () => {
+    expect(
+      resolvePermissionForSubject(
+        roles,
+        [assignment('a1', 'subject-1', 'role-gone')],
+        'subject-1',
+      ),
+    ).toBeNull();
+  });
+
+  it('returns null for an empty role list and for a missing assignment alike', () => {
+    const assigned = [assignment('a1', 'subject-1', 'role-famille')];
+    expect(resolvePermissionForSubject([], assigned, 'subject-1')).toBeNull();
+    expect(resolvePermissionForSubject(roles, assigned, 'someone-else')).toBeNull();
   });
 });
