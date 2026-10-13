@@ -33,7 +33,6 @@
     "@noble/hashes": "^2.2.0",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/netinfo": "12.0.1",
-    "@scure/bip39": "^1.6.0",
     "@shopify/react-native-skia": "2.6.2",
     "expo": "57.0.9",
     "expo-build-properties": "~57.0.8",
