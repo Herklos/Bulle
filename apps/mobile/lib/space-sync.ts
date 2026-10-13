@@ -164,7 +164,7 @@ export async function pushSpaceSnapshot(): Promise<void> {
     const results = await Promise.allSettled(
       dirty.map(async (b) => {
         const ok = await pushDoc(session, spaceId, b.nodeId, b.type, (cur) =>
-          mergeCollectionDoc(cur, b.doc, { now }) as unknown as Record<string, unknown>,
+          mergeCollectionDoc(cur, b.doc, { now }),
         );
         if (ok) {
           // Commit the baseline ONLY on success.
@@ -180,9 +180,9 @@ export async function pushSpaceSnapshot(): Promise<void> {
     if (bulle) {
       const json = stableStringify(bulle);
       if (json !== _lastPushedBulleJson) {
-        const { doc } = buildSingletonDoc(rootNodeId, bulle as unknown as Record<string, unknown>, now);
+        const { doc } = buildSingletonDoc(rootNodeId, bulle, now);
         const ok = await pushDoc(session, spaceId, rootNodeId, 'bulle', (cur) =>
-          mergeSingletonDoc(cur, doc, rootNodeId, { now }) as unknown as Record<string, unknown>,
+          mergeSingletonDoc(cur, doc, rootNodeId, { now }),
         );
         if (ok) _lastPushedBulleJson = json;
       }

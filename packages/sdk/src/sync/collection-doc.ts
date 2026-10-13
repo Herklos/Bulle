@@ -31,9 +31,9 @@ export const TOMBSTONE_TTL_MS = 90 * 24 * 60 * 60 * 1000; // 90 days
 export const COLLECTION_DOC_FMT = 1;
 
 /** An entity as stored inside a collection doc — any record carrying a string `id`. */
-export type CollectionEntity = Record<string, unknown> & { id: string };
+export type CollectionEntity = { id: string };
 
-export interface CollectionDoc {
+export type CollectionDoc = {
   /** Doc-format version. */
   fmt: number;
   /** entityId → full entity. */
@@ -42,7 +42,7 @@ export interface CollectionDoc {
   rev: Record<string, number>;
   /** entityId → ms wall-clock of deletion; presence = deleted. */
   tombstones: Record<string, number>;
-}
+};
 
 /** Mutable per-collection bookkeeping carried between pushes/hydrates. */
 export interface CollectionState {
@@ -214,7 +214,7 @@ export function buildCollectionDoc(
  */
 export function buildSingletonDoc(
   id: string,
-  entity: Record<string, unknown>,
+  entity: object,
   now: number,
 ): { doc: CollectionDoc; rev: number } {
   return {

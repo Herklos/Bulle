@@ -12,6 +12,7 @@ import {
   TOMBSTONE_TTL_MS,
   COLLECTION_DOC_FMT,
   type CollectionDoc,
+  type CollectionEntity,
   type CollectionState,
 } from './collection-doc.js';
 
@@ -24,6 +25,8 @@ const doc = (partial: Partial<CollectionDoc>): CollectionDoc => ({
 });
 
 const entity = (id: string, extra: Record<string, unknown> = {}) => ({ id, ...extra });
+const field = (row: CollectionEntity | undefined, key: string) =>
+  (row as Record<string, unknown> | undefined)?.[key];
 
 describe('collectionNodeId / isCollectionNodeId', () => {
   it('builds a deterministic sentinel id and recognises it', () => {
@@ -79,8 +82,8 @@ describe('mergeCollectionDoc — same-id edit LWW', () => {
   it('higher rev wins the conflicting leaf, regardless of argument order', () => {
     const remote = doc({ items: { t1: entity('t1', { title: 'Remote' }) }, rev: { t1: 20 } });
     const local = doc({ items: { t1: entity('t1', { title: 'Local' }) }, rev: { t1: 25 } });
-    expect(mergeCollectionDoc(remote, local).items.t1.title).toBe('Local');
-    expect(mergeCollectionDoc(local, remote).items.t1.title).toBe('Local');
+    expect(field(mergeCollectionDoc(remote, local).items.t1, 'title')).toBe('Local');
+    expect(field(mergeCollectionDoc(local, remote).items.t1, 'title')).toBe('Local');
   });
 
   it('field-merges untouched fields from the older copy under the newer one', () => {
@@ -95,9 +98,9 @@ describe('mergeCollectionDoc — same-id edit LWW', () => {
     const fromA = doc({ items: { t1: entity('t1', { status: 'done', notes: '' }) }, rev: { t1: 30 } });
     const fromB = doc({ items: { t1: entity('t1', { status: 'todo', notes: 'acheté hier' }) }, rev: { t1: 31 } });
     const merged = mergeCollectionDoc(fromA, fromB).items.t1;
-    expect(merged.notes).toBe('acheté hier');
+    expect(field(merged, 'notes')).toBe('acheté hier');
     // B's copy is newer, so its `status` wins — LWW is per-entity, not per-field.
-    expect(merged.status).toBe('todo');
+    expect(field(merged, 'status')).toBe('todo');
   });
 });
 
@@ -114,7 +117,7 @@ describe('mergeCollectionDoc — tombstones honored', () => {
     const remote = doc({ items: { t1: entity('t1', { title: 'edited' }) }, rev: { t1: 100 } });
     const local = doc({ tombstones: { t1: 90 } });
     const out = mergeCollectionDoc(remote, local);
-    expect(out.items.t1?.title).toBe('edited');
+    expect(field(out.items.t1, 'title')).toBe('edited');
     expect(out.tombstones.t1).toBeUndefined();
   });
 
